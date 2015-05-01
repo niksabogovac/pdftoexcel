@@ -1,0 +1,13 @@
+C:\Users\Bojan\Desktop\usb Milan\Drugi\bin\Debug\Drugi.exe.config
+C:\Users\Bojan\Desktop\usb Milan\Drugi\obj\Debug\Alpha.csprojResolveAssemblyReference.cache
+C:\Users\Bojan\Desktop\usb Milan\Drugi\bin\Debug\Drugi.exe
+C:\Users\Bojan\Desktop\usb Milan\Drugi\bin\Debug\Drugi.pdb
+C:\Users\Bojan\Desktop\usb Milan\Drugi\bin\Debug\ExcelLibrary.dll
+C:\Users\Bojan\Desktop\usb Milan\Drugi\obj\Debug\Drugi.exe
+C:\Users\Bojan\Desktop\usb Milan\Drugi\obj\Debug\Drugi.pdb
+C:\Users\Niksa\AppData\Roaming\Skype\My Skype Received Files\usb Milan\usb Milan\Drugi\bin\Debug\Drugi.exe.config
+C:\Users\Niksa\AppData\Roaming\Skype\My Skype Received Files\usb Milan\usb Milan\Drugi\obj\Debug\Drugi.exe
+C:\Users\Niksa\AppData\Roaming\Skype\My Skype Received Files\usb Milan\usb Milan\Drugi\obj\Debug\Drugi.pdb
+C:\Users\Niksa\AppData\Roaming\Skype\My Skype Received Files\usb Milan\usb Milan\Drugi\bin\Debug\Drugi.exe
+C:\Users\Niksa\AppData\Roaming\Skype\My Skype Received Files\usb Milan\usb Milan\Drugi\bin\Debug\Drugi.pdb
+C:\Users\Niksa\AppData\Roaming\Skype\My Skype Received Files\usb Milan\usb Milan\Drugi\obj\Debug\Alpha.csprojResolveAssemblyReference.cache
