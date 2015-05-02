@@ -41,6 +41,8 @@ namespace Drugi
         public static string Details = "";
         public static string DetailsOthers = "";
         public static string Remarks = "";
+        public static string[] lines;
+        public static int[] years = { 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 };
 
         // Used for making difference between Remarks and DetailsOthers
         public static string oldRemarks = "";
@@ -62,6 +64,18 @@ namespace Drugi
         static void Main(string[] args)
         {
             #region Preparing input and output files
+
+            if (System.IO.File.Exists("Contents.txt"))
+            {
+                lines = ReadFromFile.ParseFile("Contents.txt");
+            }
+
+            //print array of strings
+            //TODO implement it as regexp readed from external file
+            foreach (string line in lines)
+            {
+                Console.WriteLine(line);
+            }
 
             // Create input and output path
             path += Application.StartupPath;
@@ -371,9 +385,25 @@ namespace Drugi
             }
         }
 
+        private static bool isYear(string s)
+        {
+            if (s.Length > 0)
+            {
+                for (int i=0; i<years.Length; i++)
+                {
+                    if (String.Equals(s, years[i].ToString(), StringComparison.Ordinal)) 
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         private static void manageDetailsOthers(string rowStr, int rowIndex)
         {
-            if (!rowStr.Equals(POLOVINA) && !regYear.IsMatch(rowStr) && !rowStr.Equals(oldRemarks))
+            //!regYear.IsMatch(rowStr)
+            if (!rowStr.Equals(POLOVINA) && !Regex.IsMatch(rowStr, @"^\d+$") && !isYear(rowStr) && !rowStr.Equals(oldRemarks))
             {
                 DetailsOthers = rowStr;
                 Row nextRow = sheet.Cells.GetRow(rowIndex + 1);
