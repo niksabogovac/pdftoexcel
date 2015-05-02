@@ -263,14 +263,14 @@ namespace Drugi
                 else if (tokens.Length == 1)
                     Name = "[Hipo]";
 
-                stringSeparators = new string[] { "Account:" };
+                stringSeparators = new string[] { "Account" };
                 tokens = tokens[0].Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
                 Account = Regex.Replace(tokens[0], ":", "");
 
             }
             else
             {
-                stringSeparators = new string[] { "Account:" };
+                stringSeparators = new string[] { "Account" };
                 tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
                 Account = Regex.Replace(tokens[0], ":", "");
 
@@ -278,9 +278,9 @@ namespace Drugi
                 string nextRowStr = "";
                 joinRow(ref nextRowStr, nextRow);
 
-                if (nextRowStr.Contains("Name:"))
+                if (nextRowStr.Contains("Name"))
                 {
-                    stringSeparators = new string[] { "Name:" };
+                    stringSeparators = new string[] { "Name" };
                     tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
                     Name = Regex.Replace(tokens[0], ":", "");
                 }
