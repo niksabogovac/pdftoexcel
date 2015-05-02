@@ -53,16 +53,16 @@ namespace Drugi
         // Can be used for error checing
         public static int rowNumber;
         public static System.IO.StreamWriter logFile = new System.IO.StreamWriter(Application.StartupPath + @"\log.txt");
+        
 
-
-
+        
 
         #endregion
 
         static void Main(string[] args)
         {
             #region Preparing input and output files
-
+            
             // Create input and output path
             path += Application.StartupPath;
             outPath += Application.StartupPath + @"\outputSpecifikacija5.xls";
@@ -70,7 +70,7 @@ namespace Drugi
             string filename = "";
             filename = Console.ReadLine();
             path += @"\" + filename + ".xls";
-
+            
 
             // Open WorkBook with input path
             book = new Workbook();
@@ -182,7 +182,7 @@ namespace Drugi
                     continue;
                 }
 
-
+                    
             }
             #endregion
 
@@ -204,7 +204,7 @@ namespace Drugi
         }
 
 
-
+           
 
         private static void manageYear(string rowStr)
         {
@@ -252,7 +252,7 @@ namespace Drugi
                 stringSeparators = new string[] { "Account:" };
                 tokens = tokens[0].Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
                 Account = tokens[0];
-
+                
             }
             else
             {
@@ -271,14 +271,14 @@ namespace Drugi
                     Name = tokens[0];
                 }
             }
-
-
+            
+            
 
         }
 
         private static void manageContCode(Row row)
         {
-            if (Regex.IsMatch(row.GetCell(0).StringValue, @"^\d+$"))
+            if (Regex.IsMatch(row.GetCell(0).StringValue, @"^\d+$")) 
             {
                 ContainerCode = row.GetCell(0).StringValue;
                 // Description is not bound to Name and Acc but for Container Code, replacement made last night 
@@ -295,7 +295,7 @@ namespace Drugi
                     }
                 }
             }
-
+            
         }
 
         private static void manageDesc(string rowStr)
@@ -309,7 +309,7 @@ namespace Drugi
                 tmp = tokens[0];
                 Description = Regex.Replace(tmp, "-", "");
             }
-            else
+            else 
                 Description = "";
 
         }
@@ -322,7 +322,7 @@ namespace Drugi
                 Row nextRow = sheet.Cells.GetRow(rowIndex + 1);
                 string nextRowStr = "";
                 joinRow(ref nextRowStr, nextRow);
-                if (nextRowStr.StartsWith("-") || regContCode.IsMatch(nextRow.GetCell(0).StringValue))
+                if (nextRowStr.StartsWith("-") || regContCode.IsMatch(nextRow.GetCell(0).StringValue)) 
                 {
                     printToSheet();
                 }
@@ -332,14 +332,14 @@ namespace Drugi
 
                 string tmp = "";
                 string[] stringSeparators = new string[] { "Contents:" };
-                string[] tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
+                string[] tokens = rowStr.Split(stringSeparators,StringSplitOptions.RemoveEmptyEntries);
                 tmp = tokens[0];
                 Contents = Regex.Replace(tmp, "-", "");
 
                 Row nextRow = sheet.Cells.GetRow(rowIndex + 1);
                 string nextRowStr = "";
                 joinRow(ref nextRowStr, nextRow);
-                if (nextRowStr.StartsWith("-") || regContCode.IsMatch(nextRow.GetCell(0).StringValue))
+                if (nextRowStr.StartsWith("-") || regContCode.IsMatch(nextRow.GetCell(0).StringValue)) 
                 {
                     printToSheet();
                 }
@@ -416,7 +416,7 @@ namespace Drugi
             curCol = 0;
         }
 
-        private static bool isRule(string rowStr)
+        private static bool  isRule(string rowStr)
         {
             return rowStr.Contains("Account") || rowStr.Contains("Name:") || rowStr.Contains("Description")
                 || regContCode.IsMatch(rowStr)

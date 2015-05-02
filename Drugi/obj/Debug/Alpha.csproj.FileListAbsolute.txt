@@ -18,3 +18,9 @@ C:\Users\Niksa\AppData\Roaming\Skype\My Skype Received Files\usb Milan\pdftoexce
 C:\Users\Niksa\AppData\Roaming\Skype\My Skype Received Files\usb Milan\pdftoexcel\pdftoexcel\Drugi\bin\Debug\Drugi.pdb
 C:\Users\Niksa\AppData\Roaming\Skype\My Skype Received Files\usb Milan\pdftoexcel\pdftoexcel\Drugi\obj\Debug\Alpha.csprojResolveAssemblyReference.cache
 C:\Users\Milan\Source\Repos\pdftoexcel\Drugi\bin\Debug\Drugi.exe.config
+C:\Users\Milan\Source\Repos\pdftoexcel\Drugi\obj\Debug\Alpha.csprojResolveAssemblyReference.cache
+C:\Users\Milan\Source\Repos\pdftoexcel\Drugi\bin\Debug\Drugi.exe
+C:\Users\Milan\Source\Repos\pdftoexcel\Drugi\bin\Debug\Drugi.pdb
+C:\Users\Milan\Source\Repos\pdftoexcel\Drugi\bin\Debug\ExcelLibrary.dll
+C:\Users\Milan\Source\Repos\pdftoexcel\Drugi\obj\Debug\Drugi.exe
+C:\Users\Milan\Source\Repos\pdftoexcel\Drugi\obj\Debug\Drugi.pdb
