@@ -158,13 +158,13 @@ namespace Drugi
                     manageYear(ref Year, rowStr);
                     continue;
                 }*/
-                if (rowStr.Contains("Account:"))
+                if (rowStr.Contains("Account:") || rowStr.Contains("Account#£_:"))
                 {
                     manageAccAndName(rowStr, rowIndex);
                     continue;
                 }
 
-                if (rowStr.Contains("Description:"))
+                if (rowStr.Contains("Description:") || rowStr.Contains("Description#£_:"))
                 {
                     manageDesc(rowStr);
                     continue;
