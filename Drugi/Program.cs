@@ -466,7 +466,8 @@ namespace Drugi
                 || rowStr.Contains("Summary")
                 || rowStr.Contains("Specifikacija")
                 || rowStr.Contains("Container")
-                || rowStr.Contains("Code");
+                || rowStr.Contains("Code")
+                || rowStr.Equals("");
         }
     }
 }
