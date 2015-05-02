@@ -17,7 +17,7 @@ namespace Drugi
             // of the array is one line of the file. 
             string[] lines = System.IO.File.ReadAllLines(fileName);
             
-            //return array of strings 
+            //return array of strings :) 
             return lines;
         }
 
