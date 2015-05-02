@@ -72,10 +72,10 @@ namespace Drugi
 
             //print array of strings
             //TODO implement it as regexp readed from external file
-            foreach (string line in lines)
+            /*foreach (string line in lines)
             {
                 Console.WriteLine(line);
-            }
+            }*/
 
             // Create input and output path
             path += Application.StartupPath;
