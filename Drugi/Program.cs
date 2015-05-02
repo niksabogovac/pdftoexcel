@@ -11,6 +11,7 @@ using ExcelLibrary.SpreadSheet;
 
 using System.Text.RegularExpressions;
 
+
 namespace Drugi
 {
     class Program
@@ -37,10 +38,13 @@ namespace Drugi
         public static string Year = "";
         public static string Description = "";
         public static string Contents = "";
-        public static string Remarks = "";
         public static string Details = "";
-        public static string[] lines;
+        public static string DetailsOthers = "";
+        public static string Remarks = "";
 
+        // Used for making difference between Remarks and DetailsOthers
+        public static string oldRemarks = "";
+        public const string POLOVINA = "POLOVINA";
 
 
         public static int curRow;
@@ -48,22 +52,16 @@ namespace Drugi
 
         // Can be used for error checing
         public static int rowNumber;
+        public static System.IO.StreamWriter logFile = new System.IO.StreamWriter(Application.StartupPath + @"\log.txt");
+
+
+
+
         #endregion
 
         static void Main(string[] args)
         {
             #region Preparing input and output files
-
-            if (System.IO.File.Exists("Contents.txt")) {
-                lines = ReadFromFile.ParseFile("Contents.txt");
-            }
-
-            //print array of strings
-            //TODO implement it as regexp readed from external file
-            foreach (string line in lines) {
-                Console.WriteLine(line);
-            }
-            
 
             // Create input and output path
             path += Application.StartupPath;
@@ -118,6 +116,7 @@ namespace Drugi
             outputsheet.Cells[curRow, curCol++] = new Cell("Description");
             outputsheet.Cells[curRow, curCol++] = new Cell("Contents");
             outputsheet.Cells[curRow, curCol++] = new Cell("Details");
+            outputsheet.Cells[curRow, curCol++] = new Cell("Details others");
             outputsheet.Cells[curRow++, curCol] = new Cell("Napomena");
             curCol = 0;
 
@@ -175,6 +174,15 @@ namespace Drugi
                     manageDetails(rowStr, rowIndex);
                     continue;
                 }
+
+                // Old Remarks are sometimes mixed with Details Others
+                if (!(isFooterOrHeader(rowStr)))
+                {
+                    manageDetailsOthers(rowStr, rowIndex);
+                    continue;
+                }
+
+
             }
             #endregion
 
@@ -194,6 +202,8 @@ namespace Drugi
             Console.ReadLine();
             #endregion
         }
+
+
 
 
         private static void manageYear(string rowStr)
@@ -263,27 +273,29 @@ namespace Drugi
             }
 
 
-            // Don't do this. Look for row 2960 in input helena.xls file
-
-            Contents = "";
-            Details = "";
-            Remarks = "";
 
         }
 
         private static void manageContCode(Row row)
         {
-            ContainerCode = row.GetCell(0).StringValue;
-            // Description is not bound to Name and Acc but for Container Code, replacement made last night 
-            Description = "";
-            // Does it contain Year?
-            for (int i = row.FirstColIndex; i <= row.LastColIndex; i++)
+            if (Regex.IsMatch(row.GetCell(0).StringValue, @"^\d+$"))
             {
-                if (regYear.IsMatch(row.GetCell(i).StringValue))
+                ContainerCode = row.GetCell(0).StringValue;
+                // Description is not bound to Name and Acc but for Container Code, replacement made last night 
+                // Same for Contents
+                Description = "";
+                Contents = "";
+                // Does it contain Year?
+                // Start searching for Cell 1 because in Cell 0 is Container Code
+                for (int i = 1; i <= row.LastColIndex; i++)
                 {
-                    Year = row.GetCell(i).StringValue;
+                    if (regYear.IsMatch(row.GetCell(i).StringValue))
+                    {
+                        Year = row.GetCell(i).StringValue;
+                    }
                 }
             }
+
         }
 
         private static void manageDesc(string rowStr)
@@ -332,7 +344,8 @@ namespace Drugi
                     printToSheet();
                 }
             }
-
+            Details = "";
+            Remarks = "";
         }
 
         private static void manageDetails(string rowStr, int rowIndex)
@@ -342,33 +355,40 @@ namespace Drugi
             string nextRowStr = "";
             joinRow(ref nextRowStr, nextRow);
 
-            if (!(nextRowStr.Contains("Account") || nextRowStr.Contains("Name:") || nextRowStr.Contains("Description")
-                || regContCode.IsMatch(nextRowStr)
-                || nextRowStr.Contains("Contents")
-                || regDate.IsMatch(nextRowStr)
-                || regDateExtended.IsMatch(nextRowStr)
-                || regDateEnum.IsMatch(nextRowStr)
-                || nextRowStr.StartsWith("-")
-                || nextRowStr.Contains("Page")
-                || nextRowStr.Contains("Destroyed")
-                ))
+            // Next row is Remarks if it's not any of the rules
+            if (!(isRule(nextRowStr)))
             {
                 Remarks = nextRowStr;
-
                 printToSheet();
-
-
+                oldRemarks = Remarks;
                 Remarks = "";
                 Details = "";
             }
             else
             {
                 printToSheet();
-
                 Details = "";
             }
+        }
 
+        private static void manageDetailsOthers(string rowStr, int rowIndex)
+        {
+            if (!rowStr.Equals(POLOVINA) && !regYear.IsMatch(rowStr) && !rowStr.Equals(oldRemarks))
+            {
+                DetailsOthers = rowStr;
+                Row nextRow = sheet.Cells.GetRow(rowIndex + 1);
+                string nextRowStr = "";
+                joinRow(ref nextRowStr, nextRow);
 
+                // Next row is Remarks if it's not any of the rules
+
+                printToSheet();
+                DetailsOthers = "";
+            }
+            else
+            {
+                logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + rowStr + " nije mogao da bude obradjen pa je preskocen.\n\n");
+            }
         }
 
         private static void joinRow(ref string rowStr, Row row)
@@ -390,10 +410,33 @@ namespace Drugi
             outputsheet.Cells[curRow, curCol++] = new Cell(Description);
             outputsheet.Cells[curRow, curCol++] = new Cell(Contents);
             outputsheet.Cells[curRow, curCol++] = new Cell(Details);
+            outputsheet.Cells[curRow, curCol++] = new Cell(DetailsOthers);
             outputsheet.Cells[curRow++, curCol++] = new Cell(Remarks);
             // Return to first item in row
             curCol = 0;
         }
 
+        private static bool isRule(string rowStr)
+        {
+            return rowStr.Contains("Account") || rowStr.Contains("Name:") || rowStr.Contains("Description")
+                || regContCode.IsMatch(rowStr)
+                || rowStr.Contains("Contents")
+                || regDate.IsMatch(rowStr)
+                || regDateExtended.IsMatch(rowStr)
+                || regDateEnum.IsMatch(rowStr)
+                || rowStr.StartsWith("-")
+                || rowStr.Contains("Page")
+                || isFooterOrHeader(rowStr);
+        }
+
+        private static bool isFooterOrHeader(string rowStr)
+        {
+            return rowStr.Contains("Destroyed")
+                || rowStr.Contains("ACCOUNT")
+                || rowStr.Contains("Summary")
+                || rowStr.Contains("Specifikacija")
+                || rowStr.Contains("Container")
+                || rowStr.Contains("Code");
+        }
     }
 }
