@@ -25,8 +25,9 @@ namespace Drugi
         public static Workbook outputBook;
 
         public static Regex regContCode = new Regex(@"[0-9]+");
-        public static Regex regDate = new Regex(@"[0-9]+\.[0-9]+\.-[0-9]+\.[0-9]+\.");
+        public static Regex regDate = new Regex(@"[0-9]+\.[0-9]+\.?-[0-9]+\.[0-9]+\.?");
         public static Regex regDateExtended = new Regex(@"[0-9]+-[0-9]+-[0-9]+\/[0-9]+\.[0-9]+\.-[0-9]+\.[0-9]+\.");
+        public static Regex regDateEnum = new Regex(@"[0-9]+\.[0-9]+(\.,)?");
         public static Regex regYear = new Regex(@"20[0-9]{2}");
 
         public static string Page = "";
@@ -38,25 +39,40 @@ namespace Drugi
         public static string Contents = "";
         public static string Remarks = "";
         public static string Details = "";
+        public static string[] lines;
 
 
 
         public static int curRow;
         public static int curCol;
+
+        // Can be used for error checing
+        public static int rowNumber;
         #endregion
 
         static void Main(string[] args)
         {
             #region Preparing input and output files
+
+            if (System.IO.File.Exists("Contents.txt")) {
+                lines = ReadFromFile.ParseFile("Contents.txt");
+            }
+
+            //print array of strings
+            //TODO implement it as regexp readed from external file
+            foreach (string line in lines) {
+                Console.WriteLine(line);
+            }
             
+
             // Create input and output path
             path += Application.StartupPath;
-            outPath += Application.StartupPath + @"\output.xls";
+            outPath += Application.StartupPath + @"\outputSpecifikacija5.xls";
             Console.WriteLine("Unesite ime ulaznog xls fajla: ");
             string filename = "";
             filename = Console.ReadLine();
             path += @"\" + filename + ".xls";
-            
+
 
             // Open WorkBook with input path
             book = new Workbook();
@@ -85,12 +101,13 @@ namespace Drugi
 
 
             // Create default output sheet and workbook
-            outputsheet = new Worksheet("OutPut");
+            outputsheet = new Worksheet("Output");
             outputBook = new Workbook();
 
             // Set it to beginning of the document
             curRow = 0;
             curCol = 0;
+            rowNumber = 0;
 
             // Write default headers
             outputsheet.Cells[curRow, curCol++] = new Cell("Page");
@@ -112,7 +129,7 @@ namespace Drugi
                 // Read row by row and check if any of rules are fulfilled
                 Row row = new Row();
                 row = sheet.Cells.GetRow(rowIndex);
-
+                rowNumber++;
 
                 string rowStr = "";
                 joinRow(ref rowStr, row);
@@ -153,7 +170,7 @@ namespace Drugi
                     continue;
                 }
 
-                if (regDate.IsMatch(rowStr) || regDateExtended.IsMatch(rowStr))
+                if (regDate.IsMatch(rowStr) || regDateExtended.IsMatch(rowStr) || regDateEnum.IsMatch(rowStr))
                 {
                     manageDetails(rowStr, rowIndex);
                     continue;
@@ -173,10 +190,11 @@ namespace Drugi
                 Console.ReadLine();
                 Environment.Exit(-1);
             }
-            Console.WriteLine("Uspesno kreirana izlazna datoteka pod imenom output!");
+            Console.WriteLine("Uspesno kreirana izlazna datoteka pod imenom outputSpecifikacija5!");
+            Console.ReadLine();
             #endregion
         }
-           
+
 
         private static void manageYear(string rowStr)
         {
@@ -196,7 +214,15 @@ namespace Drugi
             string tmp = "";
             string[] stringSeparators = new string[] { "Page" };
             string[] tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-            tmp = tokens[1];
+            if (tokens.Length == 2)
+                tmp = tokens[1];
+            else if (tokens.Length == 1)
+            {
+                // Is number?
+                if (Regex.IsMatch(tokens[0], @"^\d+$"))
+                    tmp = tokens[0];
+            }
+
             Page = Regex.Replace(tmp, "-", "");
         }
 
@@ -208,10 +234,15 @@ namespace Drugi
             {
                 stringSeparators = new string[] { "Name:" };
                 tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-                Name = tokens[1];
+                if (tokens.Length == 2)
+                    Name = tokens[1];
+                else if (tokens.Length == 1)
+                    Name = "[Hipo]";
+
                 stringSeparators = new string[] { "Account:" };
                 tokens = tokens[0].Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
                 Account = tokens[0];
+
             }
             else
             {
@@ -231,7 +262,9 @@ namespace Drugi
                 }
             }
 
-            Description = "";
+
+            // Don't do this. Look for row 2960 in input helena.xls file
+
             Contents = "";
             Details = "";
             Remarks = "";
@@ -241,7 +274,8 @@ namespace Drugi
         private static void manageContCode(Row row)
         {
             ContainerCode = row.GetCell(0).StringValue;
-
+            // Description is not bound to Name and Acc but for Container Code, replacement made last night 
+            Description = "";
             // Does it contain Year?
             for (int i = row.FirstColIndex; i <= row.LastColIndex; i++)
             {
@@ -258,8 +292,13 @@ namespace Drugi
             string tmp = "";
             string[] stringSeparators = new string[] { "Description:" };
             string[] tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-            tmp = tokens[0];
-            Description = Regex.Replace(tmp, "-", "");
+            if (tokens.Length == 1)
+            {
+                tmp = tokens[0];
+                Description = Regex.Replace(tmp, "-", "");
+            }
+            else
+                Description = "";
 
         }
 
@@ -271,7 +310,7 @@ namespace Drugi
                 Row nextRow = sheet.Cells.GetRow(rowIndex + 1);
                 string nextRowStr = "";
                 joinRow(ref nextRowStr, nextRow);
-                if (nextRowStr.StartsWith("-"))
+                if (nextRowStr.StartsWith("-") || regContCode.IsMatch(nextRow.GetCell(0).StringValue))
                 {
                     printToSheet();
                 }
@@ -281,14 +320,14 @@ namespace Drugi
 
                 string tmp = "";
                 string[] stringSeparators = new string[] { "Contents:" };
-                string[] tokens = rowStr.Split(stringSeparators,StringSplitOptions.RemoveEmptyEntries);
+                string[] tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
                 tmp = tokens[0];
                 Contents = Regex.Replace(tmp, "-", "");
 
                 Row nextRow = sheet.Cells.GetRow(rowIndex + 1);
                 string nextRowStr = "";
                 joinRow(ref nextRowStr, nextRow);
-                if (nextRowStr.StartsWith("-"))
+                if (nextRowStr.StartsWith("-") || regContCode.IsMatch(nextRow.GetCell(0).StringValue))
                 {
                     printToSheet();
                 }
@@ -306,12 +345,18 @@ namespace Drugi
             if (!(nextRowStr.Contains("Account") || nextRowStr.Contains("Name:") || nextRowStr.Contains("Description")
                 || regContCode.IsMatch(nextRowStr)
                 || nextRowStr.Contains("Contents")
-                || regDate.IsMatch(nextRowStr) || regDateExtended.IsMatch(nextRowStr) || nextRowStr.StartsWith("-") || nextRowStr.Contains("Page") || nextRowStr.Contains("Destroyed")))
+                || regDate.IsMatch(nextRowStr)
+                || regDateExtended.IsMatch(nextRowStr)
+                || regDateEnum.IsMatch(nextRowStr)
+                || nextRowStr.StartsWith("-")
+                || nextRowStr.Contains("Page")
+                || nextRowStr.Contains("Destroyed")
+                ))
             {
                 Remarks = nextRowStr;
 
                 printToSheet();
-                
+
 
                 Remarks = "";
                 Details = "";
@@ -319,7 +364,7 @@ namespace Drugi
             else
             {
                 printToSheet();
-                
+
                 Details = "";
             }
 
