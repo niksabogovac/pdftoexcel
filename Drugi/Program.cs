@@ -403,7 +403,7 @@ namespace Drugi
         private static void manageDetailsOthers(string rowStr, int rowIndex)
         {
             //!regYear.IsMatch(rowStr)
-            if (!rowStr.Equals(POLOVINA) && !Regex.IsMatch(rowStr, @"^\d+$") && !isYear(rowStr) && !rowStr.Equals(oldRemarks))
+            if (!rowStr.Equals(POLOVINA) && !isYear(rowStr) && !rowStr.Equals(oldRemarks))
             {
                 DetailsOthers = rowStr;
                 Row nextRow = sheet.Cells.GetRow(rowIndex + 1);
