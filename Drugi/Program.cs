@@ -427,21 +427,21 @@ namespace Drugi
             {
                 rowStr += row.GetCell(i).StringValue;
             }
-            rowStr = Regex.Replace(rowStr, @"\s+", "");
+            rowStr = Regex.Replace(rowStr, @"\s+", @"#£_");
         }
 
         private static void printToSheet()
         {
-            outputsheet.Cells[curRow, curCol++] = new Cell(Page);
-            outputsheet.Cells[curRow, curCol++] = new Cell(Account);
-            outputsheet.Cells[curRow, curCol++] = new Cell(Name);
-            outputsheet.Cells[curRow, curCol++] = new Cell(ContainerCode);
-            outputsheet.Cells[curRow, curCol++] = new Cell(Year);
-            outputsheet.Cells[curRow, curCol++] = new Cell(Description);
-            outputsheet.Cells[curRow, curCol++] = new Cell(Contents);
-            outputsheet.Cells[curRow, curCol++] = new Cell(Details);
-            outputsheet.Cells[curRow, curCol++] = new Cell(DetailsOthers);
-            outputsheet.Cells[curRow++, curCol++] = new Cell(Remarks);
+            outputsheet.Cells[curRow, curCol++] = new Cell(Regex.Replace(Page,@"[#£_]+", " "));
+            outputsheet.Cells[curRow, curCol++] = new Cell(Regex.Replace(Account, @"[#£_]+", " "));
+            outputsheet.Cells[curRow, curCol++] = new Cell(Regex.Replace(Name, @"[#£_]+", " "));
+            outputsheet.Cells[curRow, curCol++] = new Cell(Regex.Replace(ContainerCode, @"[#£_]+", " "));
+            outputsheet.Cells[curRow, curCol++] = new Cell(Regex.Replace(Year, @"[#£_]+", " "));
+            outputsheet.Cells[curRow, curCol++] = new Cell(Regex.Replace(Description, @"[#£_]+", " "));
+            outputsheet.Cells[curRow, curCol++] = new Cell(Regex.Replace(Contents, @"[#£_]+", " "));
+            outputsheet.Cells[curRow, curCol++] = new Cell(Regex.Replace(Details, @"[#£_]+", " "));
+            outputsheet.Cells[curRow, curCol++] = new Cell(Regex.Replace(DetailsOthers, @"[#£_]+", " "));
+            outputsheet.Cells[curRow++, curCol++] = new Cell(Regex.Replace(Remarks, @"[#£_]+", " "));
             // Return to first item in row
             curCol = 0;
         }
