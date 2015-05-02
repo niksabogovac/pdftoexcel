@@ -254,25 +254,25 @@ namespace Drugi
         {
             string[] stringSeparators;
             string[] tokens;
-            if (rowStr.Contains("Name:"))
+            if (rowStr.Contains("Name"))
             {
-                stringSeparators = new string[] { "Name:" };
+                stringSeparators = new string[] { "Name" };
                 tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
                 if (tokens.Length == 2)
-                    Name = tokens[1];
+                    Name = Regex.Replace(tokens[1], ":", "");
                 else if (tokens.Length == 1)
                     Name = "[Hipo]";
 
                 stringSeparators = new string[] { "Account:" };
                 tokens = tokens[0].Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-                Account = tokens[0];
+                Account = Regex.Replace(tokens[0], ":", "");
 
             }
             else
             {
                 stringSeparators = new string[] { "Account:" };
                 tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-                Account = tokens[0];
+                Account = Regex.Replace(tokens[0], ":", "");
 
                 Row nextRow = sheet.Cells.GetRow(rowIndex + 1);
                 string nextRowStr = "";
@@ -282,7 +282,7 @@ namespace Drugi
                 {
                     stringSeparators = new string[] { "Name:" };
                     tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-                    Name = tokens[0];
+                    Name = Regex.Replace(tokens[0], ":", "");
                 }
             }
 
