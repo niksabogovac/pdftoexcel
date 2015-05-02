@@ -65,10 +65,10 @@ namespace Drugi
         {
             #region Preparing input and output files
 
-            if (System.IO.File.Exists("Contents.txt"))
+            /*if (System.IO.File.Exists("Contents.txt"))
             {
                 lines = ReadFromFile.ParseFile("Contents.txt");
-            }
+            }*/
 
             //print array of strings
             //TODO implement it as regexp readed from external file
@@ -417,6 +417,8 @@ namespace Drugi
             }
             else
             {
+                // Remove #£_ from Log file
+                rowStr = Regex.Replace(rowStr, @"[#£_]+", " ");
                 logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + rowStr + " nije mogao da bude obradjen pa je preskocen.\n\n");
             }
         }
