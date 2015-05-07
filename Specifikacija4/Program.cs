@@ -40,6 +40,10 @@ namespace Specifikacija4
         public static int curRow;
         public static int curCol;
 
+        public static int DescriptionMainColumn;
+        public static int ContainerCodeColumn;
+        public static int YearColumn;
+
         public static int[] years = { 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 };
 
         // Can be used for error checing
@@ -96,6 +100,37 @@ namespace Specifikacija4
             curRow = 0;
             curCol = 0;
             rowNumber = 0;
+
+            // Set columns numbers to 0
+            DescriptionMainColumn = 0;
+            ContainerCodeColumn = 0;
+            YearColumn = 0;
+
+            #region Ask for column specification
+            while (true)
+            {
+                try
+                {
+                    // Decrement because indexing starts with 0
+                    Console.WriteLine("Unesite u kojoj koloni se nalazi Description: ");
+                    DescriptionMainColumn = Int32.Parse(Console.ReadLine());
+                    DescriptionMainColumn--;
+                    Console.WriteLine("Unesite u kojoj koloni se nalazi ContainerCode: ");
+                    ContainerCodeColumn = Int32.Parse(Console.ReadLine());
+                    ContainerCodeColumn--;
+                    Console.WriteLine("Unesite u kojoj koloni se nalazi Year: ");
+                    YearColumn = Int32.Parse(Console.ReadLine());
+                    YearColumn--;
+                    break;
+                }
+                catch (FormatException e)
+                {
+                    Console.WriteLine("Pogresno se uneli broj kolone");
+                    continue;
+                }
+            }
+            #endregion
+
 
             // Write default headers
             outputsheet.Cells[curRow, curCol++] = new Cell("Page");
@@ -170,9 +205,9 @@ namespace Specifikacija4
             ContainerCode = "";
             Year = "";
 
-            DescriptionMain = row.GetCell(1).StringValue;// +row.GetCell(2).StringValue + row.GetCell(3).StringValue;
-            ContainerCode = row.GetCell(2).StringValue;
-            Year = row.GetCell(3).StringValue;
+            DescriptionMain = row.GetCell(DescriptionMainColumn).StringValue;
+            ContainerCode = row.GetCell(ContainerCodeColumn).StringValue;
+            Year = row.GetCell(YearColumn).StringValue;
             
             /*
             if (row.GetCell(1).StringValue.Equals(""))
