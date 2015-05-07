@@ -24,3 +24,9 @@ C:\Users\Milan\Source\Repos\pdftoexcel\Drugi\bin\Debug\ExcelLibrary.dll
 C:\Users\Milan\Source\Repos\pdftoexcel\Drugi\obj\Debug\Drugi.exe
 C:\Users\Milan\Source\Repos\pdftoexcel\Drugi\obj\Debug\Drugi.pdb
 C:\Users\Bojan\Source\Repos\pdftoexcel3\Drugi\bin\Debug\Drugi.exe.config
+C:\Users\Bojan\Source\Repos\pdftoexcel3\Drugi\bin\Debug\Drugi.exe
+C:\Users\Bojan\Source\Repos\pdftoexcel3\Drugi\bin\Debug\Drugi.pdb
+C:\Users\Bojan\Source\Repos\pdftoexcel3\Drugi\bin\Debug\ExcelLibrary.dll
+C:\Users\Bojan\Source\Repos\pdftoexcel3\Drugi\obj\Debug\Alpha.csprojResolveAssemblyReference.cache
+C:\Users\Bojan\Source\Repos\pdftoexcel3\Drugi\obj\Debug\Drugi.exe
+C:\Users\Bojan\Source\Repos\pdftoexcel3\Drugi\obj\Debug\Drugi.pdb
