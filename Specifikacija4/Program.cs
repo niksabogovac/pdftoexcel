@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace Specifikacija4
 {
-    class Program
+   public class Program
     {
         #region Variable definitions
         public static string path = "";
@@ -51,7 +51,7 @@ namespace Specifikacija4
 
 
 
-        static void Main(string[] args)
+       static void Main(string[] args)
         {
 
             #region Preparing input and output files
@@ -159,7 +159,7 @@ namespace Specifikacija4
 
         }
 
-        private static void manageFileFolderCode(Row row, int rowIndex)
+       public static void manageFileFolderCode(Row row, int rowIndex)
         {
             FileFolderCode = row.GetCell(0).StringValue;
 
@@ -263,7 +263,7 @@ namespace Specifikacija4
             }
         }
 
-        private static void manageContents(int rowIndex)
+        public static void manageContents(int rowIndex)
         {
             Row row = sheet.Cells.GetRow(rowIndex);
             string rowStr = "";
@@ -278,7 +278,7 @@ namespace Specifikacija4
             printToSheet();
         }
 
-        private static void manageDescription(string currentRowStr, Row currentRow, int rowIndex)
+        public static void manageDescription(string currentRowStr, Row currentRow, int rowIndex)
         {
             // Counter for row parsing
             // Needs to be set to 1 because function sends the next row index when it is called but it is not called the first time 
@@ -337,7 +337,7 @@ namespace Specifikacija4
         }
 
 
-        private static void manageAccAndName(string rowStr, int rowIndex)
+        public static void manageAccAndName(string rowStr, int rowIndex)
         {
             string[] stringSeparators;
             string[] tokens;
@@ -377,7 +377,7 @@ namespace Specifikacija4
 
         }
 
-        private static void managePage(string rowStr)
+        public static void managePage(string rowStr)
         {
             string[] tokens;
             string[] stringSeparators = new string[] { "Page" };
@@ -392,7 +392,7 @@ namespace Specifikacija4
             }
         }
 
-        private static void joinRow(ref string rowStr, Row row)
+        public static void joinRow(ref string rowStr, Row row)
         {
             for (int i = row.FirstColIndex; i <= row.LastColIndex; i++)
             {
@@ -401,7 +401,7 @@ namespace Specifikacija4
             rowStr = Regex.Replace(rowStr, @"\s+", @"#£_");
         }
 
-        private static bool isYear(string s)
+        public static bool isYear(string s)
         {
             if (s.Length > 0)
             {
@@ -416,7 +416,7 @@ namespace Specifikacija4
             return false;
         }
 
-        private static void printToSheet()
+        public static void printToSheet()
         {
             outputsheet.Cells[curRow, curCol++] = new Cell(Regex.Replace(Page, @"[#£_]+", " "));
             outputsheet.Cells[curRow, curCol++] = new Cell(Regex.Replace(Account, @"[#£_]+", " "));
@@ -430,7 +430,7 @@ namespace Specifikacija4
             // Return to first item in row
             curCol = 0;
         }
-        private static bool isFooterOrHeader(string rowStr)
+        public static bool isFooterOrHeader(string rowStr)
         {
             bool ret = false;
             if (rowStr.Contains("Destroyed") || rowStr.Contains("Summary") || rowStr.Contains("Outsourcing"))
