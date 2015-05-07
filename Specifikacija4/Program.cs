@@ -167,13 +167,29 @@ namespace Specifikacija4
             Description = "";
             DescriptionMain = "";
             Contents = "";
+            ContainerCode = "";
             Year = "";
 
-            DescriptionMain = row.GetCell(2).StringValue;
-            ContainerCode = row.GetCell(3).StringValue;
-            Year = row.GetCell(4).StringValue;
+            DescriptionMain = row.GetCell(1).StringValue;// +row.GetCell(2).StringValue + row.GetCell(3).StringValue;
+            ContainerCode = row.GetCell(2).StringValue;
+            Year = row.GetCell(3).StringValue;
+            
+            /*
+            if (row.GetCell(1).StringValue.Equals(""))
+                DescriptionMain = row.GetCell(2).StringValue;
+            else
+                DescriptionMain = row.GetCell(1).StringValue;
 
+            if (row.GetCell(3).StringValue.Equals("") && regNumber.IsMatch(row.GetCell(4).StringValue))
+                ContainerCode = row.GetCell(4).StringValue;
+            else if (regNumber.IsMatch(row.GetCell(3).StringValue))
+                ContainerCode = row.GetCell(3).StringValue;
 
+            if (isYear(row.GetCell(4).StringValue))
+                Year = row.GetCell(4).StringValue;
+            else if (isYear(row.GetCell(5).StringValue))
+                Year = row.GetCell(5).StringValue;
+            */
             // Whole idea not working, check row 161 
             // DescriptionMain - the one in the same row as FileFoled Code can be numerical
             // Instead of that - switch to get info from every cell by itself
