@@ -119,7 +119,7 @@ namespace Drugi
             // Set it to beginning of the document
             curRow = 0;
             curCol = 0;
-            rowNumber = 0;
+            rowNumber = 1;
 
             // Write default headers
             outputsheet.Cells[curRow, curCol++] = new Cell("Page");
@@ -467,8 +467,8 @@ namespace Drugi
                 || rowStr.Contains("ACCOUNT")
                 || rowStr.Contains("Summary")
                 || rowStr.Contains("Specifikacija")
-                || rowStr.Contains("Container")
-                || rowStr.Contains("Code")
+                || rowStr.Contains("ontainer")
+                || rowStr.Contains("odeYear")
                 || rowStr.Equals("");
         }
     }
