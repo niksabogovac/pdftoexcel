@@ -325,7 +325,14 @@ namespace Specifikacija4
             string[] tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
             //tmp = tokens[0];
             //Contents = Regex.Replace(tmp, "-", "");
-            Contents = tokens[0];
+
+            // Sometimes Year is written on purpose in Contents row check that
+            if (isYear(tokens[0]))
+            {
+                Year = tokens[0];
+            }
+            else 
+                Contents = tokens[0];
             printToSheet();
         }
 
@@ -475,8 +482,8 @@ namespace Specifikacija4
             outputsheet.Cells[curRow, curCol++] = new Cell(Regex.Replace(ContainerCode, @"[#£_]+", " "));
             outputsheet.Cells[curRow, curCol++] = new Cell(Regex.Replace(Year, @"[#£_]+", " "));
             outputsheet.Cells[curRow, curCol++] = new Cell(Regex.Replace(Description, @"[#£_]+", " "));
-            outputsheet.Cells[curRow, curCol++] = new Cell(Regex.Replace(Contents, @"[#£_]+", " "));
             outputsheet.Cells[curRow, curCol++] = new Cell(Regex.Replace(DescriptionMain, @"[#£_]+", " "));
+            outputsheet.Cells[curRow, curCol++] = new Cell(Regex.Replace(Contents, @"[#£_]+", " "));
             outputsheet.Cells[curRow++, curCol++] = new Cell(Regex.Replace(FileFolderCode, @"[#£_]+", " "));
             // Return to first item in row
             curCol = 0;
