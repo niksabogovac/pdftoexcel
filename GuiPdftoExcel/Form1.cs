@@ -83,168 +83,168 @@ namespace GuiPdftoExcel
         {
             if (comboBox1.SelectedIndex == 0)
             {
-                
-        
-            #region Preparing input and output files
 
-            /*if (System.IO.File.Exists("Contents.txt"))
+
+                #region Preparing input and output files
+
+                /*if (System.IO.File.Exists("Contents.txt"))
             {
                 lines = ReadFromFile.ParseFile("Contents.txt");
             }*/
 
-            //print array of strings
-            //TODO implement it as regexp readed from external file
-            /*foreach (string line in lines)
-            {
-                Console.WriteLine(line);
-            }*/
-
-            // Create input and output path
-            path += Application.StartupPath;
-            outPath += Application.StartupPath + @"\outputSpecifikacija5.xls";
-            string filename = "";
-            filename = textBox1.Text;
-            path += @"\" + filename;
-
-
-            // Open WorkBook with input path
-            book = new Workbook();
-            try
-            {
-                book = Workbook.Load(path);
-            }
-            catch
-            {
-                label2.Text ="Uneti fajl ne moze da se otvori.\nProverite da li ste uneli ispravno ime.\nProverite da li je vec otvoren i ukoliko jeste zatvorite ga i pokusajte ponovo.";
-        
-                Environment.Exit(-1);
-            }
-
-            // Open first sheet in input xls document 
-            try
-            {
-                sheet = book.Worksheets[0];
-            }
-            catch
-            {
-               label2.Text ="Uneti fajl ne moze da se otvori.\nUlazni fajl mora da sadrzi sve u prvom sheetu!";
-            
-                Environment.Exit(-1);
-            }
-
-
-            // Create default output sheet and workbook
-            outputsheet = new Worksheet("Output");
-            outputBook = new Workbook();
-
-            // Set it to beginning of the document
-            curRow = 0;
-            curCol = 0;
-            rowNumber = 0;
-
-            // Write default headers
-            outputsheet.Cells[curRow, curCol++] = new Cell("Page");
-            outputsheet.Cells[curRow, curCol++] = new Cell("Account");
-            outputsheet.Cells[curRow, curCol++] = new Cell("Name");
-            outputsheet.Cells[curRow, curCol++] = new Cell("ContainerCode");
-            outputsheet.Cells[curRow, curCol++] = new Cell("Year");
-            outputsheet.Cells[curRow, curCol++] = new Cell("Description");
-            outputsheet.Cells[curRow, curCol++] = new Cell("Contents");
-            outputsheet.Cells[curRow, curCol++] = new Cell("Details");
-            outputsheet.Cells[curRow, curCol++] = new Cell("Details others");
-            outputsheet.Cells[curRow++, curCol] = new Cell("Napomena");
-            curCol = 0;
-
-            #endregion
-
-            #region Main loop
-            for (int rowIndex = sheet.Cells.FirstRowIndex; rowIndex <= sheet.Cells.LastRowIndex; rowIndex++)
-            {
-                // Read row by row and check if any of rules are fulfilled
-                Row row = new Row();
-                row = sheet.Cells.GetRow(rowIndex);
-                rowNumber++;
-
-                string rowStr = "";
-                joinRow(ref rowStr, row);
-
-                if (rowStr.Contains("Page"))
+                //print array of strings
+                //TODO implement it as regexp readed from external file
+                /*foreach (string line in lines)
                 {
-                    managePage(rowStr);
-                    continue;
-                }
-
-                /*if (rowStr.Contains("Year"))
-                {
-                    manageYear(ref Year, rowStr);
-                    continue;
+                    Console.WriteLine(line);
                 }*/
-                if (rowStr.Contains("Account:") || rowStr.Contains("Account#£_:"))
-                {
-                    manageAccAndName(rowStr, rowIndex);
-                    continue;
-                }
 
-                if (rowStr.Contains("Description:") || rowStr.Contains("Description#£_:"))
-                {
-                    manageDesc(rowStr);
-                    continue;
-                }
-
-
-                if (regContCode.IsMatch(row.GetCell(0).StringValue))
-                {
-                    manageContCode(row);
-                    continue;
-                }
-
-                if (rowStr.Contains("Contents") || rowStr.StartsWith("-"))
-                {
-                    manageCont(rowIndex, rowStr);
-                    continue;
-                }
-
-                if (regDate.IsMatch(rowStr) || regDateExtended.IsMatch(rowStr) || regDateEnum.IsMatch(rowStr))
-                {
-                    manageDetails(rowStr, rowIndex);
-                    continue;
-                }
-
-                // Old Remarks are sometimes mixed with Details Others
-                if (!(isFooterOrHeader(rowStr)))
-                {
-                    manageDetailsOthers(rowStr, rowIndex);
-                    continue;
-                }
-
-
-            }
-            #endregion
-
-            #region Write to output file
-            try
-            {
-                outputBook.Worksheets.Add(outputsheet);
-                outputBook.Save(outPath);
-            }
-            catch
-            {
-                 label2.Text ="Nije moguce upisati u izlazni fajl.\nOn se kreira u datoteci gde je i ulazni.\nZatvorite ga i pokusajte ponovo.";
-             
-            }
-            label2.Text ="Uspesno kreirana izlazna datoteka pod imenom outputSpecifikacija5!";
-      
-            #endregion
-
-            }
-            else if (comboBox1.SelectedIndex == 1)
-            {
-                #region Preparing input and output files
+                // Create input and output path
                 path += Application.StartupPath;
                 outPath += Application.StartupPath + @"\outputSpecifikacija5.xls";
                 string filename = "";
                 filename = textBox1.Text;
                 path += @"\" + filename;
+
+
+                // Open WorkBook with input path
+                book = new Workbook();
+                try
+                {
+                    book = Workbook.Load(path);
+                }
+                catch
+                {
+                    label2.Text = "Uneti fajl ne moze da se otvori.\nProverite da li ste uneli ispravno ime.\nProverite da li je vec otvoren i ukoliko jeste zatvorite ga i pokusajte ponovo.";
+
+                    Environment.Exit(-1);
+                }
+
+                // Open first sheet in input xls document 
+                try
+                {
+                    sheet = book.Worksheets[0];
+                }
+                catch
+                {
+                    label2.Text = "Uneti fajl ne moze da se otvori.\nUlazni fajl mora da sadrzi sve u prvom sheetu!";
+
+                    Environment.Exit(-1);
+                }
+
+
+                // Create default output sheet and workbook
+                outputsheet = new Worksheet("Output");
+                outputBook = new Workbook();
+
+                // Set it to beginning of the document
+                curRow = 0;
+                curCol = 0;
+                rowNumber = 0;
+
+                // Write default headers
+                outputsheet.Cells[curRow, curCol++] = new Cell("Page");
+                outputsheet.Cells[curRow, curCol++] = new Cell("Account");
+                outputsheet.Cells[curRow, curCol++] = new Cell("Name");
+                outputsheet.Cells[curRow, curCol++] = new Cell("ContainerCode");
+                outputsheet.Cells[curRow, curCol++] = new Cell("Year");
+                outputsheet.Cells[curRow, curCol++] = new Cell("Description");
+                outputsheet.Cells[curRow, curCol++] = new Cell("Contents");
+                outputsheet.Cells[curRow, curCol++] = new Cell("Details");
+                outputsheet.Cells[curRow, curCol++] = new Cell("Details others");
+                outputsheet.Cells[curRow++, curCol] = new Cell("Napomena");
+                curCol = 0;
+
+                #endregion
+
+                #region Main loop
+                for (int rowIndex = sheet.Cells.FirstRowIndex; rowIndex <= sheet.Cells.LastRowIndex; rowIndex++)
+                {
+                    // Read row by row and check if any of rules are fulfilled
+                    Row row = new Row();
+                    row = sheet.Cells.GetRow(rowIndex);
+                    rowNumber++;
+
+                    string rowStr = "";
+                    joinRow(ref rowStr, row);
+
+                    if (rowStr.Contains("Page"))
+                    {
+                        managePage(rowStr);
+                        continue;
+                    }
+
+                    /*if (rowStr.Contains("Year"))
+                    {
+                        manageYear(ref Year, rowStr);
+                        continue;
+                    }*/
+                    if (rowStr.Contains("Account:") || rowStr.Contains("Account#£_:"))
+                    {
+                        manageAccAndName(rowStr, rowIndex);
+                        continue;
+                    }
+
+                    if (rowStr.Contains("Description:") || rowStr.Contains("Description#£_:"))
+                    {
+                        manageDesc(rowStr);
+                        continue;
+                    }
+
+
+                    if (regContCode.IsMatch(row.GetCell(0).StringValue))
+                    {
+                        manageContCode(row);
+                        continue;
+                    }
+
+                    if (rowStr.Contains("Contents") || rowStr.StartsWith("-"))
+                    {
+                        manageCont(rowIndex, rowStr);
+                        continue;
+                    }
+
+                    if (regDate.IsMatch(rowStr) || regDateExtended.IsMatch(rowStr) || regDateEnum.IsMatch(rowStr))
+                    {
+                        manageDetails(rowStr, rowIndex);
+                        continue;
+                    }
+
+                    // Old Remarks are sometimes mixed with Details Others
+                    if (!(isFooterOrHeader(rowStr)))
+                    {
+                        manageDetailsOthers(rowStr, rowIndex);
+                        continue;
+                    }
+
+
+                }
+                #endregion
+
+                #region Write to output file
+                try
+                {
+                    outputBook.Worksheets.Add(outputsheet);
+                    outputBook.Save(outPath);
+                }
+                catch
+                {
+                    label2.Text = "Nije moguce upisati u izlazni fajl.\nOn se kreira u datoteci gde je i ulazni.\nZatvorite ga i pokusajte ponovo.";
+
+                }
+                label2.Text = "Uspesno kreirana izlazna datoteka pod imenom outputSpecifikacija5!";
+
+                #endregion
+
+            }
+            else if (comboBox1.SelectedIndex == 1)
+            {
+                #region Preparing input and output files
+                Specifikacija4.Program.path += Application.StartupPath;
+                Specifikacija4.Program.outPath += Application.StartupPath + @"\outputSpecifikacija4.xls";
+                string filename = "";
+                filename = textBox1.Text;
+                Specifikacija4.Program.path += @"\" + filename;
 
                 // Open WorkBook with input path
                 Specifikacija4.Program.book = new Workbook();
@@ -254,8 +254,8 @@ namespace GuiPdftoExcel
                 }
                 catch
                 {
-                    label2.Text ="Uneti fajl ne moze da se otvori.\nProverite da li ste uneli ispravno ime.\nProverite da li je vec otvoren i ukoliko jeste zatvorite ga i pokusajte ponovo.";
-                    
+                    label2.Text = "Uneti fajl ne moze da se otvori.\nProverite da li ste uneli ispravno ime.\nProverite da li je vec otvoren i ukoliko jeste zatvorite ga i pokusajte ponovo.";
+
                 }
 
                 // Open first sheet in input xls document 
@@ -265,8 +265,8 @@ namespace GuiPdftoExcel
                 }
                 catch
                 {
-                   label2.Text ="Uneti fajl ne moze da se otvori.\nUlazni fajl mora da sadrzi sve u prvom sheetu!";
-                   
+                    label2.Text = "Uneti fajl ne moze da se otvori.\nUlazni fajl mora da sadrzi sve u prvom sheetu!";
+
                 }
 
 
@@ -280,15 +280,15 @@ namespace GuiPdftoExcel
                 Specifikacija4.Program.rowNumber = 0;
 
                 // Write default headers
-                Specifikacija4.Program.outputsheet.Cells[curRow, curCol++] = new Cell("Page");
-                Specifikacija4.Program.outputsheet.Cells[curRow, curCol++] = new Cell("Account");
-                Specifikacija4.Program.outputsheet.Cells[curRow, curCol++] = new Cell("Name");
-                Specifikacija4.Program.outputsheet.Cells[curRow, curCol++] = new Cell("ContainerCode");
-                Specifikacija4.Program.outputsheet.Cells[curRow, curCol++] = new Cell("Year");
-                Specifikacija4.Program.outputsheet.Cells[curRow, curCol++] = new Cell("Description1");
-                Specifikacija4.Program.outputsheet.Cells[curRow, curCol++] = new Cell("Description");
-                Specifikacija4.Program.outputsheet.Cells[curRow, curCol++] = new Cell("Contents");
-                Specifikacija4.Program.outputsheet.Cells[curRow++, curCol] = new Cell("FileFolderCode");
+                Specifikacija4.Program.outputsheet.Cells[Specifikacija4.Program.curRow, Specifikacija4.Program.curCol++] = new Cell("Page");
+                Specifikacija4.Program.outputsheet.Cells[Specifikacija4.Program.curRow, Specifikacija4.Program.curCol++] = new Cell("Account");
+                Specifikacija4.Program.outputsheet.Cells[Specifikacija4.Program.curRow, Specifikacija4.Program.curCol++] = new Cell("Name");
+                Specifikacija4.Program.outputsheet.Cells[Specifikacija4.Program.curRow, Specifikacija4.Program.curCol++] = new Cell("ContainerCode");
+                Specifikacija4.Program.outputsheet.Cells[Specifikacija4.Program.curRow, Specifikacija4.Program.curCol++] = new Cell("Year");
+                Specifikacija4.Program.outputsheet.Cells[Specifikacija4.Program.curRow, Specifikacija4.Program.curCol++] = new Cell("Description1");
+                Specifikacija4.Program.outputsheet.Cells[Specifikacija4.Program.curRow, Specifikacija4.Program.curCol++] = new Cell("Description");
+                Specifikacija4.Program.outputsheet.Cells[Specifikacija4.Program.curRow, Specifikacija4.Program.curCol++] = new Cell("Contents");
+                Specifikacija4.Program.outputsheet.Cells[Specifikacija4.Program.curRow++, Specifikacija4.Program.curCol] = new Cell("FileFolderCode");
                 Specifikacija4.Program.curCol = 0;
 
                 #endregion
@@ -298,7 +298,7 @@ namespace GuiPdftoExcel
                 {
                     Row row = new Row();
                     row = sheet.Cells.GetRow(rowIndex);
-                    rowNumber++;
+                    Specifikacija4.Program.rowNumber++;
 
                     string rowStr = "";
                     Specifikacija4.Program.joinRow(ref rowStr, row);
@@ -331,14 +331,20 @@ namespace GuiPdftoExcel
                 }
                 catch
                 {
-                    Console.WriteLine("Nije moguce upisati u izlazni fajl.\nOn se kreira u datoteci gde je i ulazni.\nZatvorite ga i pokusajte ponovo.");
-                   
+                    label2.Text = "Nije moguce upisati u izlazni fajl.\nOn se kreira u datoteci gde je i ulazni.\nZatvorite ga i pokusajte ponovo.";
+
                 }
-                Console.WriteLine("Uspesno kreirana izlazna datoteka pod imenom outputSpecifikacija4!");
-             
+                label2.Text = "Uspesno kreirana izlazna datoteka pod imenom outputSpecifikacija4!";
+
                 #endregion
+
+            }
+            else
+            {
+                label2.Text = "Morate odabrati specifikaciju!";
             }
         }
+
 
         private static void manageYear(string rowStr)
         {
