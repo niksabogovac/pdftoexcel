@@ -230,24 +230,36 @@ namespace Drugi
                 tmp = tokens[1];
                 Year = Regex.Replace(tmp, "-", "");
             }
-            catch { }
+            catch (Exception e)
+            {
+                rowStr = Regex.Replace(rowStr, @"[#£_]+", " ");
+                logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + rowStr + " nije mogao da bude obradjen pa je preskocen.\n\n");
+            }
         }
 
         private static void managePage(string rowStr)
         {
-            string tmp = "";
-            string[] stringSeparators = new string[] { "Page" };
-            string[] tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-            if (tokens.Length == 2)
-                tmp = tokens[1];
-            else if (tokens.Length == 1)
+            try
             {
-                // Is number?
-                if (Regex.IsMatch(tokens[0], @"^\d+$"))
-                    tmp = tokens[0];
-            }
+                string tmp = "";
+                string[] stringSeparators = new string[] { "Page" };
+                string[] tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
+                if (tokens.Length == 2)
+                    tmp = tokens[1];
+                else if (tokens.Length == 1)
+                {
+                    // Is number?
+                    if (Regex.IsMatch(tokens[0], @"^\d+$"))
+                        tmp = tokens[0];
+                }
 
-            Page = Regex.Replace(tmp, "-", "");
+                Page = Regex.Replace(tmp, "-", "");
+            }
+            catch (Exception e)
+            {
+                rowStr = Regex.Replace(rowStr, @"[#£_]+", " ");
+                logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + rowStr + " nije mogao da bude obradjen pa je preskocen.\n\n");
+            }
         }
 
         private static void manageAccAndName(string rowStr, int rowIndex)
@@ -257,32 +269,48 @@ namespace Drugi
             if (rowStr.Contains("Name"))
             {
                 stringSeparators = new string[] { "Name" };
-                tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-                if (tokens.Length == 2)
-                    Name = Regex.Replace(tokens[1], ":", "");
-                else if (tokens.Length == 1)
-                    Name = "[Hipo]";
+                try
+                {
+                    tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
+                    if (tokens.Length == 2)
+                        Name = Regex.Replace(tokens[1], ":", "");
+                    else if (tokens.Length == 1)
+                        Name = "[Hipo]";
 
-                stringSeparators = new string[] { "Account" };
-                tokens = tokens[0].Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-                Account = Regex.Replace(tokens[0], ":", "");
+                    stringSeparators = new string[] { "Account" };
+                    tokens = tokens[0].Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
+                    Account = Regex.Replace(tokens[0], ":", "");
+                }
+                catch (Exception e)
+                {
+                    rowStr = Regex.Replace(rowStr, @"[#£_]+", " ");
+                    logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + rowStr + " nije mogao da bude obradjen pa je preskocen.\n\n");
+                }
 
             }
             else
             {
-                stringSeparators = new string[] { "Account" };
-                tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-                Account = Regex.Replace(tokens[0], ":", "");
-
-                Row nextRow = sheet.Cells.GetRow(rowIndex + 1);
-                string nextRowStr = "";
-                joinRow(ref nextRowStr, nextRow);
-
-                if (nextRowStr.Contains("Name"))
+                try
                 {
-                    stringSeparators = new string[] { "Name" };
+                    stringSeparators = new string[] { "Account" };
                     tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-                    Name = Regex.Replace(tokens[0], ":", "");
+                    Account = Regex.Replace(tokens[0], ":", "");
+
+                    Row nextRow = sheet.Cells.GetRow(rowIndex + 1);
+                    string nextRowStr = "";
+                    joinRow(ref nextRowStr, nextRow);
+
+                    if (nextRowStr.Contains("Name"))
+                    {
+                        stringSeparators = new string[] { "Name" };
+                        tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
+                        Name = Regex.Replace(tokens[0], ":", "");
+                    }
+                }
+                catch (Exception e)
+                {
+                    rowStr = Regex.Replace(rowStr, @"[#£_]+", " ");
+                    logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + rowStr + " nije mogao da bude obradjen pa je preskocen.\n\n");
                 }
             }
 
@@ -315,16 +343,24 @@ namespace Drugi
         private static void manageDesc(string rowStr)
         {
 
-            string tmp = "";
-            string[] stringSeparators = new string[] { "Description:" };
-            string[] tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-            if (tokens.Length == 1)
+            try
             {
-                tmp = tokens[0];
-                Description = Regex.Replace(tmp, "-", "");
+                string tmp = "";
+                string[] stringSeparators = new string[] { "Description:" };
+                string[] tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
+                if (tokens.Length == 1)
+                {
+                    tmp = tokens[0];
+                    Description = Regex.Replace(tmp, "-", "");
+                }
+                else
+                    Description = "";
             }
-            else
-                Description = "";
+            catch (Exception e)
+            {
+                rowStr = Regex.Replace(rowStr, @"[#£_]+", " ");
+                logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + rowStr + " nije mogao da bude obradjen pa je preskocen.\n\n");
+            }
 
         }
 
@@ -344,18 +380,26 @@ namespace Drugi
             else
             {
 
-                string tmp = "";
-                string[] stringSeparators = new string[] { "Contents:" };
-                string[] tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-                tmp = tokens[0];
-                Contents = Regex.Replace(tmp, "-", "");
-
-                Row nextRow = sheet.Cells.GetRow(rowIndex + 1);
-                string nextRowStr = "";
-                joinRow(ref nextRowStr, nextRow);
-                if (nextRowStr.StartsWith("-") || regContCode.IsMatch(nextRow.GetCell(0).StringValue))
+                try
                 {
-                    printToSheet();
+                    string tmp = "";
+                    string[] stringSeparators = new string[] { "Contents:" };
+                    string[] tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
+                    tmp = tokens[0];
+                    Contents = Regex.Replace(tmp, "-", "");
+
+                    Row nextRow = sheet.Cells.GetRow(rowIndex + 1);
+                    string nextRowStr = "";
+                    joinRow(ref nextRowStr, nextRow);
+                    if (nextRowStr.StartsWith("-") || regContCode.IsMatch(nextRow.GetCell(0).StringValue))
+                    {
+                        printToSheet();
+                    }
+                }
+                catch(Exception e)
+                {
+                    rowStr = Regex.Replace(rowStr, @"[#£_]+", " ");
+                    logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + rowStr + " nije mogao da bude obradjen pa je preskocen.\n\n");
                 }
             }
             Details = "";
