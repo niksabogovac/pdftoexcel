@@ -449,15 +449,53 @@ namespace Drugi
             //!regYear.IsMatch(rowStr)
             if (!rowStr.Equals(POLOVINA) && !isYear(rowStr) && !rowStr.Equals(oldRemarks))
             {
-                DetailsOthers = rowStr;
-                Row nextRow = sheet.Cells.GetRow(rowIndex + 1);
-                string nextRowStr = "";
-                joinRow(ref nextRowStr, nextRow);
+                // If details others contains more than one line it should be merged into one cell
+                // Multi lines start with #[ and end with #] 
+                // Everything between is considered as one deail
+                if (rowStr.Contains("#["))
+                {
+                    DetailsOthers = "";
+                    string[] stringSeparators = new string[] { "#[" };
+                    string[] tokens = rowStr.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
 
-                // Next row is Remarks if it's not any of the rules
+                    DetailsOthers += tokens[0] + "[#£_]";
 
-                printToSheet();
-                DetailsOthers = "";
+                    Row row = new Row();
+                    row = sheet.Cells.GetRow(++rowIndex);
+
+                    rowStr = "";
+                    joinRow(ref rowStr, row);
+
+                    while(!rowStr.Contains("#]"))
+                    {
+                        DetailsOthers += rowStr + "[#£_]";
+
+                        row = new Row();
+                        row = sheet.Cells.GetRow(++rowIndex);
+
+                        rowStr = "";
+                        joinRow(ref rowStr, row);
+                        
+                    }
+                    stringSeparators = new string[] { "#]" };
+                    tokens = rowStr.Split(stringSeparators,StringSplitOptions.RemoveEmptyEntries);
+                    DetailsOthers += tokens[0] + "[#£_]";
+
+                    printToSheet();
+                    DetailsOthers = "";
+                }
+                else
+                {
+                    DetailsOthers = rowStr;
+                    Row nextRow = sheet.Cells.GetRow(rowIndex + 1);
+                    string nextRowStr = "";
+                    joinRow(ref nextRowStr, nextRow);
+
+                    // Next row is Remarks if it's not any of the rules
+
+                    printToSheet();
+                    DetailsOthers = "";
+                }
             }
             else
             {
