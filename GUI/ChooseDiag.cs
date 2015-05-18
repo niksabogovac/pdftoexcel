@@ -25,6 +25,7 @@ namespace GUI
             DescriptionMainColumn = Int32.Parse(tbDescription.Text.ToString());
             ContainerCodeColumn = Int32.Parse(tbContainerCode.Text.ToString());
             YearColumn = Int32.Parse(tbYear.Text.ToString());
+            this.Dispose();
         }
     }
 }
