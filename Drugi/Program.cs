@@ -462,7 +462,7 @@ namespace Drugi
 
                     Row row = new Row();
                     row = sheet.Cells.GetRow(++rowIndex);
-
+                    rowNumber++;
                     rowStr = "";
                     joinRow(ref rowStr, row);
 
@@ -472,7 +472,7 @@ namespace Drugi
 
                         row = new Row();
                         row = sheet.Cells.GetRow(++rowIndex);
-
+                        rowNumber++;
                         rowStr = "";
                         joinRow(ref rowStr, row);
                         
