@@ -1,0 +1,6 @@
+C:\Users\Milan\Source\Repos\pdftoexcel\Specifikacija4\bin\Debug\Specifikacija4.exe.config
+C:\Users\Milan\Source\Repos\pdftoexcel\Specifikacija4\bin\Debug\Specifikacija4.exe
+C:\Users\Milan\Source\Repos\pdftoexcel\Specifikacija4\bin\Debug\Specifikacija4.pdb
+C:\Users\Milan\Source\Repos\pdftoexcel\Specifikacija4\obj\Debug\Specifikacija4.csprojResolveAssemblyReference.cache
+C:\Users\Milan\Source\Repos\pdftoexcel\Specifikacija4\obj\Debug\Specifikacija4.exe
+C:\Users\Milan\Source\Repos\pdftoexcel\Specifikacija4\obj\Debug\Specifikacija4.pdb
