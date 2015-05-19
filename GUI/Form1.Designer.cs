@@ -99,7 +99,9 @@
             this.Controls.Add(this.cbSpec);
             this.Controls.Add(this.btnConvert);
             this.Controls.Add(this.btnOpenFile);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Konvertovanje";
             this.ResumeLayout(false);
             this.PerformLayout();
