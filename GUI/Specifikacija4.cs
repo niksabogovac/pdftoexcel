@@ -247,7 +247,7 @@ namespace GUI
                     Contents = tokens[0];
             } catch (IndexOutOfRangeException e)
             {
-                logFile.Write("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + rowStr + "  sadrzi prazan Contents pa nije mogao da bude obradjen.\n\n");
+                logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + Regex.Replace(rowStr, @"[#£_]+", " ") + "  sadrzi prazan Contents pa nije mogao da bude obradjen.\n\n");
             }
             printToSheet();
         }
@@ -361,7 +361,7 @@ namespace GUI
             }
             catch
             {
-                logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + rowStr + " ne sadrzi broj stranice ili rec Page.\n\n");
+                logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + Regex.Replace(rowStr, @"[#£_]+", " ") + " ne sadrzi broj stranice ili rec Page.\n\n");
             }
         }
 

@@ -212,7 +212,7 @@ namespace GUI
             catch (Exception e)
             {
                 rowStr = Regex.Replace(rowStr, @"[#£_]+", " ");
-                logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + rowStr + " nije mogao da bude obradjen pa je preskocen.\n\n");
+                logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + Regex.Replace(rowStr, @"[#£_]+", " ") + " nije mogao da bude obradjen pa je preskocen.\n\n");
             }
         }
 
@@ -238,7 +238,7 @@ namespace GUI
                 catch (Exception e)
                 {
                     rowStr = Regex.Replace(rowStr, @"[#£_]+", " ");
-                    logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + rowStr + " nije mogao da bude obradjen pa je preskocen.\n\n");
+                    logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + Regex.Replace(rowStr, @"[#£_]+", " ") + " nije mogao da bude obradjen pa je preskocen.\n\n");
                 }
 
             }
@@ -264,7 +264,7 @@ namespace GUI
                 catch (Exception e)
                 {
                     rowStr = Regex.Replace(rowStr, @"[#£_]+", " ");
-                    logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + rowStr + " nije mogao da bude obradjen pa je preskocen.\n\n");
+                    logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + Regex.Replace(rowStr, @"[#£_]+", " ") + " nije mogao da bude obradjen pa je preskocen.\n\n");
                 }
             }
 
@@ -312,7 +312,7 @@ namespace GUI
             catch (Exception e)
             {
                 rowStr = Regex.Replace(rowStr, @"[#£_]+", " ");
-                logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + rowStr + " nije mogao da bude obradjen pa je preskocen.\n\n");
+                logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + Regex.Replace(rowStr, @"[#£_]+", " ") + " nije mogao da bude obradjen pa je preskocen.\n\n");
             }
 
         }
@@ -352,7 +352,7 @@ namespace GUI
                 catch (Exception e)
                 {
                     rowStr = Regex.Replace(rowStr, @"[#£_]+", " ");
-                    logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + rowStr + " nije mogao da bude obradjen pa je preskocen.\n\n");
+                    logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + Regex.Replace(rowStr, @"[#£_]+", " ") + " nije mogao da bude obradjen pa je preskocen.\n\n");
                 }
             }
             Details = "";
@@ -454,7 +454,7 @@ namespace GUI
             {
                 // Remove #£_ from Log file
                 rowStr = Regex.Replace(rowStr, @"[#£_]+", " ");
-                logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + rowStr + " nije mogao da bude obradjen pa je preskocen.\n\n");
+                logFile.WriteLine("Red u ulaznoj datoteci sa brojem  " + rowNumber + ": " + Regex.Replace(rowStr, @"[#£_]+", " ") + " nije mogao da bude obradjen pa je preskocen.\n\n");
             }
         }
 
