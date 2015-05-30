@@ -15,9 +15,10 @@ namespace SecondProject
 {
     public partial class Form1 : Form
     {
+        private static Form1 instance;
         private static string filePath = "";
         private Conversion conversion;
-        public Form1()
+        private  Form1()
         {
             InitializeComponent();
             this.CenterToParent();
@@ -42,6 +43,13 @@ namespace SecondProject
             conversion.OpenInputAndOutputFiles();
             conversion.MainSort();
             conversion.Write();
+        }
+
+        public static Form1 getInstance()
+        {
+            if (instance == null)
+                instance = new Form1();
+            return instance;
         }
     }
 }

@@ -35,6 +35,7 @@
             this.lblArchNum = new System.Windows.Forms.Label();
             this.txtArchNum = new System.Windows.Forms.TextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
             // label2
@@ -58,11 +59,11 @@
             // 
             // btnConvert
             // 
-            this.btnConvert.Location = new System.Drawing.Point(132, 116);
+            this.btnConvert.Location = new System.Drawing.Point(134, 153);
             this.btnConvert.Name = "btnConvert";
-            this.btnConvert.Size = new System.Drawing.Size(75, 23);
+            this.btnConvert.Size = new System.Drawing.Size(100, 23);
             this.btnConvert.TabIndex = 7;
-            this.btnConvert.Text = "Konvertuj";
+            this.btnConvert.Text = "Kreiraj";
             this.btnConvert.UseVisualStyleBackColor = true;
             this.btnConvert.Click += new System.EventHandler(this.btnConvert_Click);
             // 
@@ -81,16 +82,25 @@
             this.txtArchNum.Name = "txtArchNum";
             this.txtArchNum.Size = new System.Drawing.Size(100, 20);
             this.txtArchNum.TabIndex = 9;
+            this.txtArchNum.Text = "0";
             // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // progressBar
+            // 
+            this.progressBar.Location = new System.Drawing.Point(34, 112);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(297, 23);
+            this.progressBar.TabIndex = 10;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(358, 160);
+            this.ClientSize = new System.Drawing.Size(358, 187);
+            this.Controls.Add(this.progressBar);
             this.Controls.Add(this.txtArchNum);
             this.Controls.Add(this.lblArchNum);
             this.Controls.Add(this.btnConvert);
@@ -112,6 +122,7 @@
         private System.Windows.Forms.Label lblArchNum;
         private System.Windows.Forms.TextBox txtArchNum;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        public System.Windows.Forms.ProgressBar progressBar;
     }
 }
 

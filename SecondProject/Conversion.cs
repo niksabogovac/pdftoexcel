@@ -16,17 +16,6 @@ namespace SecondProject
         #region Variable definition
 
         /// <summary>
-        /// Columns of input file
-        /// </summary>
-        private Int32 year;
-        private string fileNumber;
-        private string categoryNumber;
-        private string categoryName;
-        private string fileType;
-        private string deadline;
-        private string location;
-
-        /// <summary>
         /// Support fields used for reading input  files
         /// </summary>
         private Workbook book;
@@ -36,17 +25,12 @@ namespace SecondProject
         private Worksheet outputSheet2;
         private Workbook outputBook2;
 
+ 
         /// <summary>
-        /// Output fields for first output file
+        /// This is get trough textBox
         /// </summary>
-        private Int32 yearOutput;
         private Int32 archiveNumber;
-        private string categoryNumberOutput;
-        private string categoryNameOutput;
-        private string fileTypeOutput;
-        private string deadlineOutput;
-        private string fileAmount;
-        private string locationOutput;
+
 
         /// <summary>
         /// Output files no.2 uses archiveNumber of first output file, explained later
@@ -95,25 +79,6 @@ namespace SecondProject
 
         private void Initialize()
         {
-            year = -1;
-            yearOutput = -1;
-            fileNumber = "";
-            categoryNumber = "";
-            categoryName = "";
-            fileType = "";
-            deadline = "";
-            location = "";
-
-
-            yearOutput = -1;
-            archiveNumber = -1;
-            categoryNumberOutput = "";
-            categoryNameOutput = "";
-            fileTypeOutput = "";
-            deadlineOutput = "";
-            fileAmount = "";
-            locationOutput = "";
-
             curColOutput1 = 0;
             curRowOutput1 = 0;
             curColOutput2 = 0;
@@ -255,20 +220,48 @@ namespace SecondProject
             }
 
             rows.Sort();
-            foreach(MyRow row in rows)
+
+            Form1.getInstance().progressBar.Minimum = 1;
+            Form1.getInstance().progressBar.Maximum = rows.Count;
+
+            List<MyRow> deletedRows = new List<MyRow>();
+            for (int i = 0; i < rows.Count; i++ )
             {
-                
-                outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell((archiveNumber++).ToString());
-                outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell(row.Year.ToString());
-                outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell(row.CategoryNumber);
-                outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell(row.CategoryName);
-                outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell(row.Deadline);
-                outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell(row.FileType);
-                outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell(row.FileNumber);
-                outputSheet1.Cells[curRowOutput1++, curColOutput1++] = new Cell(row.Location);
-                curColOutput1 = 0;
+               Form1.getInstance().progressBar.Value++;
+               int fileAmount = 1;
+               for (int j = 0; j < rows.Count; j++)
+               {
+                    if (i != j)
+                    {
+                        if (rows[i].Equals(rows[j]))
+                        {
+                            outputSheet2.Cells[curRowOutput2, curColOutput2++] = new Cell(archiveNumber.ToString());
+                            outputSheet2.Cells[curRowOutput2++, curColOutput2++] = new Cell(rows[j].FileNumber);
+                            curColOutput2 = 0;
+
+                            fileAmount++;
+                            rows.RemoveAt(j);
+                            Form1.getInstance().progressBar.Maximum--;
+                        }
+                    }
+               }
+               outputSheet2.Cells[curRowOutput2, curColOutput2++] = new Cell(archiveNumber.ToString());
+               outputSheet2.Cells[curRowOutput2++, curColOutput2++] = new Cell(rows[i].FileNumber);
+               curColOutput2 = 0;
+
+               outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell((archiveNumber++).ToString());
+               outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell(rows[i].Year.ToString());
+               outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell(rows[i].CategoryNumber);
+               outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell(rows[i].CategoryName);
+               outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell(rows[i].Deadline);
+               outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell(rows[i].FileType);
+               outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell(fileAmount.ToString());
+               outputSheet1.Cells[curRowOutput1++, curColOutput1++] = new Cell(rows[i].Location);
+               curColOutput1 = 0;
+
+               rows.RemoveAt(i);
+               Form1.getInstance().progressBar.Maximum--;
             }
-            MessageBox.Show("");
             #region 
             /*List<Int32> yearList = new List<Int32>();
             List<string> locationList = new List<string>();
@@ -330,7 +323,7 @@ namespace SecondProject
 
             */
             #endregion
-
+         
         }
 
         private class MyRow : Row, IComparable
@@ -379,10 +372,10 @@ namespace SecondProject
                 this.Location = _location;
                 this.CategoryName = _categoryName;
                 this.Deadline = _deadline;
-                this.FileNumber = _fileType;
+                this.FileNumber = _fileNumber;
             }
 
-            virtual public int CompareTo(object obj)
+            virtual  public int CompareTo(object obj)
             {
                 
 
@@ -408,6 +401,28 @@ namespace SecondProject
                     throw new ArgumentException("Object is not a MyObject ");
                 }
             }
+
+            public override bool Equals(object obj)
+            {
+                bool ret = false;
+                if (obj is MyRow)
+                {
+                    MyRow row = (MyRow)obj;
+                    if ((this.Year == row.Year) 
+                        && (this.Location.Equals(row.Location)) 
+                        && (this.CategoryNumber.Equals(row.CategoryNumber))
+                        && (this.CategoryName.Equals(row.CategoryName))
+                        && (this.FileType.Equals(row.FileType))
+                        )
+                    {
+                        ret = true;
+                    }
+                    return ret;
+                }
+                else return ret;
+            }
+
+
         }
 
 
