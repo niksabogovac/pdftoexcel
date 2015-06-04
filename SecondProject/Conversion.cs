@@ -224,7 +224,6 @@ namespace SecondProject
             Form1.getInstance().progressBar.Minimum = 1;
             Form1.getInstance().progressBar.Maximum = rows.Count;
 
-            List<MyRow> deletedRows = new List<MyRow>();
             for (int i = 0; i < rows.Count; i++ )
             {
                Form1.getInstance().progressBar.Value++;
@@ -261,69 +260,7 @@ namespace SecondProject
 
                rows.RemoveAt(i);
                Form1.getInstance().progressBar.Maximum--;
-            }
-            #region 
-            /*List<Int32> yearList = new List<Int32>();
-            List<string> locationList = new List<string>();
-            List<string> categoryNumberList = new List<string>();
-
-            // Get all rows into a list and later sort them out
-            for (int rowIndex = sheet.Cells.FirstRowIndex + 1; rowIndex <= sheet.Cells.LastRowIndex; rowIndex++)
-            {
-                Row row = new Row();
-                row = sheet.Cells.GetRow(rowIndex);
-                rows.Add(row);
-
-                int tmpYear = 0;
-                string tmpYearString = "";
-                tmpYearString = row.GetCell(0).StringValue;
-
-                if (yearRangeReg.IsMatch(tmpYearString))
-                {
-                    string[] stringSeparators = new string[] { "-" };
-                    string[] tokens = tmpYearString.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-                    tmpYear = Int32.Parse(tokens[0]);
-                    yearList.Add(tmpYear);
-
-                } else if (yearReg.IsMatch(tmpYearString))
-                {
-                    tmpYear = Int32.Parse(tmpYearString);
-                    if (!yearList.Contains(tmpYear))
-                        yearList.Add(tmpYear);
-                }
-
-            }
-            yearList.Sort();
-
-            List<Row> rowsSortedByYear = new List<Row>();
-
-            foreach (uint  currentYear in yearList)
-            {
-                foreach(Row row in rows)
-                {
-                    int tmpYear = 0;
-                    string tmpYearString = "";
-                    tmpYearString = row.GetCell(0).StringValue;
-                    if (yearRangeReg.IsMatch(tmpYearString))
-                    {
-                        string[] stringSeparators = new string[] { "-" };
-                        string[] tokens = tmpYearString.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-                        tmpYear = Int32.Parse(tokens[0]);
-                    }
-                    else if (yearReg.IsMatch(tmpYearString))
-                    {
-                        tmpYear = Int32.Parse(tmpYearString);
-                    }
-                    if (tmpYear == currentYear)
-                    {
-                        rowsSortedByYear.Add(row);
-                    }
-                }
-            }
-
-            */
-            #endregion
-         
+            }         
         }
 
         private class MyRow : Row, IComparable

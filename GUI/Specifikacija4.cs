@@ -32,6 +32,8 @@ namespace GUI
         private string FileFolderCode;
 
         public static Regex regFileFolderCode = new Regex(@"[0-9]{12}");
+        public static Regex regFileFolderCodeErr1 = new Regex(@"D?[0-9]{11}");
+        public static Regex regFileFolderCodeErr2 = new Regex(@"\)?[0-9]{11}");
         public static Regex regDescriptionMain = new Regex(@"([A-Za-z]+\t?)+");
         public static Regex regDescriptionMainNumeric = new Regex(@"([0-9]+-[0-9]+-[0-9]{1,5},?)+");
         public static Regex regYear = new Regex(@"20[0-9]{2}");
@@ -164,7 +166,9 @@ namespace GUI
                     continue;
                 }
 
-                if (regFileFolderCode.IsMatch(row.GetCell(0).StringValue))
+                if (regFileFolderCode.IsMatch(row.GetCell(0).StringValue) 
+                 || regFileFolderCodeErr1.IsMatch(row.GetCell(0).StringValue) 
+                 || regFileFolderCodeErr2.IsMatch(row.GetCell(0).StringValue))
                 {
                     manageFileFolderCode(row, rowIndex);
                     continue;
@@ -208,7 +212,9 @@ namespace GUI
             joinRow(ref nextRowStr, nextRow);
 
             // Next row is another File folder, current row doesn't have description or contents
-            if (regFileFolderCode.IsMatch(nextRow.GetCell(0).StringValue) || nextRowStr.Equals("") || isFooterOrHeader(nextRowStr))
+            if (regFileFolderCode.IsMatch(row.GetCell(0).StringValue)
+                 || regFileFolderCodeErr1.IsMatch(row.GetCell(0).StringValue)
+                 || regFileFolderCodeErr2.IsMatch(row.GetCell(0).StringValue) || nextRowStr.Equals("") || isFooterOrHeader(nextRowStr))
             {
                 printToSheet();
                 return;
@@ -297,7 +303,9 @@ namespace GUI
                     rowStr = "";
                     joinRow(ref rowStr, row);
                 }
-            } while (!(regFileFolderCode.IsMatch(row.GetCell(0).StringValue) || rowStr.Equals("") || isFooterOrHeader(rowStr) || rowStr.Contains("Contents:")));
+            } while (!(regFileFolderCode.IsMatch(row.GetCell(0).StringValue)
+                 || regFileFolderCodeErr1.IsMatch(row.GetCell(0).StringValue)
+                 || regFileFolderCodeErr2.IsMatch(row.GetCell(0).StringValue) || rowStr.Equals("") || isFooterOrHeader(rowStr) || rowStr.Contains("Contents:")));
 
 
             // If next is contents take info from that first then write it
