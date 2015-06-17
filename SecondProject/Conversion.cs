@@ -73,8 +73,9 @@ namespace SecondProject
         /// Recognize a range od years
         /// </summary>
         private static Regex yearReg = new Regex(@"[0-9]{4}");
-        private static Regex yearRangeReg = new Regex(@"[0-9]{4}-[0-9]{4}");
-        
+        private static Regex yearRangeReg = new Regex(@"[0-9]{4}.? *- *[0-9]{4}");
+        private static Regex yearManyReg = new Regex(@"([0-9]{4}. ?)+");
+        private static Regex trajnoReg = new Regex(@" *trajno *");
         #endregion
 
         private void Initialize()
@@ -191,14 +192,14 @@ namespace SecondProject
 
         public void MainSort()
         {
+            ChooseDiagMore diag = new ChooseDiagMore();
+            diag.ShowDialog();
             
             for (int rowIndex = sheet.Cells.FirstRowIndex + 1; rowIndex <= sheet.Cells.LastRowIndex; rowIndex++)
             {
                 Row row = new Row();
                 row = sheet.Cells.GetRow(rowIndex);
-
-               
-                int _year = 0;
+                /*Int32 _year = 0;
                 string tmpYearString = "";
                 tmpYearString = row.GetCell(0).StringValue;
                 _year = Int32.Parse(tmpYearString);
@@ -214,8 +215,71 @@ namespace SecondProject
                 string _fileType = row.GetCell(2).StringValue;
                 string _location = row.GetCell(9).StringValue;
                 string _fileNumber = row.GetCell(11).StringValue;
+                string _deadline = row.GetCell(7).StringValue;
+                 * */
 
-                MyRow tmpRow = new MyRow(_year,_categoryNumber,_fileType,_location,_categoryName,"",_fileNumber);
+                
+                int _yearForSort = 0;
+                string _year = row.GetCell(diag.year).StringValue;
+                if (yearRangeReg.IsMatch(_year))
+                {
+                    _year = yearRangeReg.Match(_year).ToString();
+                    char[] stringSeparator = new char[] { '-' };
+                    Regex.Replace(_year, " ", "");
+                    Regex.Replace(_year, ".", "");
+                    string[] tokens = _year.Split(stringSeparator);
+                    try
+                    {
+                        _yearForSort = Int32.Parse(tokens[tokens.Length - 1]);
+                    }
+                    catch (Exception e)
+                    {
+                        logFile.WriteLine("Red " + rowIndex.ToString() + " nije mogao da bude obradjen.");
+                    }
+                }
+                else if (yearManyReg.IsMatch(_year))
+                {
+                    _year = yearManyReg.Match(_year).ToString();
+                    char[] stringSeparator = new char[] { '.' };
+                    Regex.Replace(_year, " ", "");
+                    string[] tokens = _year.Split(stringSeparator);
+                    if (!tokens[tokens.Length - 2].Equals(""))
+                        try
+                        {
+                            _yearForSort = Int32.Parse(tokens[tokens.Length - 2]);
+                        }
+                        catch(Exception e)
+                        {
+                            logFile.WriteLine("Red " + rowIndex.ToString() + " nije mogao da bude obradjen.");
+                        }
+                    else
+                        _yearForSort = Int32.Parse(tokens[0]);
+                } else if (yearReg.IsMatch(_year))
+                {
+                    _yearForSort = Int32.Parse(_year);
+                    _year += ".";
+                } else
+                {
+                    logFile.WriteLine("Red " + rowIndex.ToString() + " nije mogao da bude obradjen.\nProgram nije mogao da prepozna godinu u tom redu.");
+                }
+                string _categoryNumber = row.GetCell(diag.categoryNum).StringValue;
+                string _fileType = row.GetCell(diag.fileType).StringValue;
+                string _location = row.GetCell(diag.location).StringValue;
+                int _deadline = 0;
+                string _deadlineTmp = row.GetCell(diag.deadline).StringValue;
+                _deadlineTmp.TrimEnd();
+                _deadlineTmp.TrimStart();
+                _deadlineTmp.Trim();
+                if (trajnoReg.IsMatch(_deadlineTmp))
+                {
+                    _deadline = 999999;
+                }
+                else _deadline = Int32.Parse(_deadlineTmp);
+
+                string _categoryName = row.GetCell(diag.categoryName).StringValue;
+                string _fileNumber = row.GetCell(diag.fileNum).StringValue;
+
+                MyRow tmpRow = new MyRow(_yearForSort, _year, _categoryNumber, _fileType, _location, _categoryName, _deadline, _fileNumber);
                 rows.Add(tmpRow);
             }
 
@@ -224,9 +288,20 @@ namespace SecondProject
             Form1.getInstance().progressBar.Minimum = 1;
             Form1.getInstance().progressBar.Maximum = rows.Count;
 
+            List<MyRow> deletedRows = new List<MyRow>();
+            
             for (int i = 0; i < rows.Count; i++ )
             {
-               Form1.getInstance().progressBar.Value++;
+                if (deletedRows.Contains(rows[i]))
+                    continue;
+               try
+               {
+                   Form1.getInstance().progressBar.Value++;
+               }
+               catch (Exception e)
+               {
+
+               }
                int fileAmount = 1;
                for (int j = 0; j < rows.Count; j++)
                {
@@ -239,7 +314,8 @@ namespace SecondProject
                             curColOutput2 = 0;
 
                             fileAmount++;
-                            rows.RemoveAt(j);
+                            deletedRows.Add(rows[j]);
+                            //rows.RemoveAt(j);
                             Form1.getInstance().progressBar.Maximum--;
                         }
                     }
@@ -249,23 +325,33 @@ namespace SecondProject
                curColOutput2 = 0;
 
                outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell((archiveNumber++).ToString());
-               outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell(rows[i].Year.ToString());
+               outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell(rows[i].Year);
                outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell(rows[i].CategoryNumber);
                outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell(rows[i].CategoryName);
-               outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell(rows[i].Deadline);
+               int _deadLine = rows[i].Deadline;
+               if (_deadLine == 999999)
+                    outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell("trajno");
+               else
+                   outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell(_deadLine.ToString());
                outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell(rows[i].FileType);
                outputSheet1.Cells[curRowOutput1, curColOutput1++] = new Cell(fileAmount.ToString());
                outputSheet1.Cells[curRowOutput1++, curColOutput1++] = new Cell(rows[i].Location);
                curColOutput1 = 0;
 
-               rows.RemoveAt(i);
+               deletedRows.Add(rows[i]);
+               //rows.RemoveAt(i);
                Form1.getInstance().progressBar.Maximum--;
             }         
         }
 
         private class MyRow : Row, IComparable
         {
-            public Int32 Year
+            public int YearForSort
+            {
+                get;
+                set;
+            }
+            public string Year
             {
                 get;
                 set;
@@ -290,7 +376,7 @@ namespace SecondProject
                 get;
                 set;
             }
-            public string Deadline
+            public int Deadline
             {
                 get;
                 set;
@@ -301,8 +387,9 @@ namespace SecondProject
                 set;
             }
 
-            public MyRow(int _year, string _categoryNumber,string _fileType, string _location, string _categoryName,string _deadline, string _fileNumber)
+            public MyRow(int _yearForSort, string _year, string _categoryNumber,string _fileType, string _location, string _categoryName,int _deadline, string _fileNumber)
             {
+                this.YearForSort = _yearForSort;
                 this.Year = _year;
                 this.CategoryNumber = _categoryNumber;
                 this.FileType = _fileType;
@@ -316,7 +403,7 @@ namespace SecondProject
             {
                 
 
-                if (obj is MyRow)
+                /*if (obj is MyRow)
                 {
                     var compareObj = (MyRow)obj;
                     if (this.Year.CompareTo(compareObj.Year) == 0)
@@ -336,6 +423,23 @@ namespace SecondProject
                 else
                 {
                     throw new ArgumentException("Object is not a MyObject ");
+                }*/
+                if (obj is MyRow)
+                {
+                    var compareObj = (MyRow)obj;
+                    if (this.YearForSort.CompareTo(compareObj.YearForSort)== 0)
+                    {
+                        /*if (this.CategoryNumber.CompareTo(compareObj.CategoryNumber) == 0)
+                        {
+                                return this.FileType.CompareTo(compareObj.FileType);
+                        }
+                        else return this.CategoryNumber.CompareTo(compareObj.CategoryNumber);*/
+                        return - this.Deadline.CompareTo(compareObj.Deadline);
+                    } else  return this.YearForSort.CompareTo(compareObj.YearForSort);
+                }
+                else
+                {
+                    throw new ArgumentException("Object is not a MyObject ");
                 }
             }
 
@@ -346,10 +450,10 @@ namespace SecondProject
                 {
                     MyRow row = (MyRow)obj;
                     if ((this.Year == row.Year) 
-                        && (this.Location.Equals(row.Location)) 
+                        && (this.Location.Equals(row.Location))
                         && (this.CategoryNumber.Equals(row.CategoryNumber))
-                        && (this.CategoryName.Equals(row.CategoryName))
                         && (this.FileType.Equals(row.FileType))
+                        && (this.Deadline.Equals(row.Deadline))
                         )
                     {
                         ret = true;
