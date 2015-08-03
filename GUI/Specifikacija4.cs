@@ -46,7 +46,7 @@ namespace GUI
         private int ContainerCodeColumn;
         private int YearColumn;
 
-        // Can be used for error checing
+        // Can be used for error checking
         private int rowNumber;
         private StreamWriter logFile;
         #endregion
@@ -152,7 +152,7 @@ namespace GUI
                 string rowStr = "";
                 joinRow(ref rowStr, row);
 
-                if (rowStr.Contains("Page"))
+                if (rowStr.Contains("Page") || rowStr.Contains("PAGE"))
                 {
                     managePage(rowStr);
                     continue;
@@ -213,12 +213,12 @@ namespace GUI
                 printToSheet();
                 return;
             }
-            else if (nextRowStr.Contains("Description:"))
+            else if (nextRowStr.Contains("Description"))
             {
                 manageDescription(nextRowStr, nextRow, ++rowIndex);
                 rowNumber++;
             }
-            else if (nextRowStr.Contains("Contents:"))
+            else if (nextRowStr.Contains("Contents"))
             {
                 manageContents(++rowIndex);
                 rowNumber++;
