@@ -344,9 +344,20 @@ namespace GUI
                     Row nextRow = sheet.Cells.GetRow(rowIndex + 1);
                     string nextRowStr = "";
                     joinRow(ref nextRowStr, nextRow);
+                    // If next row is another content or new containter code than print.
                     if (nextRowStr.StartsWith("-") || regContCode.IsMatch(nextRow.GetCell(0).StringValue))
                     {
                         printToSheet();
+                    }
+                    // if it's empty row check the row afterwards.
+                    else if (nextRowStr.Equals(""))
+                    {
+                        nextRow = sheet.Cells.GetRow(rowIndex + 2);
+                        joinRow(ref nextRowStr, nextRow);
+                        if (nextRowStr.StartsWith("-") || regContCode.IsMatch(nextRow.GetCell(0).StringValue))
+                        {
+                            printToSheet();
+                        }
                     }
                 }
                 catch (Exception e)
@@ -436,6 +447,8 @@ namespace GUI
 
                     printToSheet();
                     DetailsOthers = "";
+                    // changed in last version doesn't pick up lines because of this.
+                    oldRemarks = "";
                 }
                 else
                 {
@@ -448,6 +461,8 @@ namespace GUI
 
                     printToSheet();
                     DetailsOthers = "";
+                    // changed in last version doesn't pick up lines because of this.
+                    oldRemarks = "";
                 }
             }
             else
