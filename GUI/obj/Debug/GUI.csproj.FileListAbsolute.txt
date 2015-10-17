@@ -8,3 +8,14 @@ C:\Users\Milan\Source\Repos\pdftoexcel\GUI\obj\Debug\GUI.Properties.Resources.re
 C:\Users\Milan\Source\Repos\pdftoexcel\GUI\obj\Debug\GUI.csproj.GenerateResource.Cache
 C:\Users\Milan\Source\Repos\pdftoexcel\GUI\obj\Debug\GUI.exe
 C:\Users\Milan\Source\Repos\pdftoexcel\GUI\obj\Debug\GUI.pdb
+D:\GitRepos\pdftoexcel\GUI\bin\Debug\GUI.exe.config
+D:\GitRepos\pdftoexcel\GUI\bin\Debug\GUI.exe
+D:\GitRepos\pdftoexcel\GUI\bin\Debug\GUI.pdb
+D:\GitRepos\pdftoexcel\GUI\bin\Debug\ExcelLibrary.dll
+D:\GitRepos\pdftoexcel\GUI\obj\Debug\GUI.csprojResolveAssemblyReference.cache
+D:\GitRepos\pdftoexcel\GUI\obj\Debug\GUI.ChooseDiag.resources
+D:\GitRepos\pdftoexcel\GUI\obj\Debug\GUI.Form1.resources
+D:\GitRepos\pdftoexcel\GUI\obj\Debug\GUI.Properties.Resources.resources
+D:\GitRepos\pdftoexcel\GUI\obj\Debug\GUI.csproj.GenerateResource.Cache
+D:\GitRepos\pdftoexcel\GUI\obj\Debug\GUI.exe
+D:\GitRepos\pdftoexcel\GUI\obj\Debug\GUI.pdb
