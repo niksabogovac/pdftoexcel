@@ -8,28 +8,45 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+
 namespace QR_Code
 {
+    /// <summary>
+    /// Form used user identification.
+    /// </summary>
     public partial class LoginForm : Form
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LoginForm"/> class.
+        /// </summary>
         public LoginForm()
         {
             InitializeComponent();
         }
 
-        private void bCancel_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Handles the click on cancel button.
+        /// </summary>
+        /// <param name="sender">Sending object aka the button itself.</param>
+        /// <param name="e">Following arguments.</param>
+        private void BCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             Close();
         }
 
-        private void bOK_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Handles the click on cancel button.
+        /// </summary>
+        /// <param name="sender">Sending object aka the button itself.</param>
+        /// <param name="e">Following arguments.</param>
+        private void BOK_Click(object sender, EventArgs e)
         {
             try
             {
                 SqlConnection conn = new SqlConnection("Data Source=DESKTOP-DMTBJFE;Integrated Security=True");
                 conn.Open();
-                SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[Users] WHERE [JMBG]=" + tbPass.Text,conn);
+                SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[Users] WHERE [JMBG]=" + tbPass.Text, conn);
 
                 SqlDataReader reader = command.ExecuteReader();
                 if (reader.HasRows)
@@ -45,7 +62,7 @@ namespace QR_Code
                 }
                 conn.Close();
             }
-            catch(Exception o)
+            catch (Exception)
             {
                 MessageBox.Show("Neuspesno ste se prijavili pokusajte ponovo.");
                 DialogResult = DialogResult.Cancel;

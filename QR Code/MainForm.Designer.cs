@@ -28,7 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.pUpper = new System.Windows.Forms.Panel();
+            this.bAddData = new System.Windows.Forms.Button();
+            this.tbQr = new System.Windows.Forms.TextBox();
+            this.lQr = new System.Windows.Forms.Label();
             this.tbOrderNum = new System.Windows.Forms.TextBox();
             this.lOrderNum = new System.Windows.Forms.Label();
             this.lWorker = new System.Windows.Forms.Label();
@@ -39,8 +43,8 @@
             this.pGreen = new System.Windows.Forms.Panel();
             this.lNumFilesGreen = new System.Windows.Forms.Label();
             this.lStatusGreen = new System.Windows.Forms.Label();
-            this.tbGreen = new System.Windows.Forms.TextBox();
             this.lGreen = new System.Windows.Forms.Label();
+            this.tbGreen = new System.Windows.Forms.TextBox();
             this.bCloseGreen = new System.Windows.Forms.Button();
             this.pRed = new System.Windows.Forms.Panel();
             this.lNumFilesRed = new System.Windows.Forms.Label();
@@ -51,8 +55,8 @@
             this.pYellow = new System.Windows.Forms.Panel();
             this.lNumFilesYellow = new System.Windows.Forms.Label();
             this.lStatusYellow = new System.Windows.Forms.Label();
-            this.tbYellow = new System.Windows.Forms.TextBox();
             this.lYellow = new System.Windows.Forms.Label();
+            this.tbYellow = new System.Windows.Forms.TextBox();
             this.bCloseYellow = new System.Windows.Forms.Button();
             this.pBlue = new System.Windows.Forms.Panel();
             this.lNumFilesBlue = new System.Windows.Forms.Label();
@@ -60,8 +64,7 @@
             this.tbBlue = new System.Windows.Forms.TextBox();
             this.lBlue = new System.Windows.Forms.Label();
             this.bCloseBlue = new System.Windows.Forms.Button();
-            this.tbQr = new System.Windows.Forms.TextBox();
-            this.lQr = new System.Windows.Forms.Label();
+            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.pUpper.SuspendLayout();
             this.mMain.SuspendLayout();
             this.tlpLower.SuspendLayout();
@@ -69,10 +72,12 @@
             this.pRed.SuspendLayout();
             this.pYellow.SuspendLayout();
             this.pBlue.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // pUpper
             // 
+            this.pUpper.Controls.Add(this.bAddData);
             this.pUpper.Controls.Add(this.tbQr);
             this.pUpper.Controls.Add(this.lQr);
             this.pUpper.Controls.Add(this.tbOrderNum);
@@ -83,6 +88,35 @@
             this.pUpper.Name = "pUpper";
             this.pUpper.Size = new System.Drawing.Size(1315, 74);
             this.pUpper.TabIndex = 0;
+            // 
+            // bAddData
+            // 
+            this.bAddData.Location = new System.Drawing.Point(414, 41);
+            this.bAddData.Name = "bAddData";
+            this.bAddData.Size = new System.Drawing.Size(103, 23);
+            this.bAddData.TabIndex = 7;
+            this.bAddData.Text = "Unesi";
+            this.bAddData.UseVisualStyleBackColor = true;
+            this.bAddData.MouseClick += new System.Windows.Forms.MouseEventHandler(this.AddDataMouseClick);
+            // 
+            // tbQr
+            // 
+            this.tbQr.Location = new System.Drawing.Point(541, 14);
+            this.tbQr.Multiline = true;
+            this.tbQr.Name = "tbQr";
+            this.tbQr.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbQr.Size = new System.Drawing.Size(458, 50);
+            this.tbQr.TabIndex = 6;
+            this.tbQr.TextChanged += new System.EventHandler(this.QrCodeEntered);
+            // 
+            // lQr
+            // 
+            this.lQr.AutoSize = true;
+            this.lQr.Location = new System.Drawing.Point(411, 13);
+            this.lQr.Name = "lQr";
+            this.lQr.Size = new System.Drawing.Size(106, 13);
+            this.lQr.TabIndex = 5;
+            this.lQr.Text = "Unesite QR Kod fajla";
             // 
             // tbOrderNum
             // 
@@ -103,7 +137,7 @@
             // lWorker
             // 
             this.lWorker.AutoSize = true;
-            this.lWorker.Location = new System.Drawing.Point(447, 14);
+            this.lWorker.Location = new System.Drawing.Point(12, 13);
             this.lWorker.Name = "lWorker";
             this.lWorker.Size = new System.Drawing.Size(50, 13);
             this.lWorker.TabIndex = 0;
@@ -157,8 +191,8 @@
             this.pGreen.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.pGreen.Controls.Add(this.lNumFilesGreen);
             this.pGreen.Controls.Add(this.lStatusGreen);
-            this.pGreen.Controls.Add(this.tbGreen);
             this.pGreen.Controls.Add(this.lGreen);
+            this.pGreen.Controls.Add(this.tbGreen);
             this.pGreen.Controls.Add(this.bCloseGreen);
             this.pGreen.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pGreen.Location = new System.Drawing.Point(3, 3);
@@ -184,13 +218,6 @@
             this.lStatusGreen.TabIndex = 3;
             this.lStatusGreen.Text = "Status: Zatvorena";
             // 
-            // tbGreen
-            // 
-            this.tbGreen.Location = new System.Drawing.Point(125, 15);
-            this.tbGreen.Name = "tbGreen";
-            this.tbGreen.Size = new System.Drawing.Size(194, 20);
-            this.tbGreen.TabIndex = 2;
-            // 
             // lGreen
             // 
             this.lGreen.AutoSize = true;
@@ -200,6 +227,13 @@
             this.lGreen.TabIndex = 1;
             this.lGreen.Text = "Unesite kod za kutiju:";
             // 
+            // tbGreen
+            // 
+            this.tbGreen.Location = new System.Drawing.Point(124, 15);
+            this.tbGreen.Name = "tbGreen";
+            this.tbGreen.Size = new System.Drawing.Size(178, 20);
+            this.tbGreen.TabIndex = 2;
+            // 
             // bCloseGreen
             // 
             this.bCloseGreen.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -207,8 +241,9 @@
             this.bCloseGreen.Name = "bCloseGreen";
             this.bCloseGreen.Size = new System.Drawing.Size(322, 35);
             this.bCloseGreen.TabIndex = 3;
-            this.bCloseGreen.Text = "Zatvori";
+            this.bCloseGreen.Text = "Otvori";
             this.bCloseGreen.UseVisualStyleBackColor = true;
+            this.bCloseGreen.Click += new System.EventHandler(this.OpenCloseGreenBoxMouseClick);
             // 
             // pRed
             // 
@@ -246,7 +281,7 @@
             // 
             this.tbRed.Location = new System.Drawing.Point(119, 15);
             this.tbRed.Name = "tbRed";
-            this.tbRed.Size = new System.Drawing.Size(200, 20);
+            this.tbRed.Size = new System.Drawing.Size(178, 20);
             this.tbRed.TabIndex = 4;
             // 
             // lRed
@@ -265,16 +300,17 @@
             this.bCloseRed.Name = "bCloseRed";
             this.bCloseRed.Size = new System.Drawing.Size(322, 35);
             this.bCloseRed.TabIndex = 5;
-            this.bCloseRed.Text = "Zatvori";
+            this.bCloseRed.Text = "Otvori";
             this.bCloseRed.UseVisualStyleBackColor = true;
+            this.bCloseRed.Click += new System.EventHandler(this.OpenCloseRedBoxMouseClick);
             // 
             // pYellow
             // 
             this.pYellow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.pYellow.Controls.Add(this.lNumFilesYellow);
             this.pYellow.Controls.Add(this.lStatusYellow);
-            this.pYellow.Controls.Add(this.tbYellow);
             this.pYellow.Controls.Add(this.lYellow);
+            this.pYellow.Controls.Add(this.tbYellow);
             this.pYellow.Controls.Add(this.bCloseYellow);
             this.pYellow.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pYellow.Location = new System.Drawing.Point(659, 3);
@@ -300,13 +336,6 @@
             this.lStatusYellow.TabIndex = 7;
             this.lStatusYellow.Text = "Status: Zatvorena";
             // 
-            // tbYellow
-            // 
-            this.tbYellow.Location = new System.Drawing.Point(119, 18);
-            this.tbYellow.Name = "tbYellow";
-            this.tbYellow.Size = new System.Drawing.Size(200, 20);
-            this.tbYellow.TabIndex = 6;
-            // 
             // lYellow
             // 
             this.lYellow.AutoSize = true;
@@ -316,6 +345,13 @@
             this.lYellow.TabIndex = 3;
             this.lYellow.Text = "Unesite kod za kutiju:";
             // 
+            // tbYellow
+            // 
+            this.tbYellow.Location = new System.Drawing.Point(115, 15);
+            this.tbYellow.Name = "tbYellow";
+            this.tbYellow.Size = new System.Drawing.Size(178, 20);
+            this.tbYellow.TabIndex = 6;
+            // 
             // bCloseYellow
             // 
             this.bCloseYellow.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -323,8 +359,9 @@
             this.bCloseYellow.Name = "bCloseYellow";
             this.bCloseYellow.Size = new System.Drawing.Size(322, 35);
             this.bCloseYellow.TabIndex = 7;
-            this.bCloseYellow.Text = "Zatvori";
+            this.bCloseYellow.Text = "Otvori";
             this.bCloseYellow.UseVisualStyleBackColor = true;
+            this.bCloseYellow.Click += new System.EventHandler(this.OpenCloseYellowBoxMouseClick);
             // 
             // pBlue
             // 
@@ -360,9 +397,9 @@
             // 
             // tbBlue
             // 
-            this.tbBlue.Location = new System.Drawing.Point(119, 18);
+            this.tbBlue.Location = new System.Drawing.Point(118, 15);
             this.tbBlue.Name = "tbBlue";
-            this.tbBlue.Size = new System.Drawing.Size(203, 20);
+            this.tbBlue.Size = new System.Drawing.Size(178, 20);
             this.tbBlue.TabIndex = 8;
             // 
             // lBlue
@@ -381,24 +418,13 @@
             this.bCloseBlue.Name = "bCloseBlue";
             this.bCloseBlue.Size = new System.Drawing.Size(325, 35);
             this.bCloseBlue.TabIndex = 9;
-            this.bCloseBlue.Text = "Zatvori";
+            this.bCloseBlue.Text = "Otvori";
             this.bCloseBlue.UseVisualStyleBackColor = true;
+            this.bCloseBlue.Click += new System.EventHandler(this.OpenCloseBlueBoxMouseClick);
             // 
-            // tbQr
+            // errorProvider
             // 
-            this.tbQr.Location = new System.Drawing.Point(758, 43);
-            this.tbQr.Name = "tbQr";
-            this.tbQr.Size = new System.Drawing.Size(194, 20);
-            this.tbQr.TabIndex = 6;
-            // 
-            // lQr
-            // 
-            this.lQr.AutoSize = true;
-            this.lQr.Location = new System.Drawing.Point(589, 43);
-            this.lQr.Name = "lQr";
-            this.lQr.Size = new System.Drawing.Size(106, 13);
-            this.lQr.TabIndex = 5;
-            this.lQr.Text = "Unesite QR Kod fajla";
+            this.errorProvider.ContainerControl = this;
             // 
             // MainForm
             // 
@@ -412,7 +438,6 @@
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Program";
-            this.Load += new System.EventHandler(this.fMain_Load);
             this.pUpper.ResumeLayout(false);
             this.pUpper.PerformLayout();
             this.mMain.ResumeLayout(false);
@@ -426,6 +451,7 @@
             this.pYellow.PerformLayout();
             this.pBlue.ResumeLayout(false);
             this.pBlue.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -467,6 +493,8 @@
         private System.Windows.Forms.Label lOrderNum;
         private System.Windows.Forms.TextBox tbQr;
         private System.Windows.Forms.Label lQr;
+        private System.Windows.Forms.Button bAddData;
+        private System.Windows.Forms.ErrorProvider errorProvider;
     }
 }
 

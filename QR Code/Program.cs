@@ -6,13 +6,16 @@ using System.Windows.Forms;
 
 namespace QR_Code
 {
-    static class Program
+    /// <summary>
+    /// Startup class.
+    /// </summary>
+    public static class Program
     {
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        public static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -20,7 +23,7 @@ namespace QR_Code
             LoginForm loginForm = new LoginForm();
             DialogResult result = loginForm.ShowDialog();
 
-            while(result != DialogResult.Cancel)
+            while (result != DialogResult.Cancel)
             {
                 if (result == DialogResult.OK)
                 {
@@ -33,7 +36,6 @@ namespace QR_Code
                     loginForm.ShowDialog();
                 }
             }     
-
         }
     }
 }

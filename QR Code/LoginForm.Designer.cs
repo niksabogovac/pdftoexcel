@@ -1,10 +1,13 @@
 ﻿namespace QR_Code
 {
-    partial class LoginForm
+    /// <summary>
+    /// Form that is shown when application is started. Used for identifying current user.
+    /// </summary>
+    public partial class LoginForm
     {
         /// <summary>
         /// Required designer variable.
-        /// </summary>
+        /// </summary>  
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
@@ -17,6 +20,7 @@
             {
                 components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
@@ -77,7 +81,7 @@
             this.bOK.TabIndex = 4;
             this.bOK.Text = "Potvrdi";
             this.bOK.UseVisualStyleBackColor = true;
-            this.bOK.Click += new System.EventHandler(this.bOK_Click);
+            this.bOK.Click += new System.EventHandler(this.BOK_Click);
             // 
             // bCancel
             // 
@@ -87,7 +91,7 @@
             this.bCancel.TabIndex = 5;
             this.bCancel.Text = "Otkaži";
             this.bCancel.UseVisualStyleBackColor = true;
-            this.bCancel.Click += new System.EventHandler(this.bCancel_Click);
+            this.bCancel.Click += new System.EventHandler(this.BCancel_Click);
             // 
             // LoginForm
             // 
