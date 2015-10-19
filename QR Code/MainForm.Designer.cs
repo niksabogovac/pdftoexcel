@@ -65,6 +65,10 @@
             this.lBlue = new System.Windows.Forms.Label();
             this.bCloseBlue = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.lGreenTableName = new System.Windows.Forms.Label();
+            this.lRedTableName = new System.Windows.Forms.Label();
+            this.lYellowTableName = new System.Windows.Forms.Label();
+            this.lBlueTableName = new System.Windows.Forms.Label();
             this.pUpper.SuspendLayout();
             this.mMain.SuspendLayout();
             this.tlpLower.SuspendLayout();
@@ -189,6 +193,7 @@
             // pGreen
             // 
             this.pGreen.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.pGreen.Controls.Add(this.lGreenTableName);
             this.pGreen.Controls.Add(this.lNumFilesGreen);
             this.pGreen.Controls.Add(this.lStatusGreen);
             this.pGreen.Controls.Add(this.lGreen);
@@ -221,7 +226,7 @@
             // lGreen
             // 
             this.lGreen.AutoSize = true;
-            this.lGreen.Location = new System.Drawing.Point(9, 15);
+            this.lGreen.Location = new System.Drawing.Point(9, 46);
             this.lGreen.Name = "lGreen";
             this.lGreen.Size = new System.Drawing.Size(109, 13);
             this.lGreen.TabIndex = 1;
@@ -229,7 +234,7 @@
             // 
             // tbGreen
             // 
-            this.tbGreen.Location = new System.Drawing.Point(124, 15);
+            this.tbGreen.Location = new System.Drawing.Point(124, 46);
             this.tbGreen.Name = "tbGreen";
             this.tbGreen.Size = new System.Drawing.Size(178, 20);
             this.tbGreen.TabIndex = 2;
@@ -248,6 +253,7 @@
             // pRed
             // 
             this.pRed.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.pRed.Controls.Add(this.lRedTableName);
             this.pRed.Controls.Add(this.lNumFilesRed);
             this.pRed.Controls.Add(this.lStatusRed);
             this.pRed.Controls.Add(this.tbRed);
@@ -279,7 +285,7 @@
             // 
             // tbRed
             // 
-            this.tbRed.Location = new System.Drawing.Point(119, 15);
+            this.tbRed.Location = new System.Drawing.Point(131, 46);
             this.tbRed.Name = "tbRed";
             this.tbRed.Size = new System.Drawing.Size(178, 20);
             this.tbRed.TabIndex = 4;
@@ -287,7 +293,7 @@
             // lRed
             // 
             this.lRed.AutoSize = true;
-            this.lRed.Location = new System.Drawing.Point(4, 15);
+            this.lRed.Location = new System.Drawing.Point(16, 46);
             this.lRed.Name = "lRed";
             this.lRed.Size = new System.Drawing.Size(109, 13);
             this.lRed.TabIndex = 3;
@@ -307,6 +313,7 @@
             // pYellow
             // 
             this.pYellow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.pYellow.Controls.Add(this.lYellowTableName);
             this.pYellow.Controls.Add(this.lNumFilesYellow);
             this.pYellow.Controls.Add(this.lStatusYellow);
             this.pYellow.Controls.Add(this.lYellow);
@@ -339,7 +346,7 @@
             // lYellow
             // 
             this.lYellow.AutoSize = true;
-            this.lYellow.Location = new System.Drawing.Point(3, 18);
+            this.lYellow.Location = new System.Drawing.Point(12, 46);
             this.lYellow.Name = "lYellow";
             this.lYellow.Size = new System.Drawing.Size(109, 13);
             this.lYellow.TabIndex = 3;
@@ -347,7 +354,7 @@
             // 
             // tbYellow
             // 
-            this.tbYellow.Location = new System.Drawing.Point(115, 15);
+            this.tbYellow.Location = new System.Drawing.Point(124, 43);
             this.tbYellow.Name = "tbYellow";
             this.tbYellow.Size = new System.Drawing.Size(178, 20);
             this.tbYellow.TabIndex = 6;
@@ -366,6 +373,7 @@
             // pBlue
             // 
             this.pBlue.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.pBlue.Controls.Add(this.lBlueTableName);
             this.pBlue.Controls.Add(this.lNumFilesBlue);
             this.pBlue.Controls.Add(this.lStatusBlue);
             this.pBlue.Controls.Add(this.tbBlue);
@@ -397,7 +405,7 @@
             // 
             // tbBlue
             // 
-            this.tbBlue.Location = new System.Drawing.Point(118, 15);
+            this.tbBlue.Location = new System.Drawing.Point(112, 43);
             this.tbBlue.Name = "tbBlue";
             this.tbBlue.Size = new System.Drawing.Size(178, 20);
             this.tbBlue.TabIndex = 8;
@@ -405,7 +413,7 @@
             // lBlue
             // 
             this.lBlue.AutoSize = true;
-            this.lBlue.Location = new System.Drawing.Point(3, 18);
+            this.lBlue.Location = new System.Drawing.Point(-3, 46);
             this.lBlue.Name = "lBlue";
             this.lBlue.Size = new System.Drawing.Size(109, 13);
             this.lBlue.TabIndex = 3;
@@ -425,6 +433,42 @@
             // errorProvider
             // 
             this.errorProvider.ContainerControl = this;
+            // 
+            // lGreenTableName
+            // 
+            this.lGreenTableName.AutoSize = true;
+            this.lGreenTableName.Location = new System.Drawing.Point(121, 9);
+            this.lGreenTableName.Name = "lGreenTableName";
+            this.lGreenTableName.Size = new System.Drawing.Size(55, 13);
+            this.lGreenTableName.TabIndex = 5;
+            this.lGreenTableName.Text = "Pozajmice";
+            // 
+            // lRedTableName
+            // 
+            this.lRedTableName.AutoSize = true;
+            this.lRedTableName.Location = new System.Drawing.Point(128, 9);
+            this.lRedTableName.Name = "lRedTableName";
+            this.lRedTableName.Size = new System.Drawing.Size(36, 13);
+            this.lRedTableName.TabIndex = 7;
+            this.lRedTableName.Text = "Krediti";
+            // 
+            // lYellowTableName
+            // 
+            this.lYellowTableName.AutoSize = true;
+            this.lYellowTableName.Location = new System.Drawing.Point(121, 9);
+            this.lYellowTableName.Name = "lYellowTableName";
+            this.lYellowTableName.Size = new System.Drawing.Size(41, 13);
+            this.lYellowTableName.TabIndex = 9;
+            this.lYellowTableName.Text = "Računi";
+            // 
+            // lBlueTableName
+            // 
+            this.lBlueTableName.AutoSize = true;
+            this.lBlueTableName.Location = new System.Drawing.Point(109, 9);
+            this.lBlueTableName.Name = "lBlueTableName";
+            this.lBlueTableName.Size = new System.Drawing.Size(50, 13);
+            this.lBlueTableName.TabIndex = 10;
+            this.lBlueTableName.Text = "Oročenja";
             // 
             // MainForm
             // 
@@ -495,6 +539,10 @@
         private System.Windows.Forms.Label lQr;
         private System.Windows.Forms.Button bAddData;
         private System.Windows.Forms.ErrorProvider errorProvider;
+        private System.Windows.Forms.Label lGreenTableName;
+        private System.Windows.Forms.Label lRedTableName;
+        private System.Windows.Forms.Label lYellowTableName;
+        private System.Windows.Forms.Label lBlueTableName;
     }
 }
 

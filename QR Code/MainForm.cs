@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -68,8 +69,6 @@ namespace QR_Code
         }
         #endregion
 
-
-
         #region Private methods
 
         /// <summary>
@@ -88,7 +87,47 @@ namespace QR_Code
             errorProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.AlwaysBlink;
         }
 
-        
+        // NOT FINISHED IMPLEMENTING. CHECK THEIR EXAMPLE TO SEE MISTAKES AND PROBLEM.
+        /// <summary>
+        /// Calculates box code of existing opened boxes from input document type.
+        /// </summary>
+        /// <param name="doctype">Input document type.</param>
+        /// <returns>Output box code.</returns>
+        private string GetBoxCodeFromDocType(string doctype)
+        {
+       
+            doctype = doctype.ToUpper();
+            if (doctype.Equals("ODTR"))
+            {
+                return tbYellow.Text;
+            }
+            else
+            {
+                return null;
+            }
+
+          
+        }
+
+        /// <summary>
+        /// Inserts into BankTable database table.
+        /// </summary>
+        /// <param name="id">Unique id.</param>
+        /// <param name="boxCode">Code of open box.</param>
+        /// <param name="code">Read QR code.</param>
+        private void InsertoBankTable(string id, string boxCode, string code)
+        {
+            SqlConnection conn = new SqlConnection("Data Source=DESKTOP-DMTBJFE;Integrated Security=True");
+            conn.Open();
+            SqlCommand command = new SqlCommand("INSERT INTO [QRCode].[dbo].[BankTable] VALUES (@id, @orderNum, @boxCode, @jmbg, @code)", conn);
+            command.Parameters.AddWithValue("@id", id);
+            command.Parameters.AddWithValue("@orderNum", tbOrderNum.Text);
+            command.Parameters.AddWithValue("@boxCode", boxCode);
+            command.Parameters.AddWithValue("@jmbg", jmbg);
+            command.Parameters.AddWithValue("@code", code);
+            command.ExecuteNonQuery();
+            conn.Close();
+        }
 
         #region Event handlers
         /// <summary>
@@ -293,28 +332,59 @@ namespace QR_Code
             {
                 errorProvider.SetError((Button)sender, string.Empty);
                 // Get QR Code.
+                string startCode = tbQr.Text;
                 string code = tbQr.Text;
                 // ID of scanned code.
                 string id = null;
+                // Type of docyment of scanned code.
+                string doctype = null;
 
-                // Separate clien infos and remove ".
+                // Remove all non-ASCII characters.
+                code = Regex.Replace(code, @"[^\u0000-\u007F]", string.Empty);
+
+                // Remove { and }.
+                code = Regex.Replace(code, "{", string.Empty);
+                code = Regex.Replace(code, "}", string.Empty);
+                
+                // Separate client infos and remove ".
                 string[] stringSeparators = new string[] { "," };
                 string[] tokens = code.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
 
+
+                
                 foreach (string clientInfo in tokens)
                 {
-                    Regex.Replace(clientInfo, "\"", string.Empty);
+                    string tmp = Regex.Replace(clientInfo, "\"", string.Empty);
                     string[] tmpSeparator = new string[] { ":" };
-                    string[] tmpTokens = clientInfo.Split(tmpSeparator, StringSplitOptions.RemoveEmptyEntries);
+                    string[] tmpTokens = tmp.Split(tmpSeparator, StringSplitOptions.RemoveEmptyEntries);
                     if (tmpTokens[0].Equals("id"))
                     {
                         // Get id.
                         id = tmpTokens[1];
+                    }
+                    else if (tmpTokens[0].Equals("doctype"))
+                    {
+                        // Get type of document.
+                        doctype = tmpTokens[1];
+                    }
+
+                    // Both found break.
+                    if (id != null && doctype != null)
+                    {
                         break;
                     }
                 }
 
+                string boxCode = GetBoxCodeFromDocType(doctype);
 
+                try
+                {
+                    InsertoBankTable(id, boxCode, startCode);
+                }
+                catch (Exception)
+                {
+
+                }
                 
             }
 
