@@ -41,34 +41,35 @@
             this.miHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.tlpLower = new System.Windows.Forms.TableLayoutPanel();
             this.pGreen = new System.Windows.Forms.Panel();
+            this.lGreenTableName = new System.Windows.Forms.Label();
             this.lNumFilesGreen = new System.Windows.Forms.Label();
             this.lStatusGreen = new System.Windows.Forms.Label();
             this.lGreen = new System.Windows.Forms.Label();
             this.tbGreen = new System.Windows.Forms.TextBox();
             this.bCloseGreen = new System.Windows.Forms.Button();
             this.pRed = new System.Windows.Forms.Panel();
+            this.lRedTableName = new System.Windows.Forms.Label();
             this.lNumFilesRed = new System.Windows.Forms.Label();
             this.lStatusRed = new System.Windows.Forms.Label();
             this.tbRed = new System.Windows.Forms.TextBox();
             this.lRed = new System.Windows.Forms.Label();
             this.bCloseRed = new System.Windows.Forms.Button();
             this.pYellow = new System.Windows.Forms.Panel();
+            this.lYellowTableName = new System.Windows.Forms.Label();
             this.lNumFilesYellow = new System.Windows.Forms.Label();
             this.lStatusYellow = new System.Windows.Forms.Label();
             this.lYellow = new System.Windows.Forms.Label();
             this.tbYellow = new System.Windows.Forms.TextBox();
             this.bCloseYellow = new System.Windows.Forms.Button();
             this.pBlue = new System.Windows.Forms.Panel();
+            this.lBlueTableName = new System.Windows.Forms.Label();
             this.lNumFilesBlue = new System.Windows.Forms.Label();
             this.lStatusBlue = new System.Windows.Forms.Label();
             this.tbBlue = new System.Windows.Forms.TextBox();
             this.lBlue = new System.Windows.Forms.Label();
             this.bCloseBlue = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.lGreenTableName = new System.Windows.Forms.Label();
-            this.lRedTableName = new System.Windows.Forms.Label();
-            this.lYellowTableName = new System.Windows.Forms.Label();
-            this.lBlueTableName = new System.Windows.Forms.Label();
+            this.lNotification = new System.Windows.Forms.Label();
             this.pUpper.SuspendLayout();
             this.mMain.SuspendLayout();
             this.tlpLower.SuspendLayout();
@@ -81,6 +82,7 @@
             // 
             // pUpper
             // 
+            this.pUpper.Controls.Add(this.lNotification);
             this.pUpper.Controls.Add(this.bAddData);
             this.pUpper.Controls.Add(this.tbQr);
             this.pUpper.Controls.Add(this.lQr);
@@ -90,7 +92,7 @@
             this.pUpper.Dock = System.Windows.Forms.DockStyle.Top;
             this.pUpper.Location = new System.Drawing.Point(0, 24);
             this.pUpper.Name = "pUpper";
-            this.pUpper.Size = new System.Drawing.Size(1315, 74);
+            this.pUpper.Size = new System.Drawing.Size(1017, 74);
             this.pUpper.TabIndex = 0;
             // 
             // bAddData
@@ -98,7 +100,7 @@
             this.bAddData.Location = new System.Drawing.Point(414, 41);
             this.bAddData.Name = "bAddData";
             this.bAddData.Size = new System.Drawing.Size(103, 23);
-            this.bAddData.TabIndex = 7;
+            this.bAddData.TabIndex = 11;
             this.bAddData.Text = "Unesi";
             this.bAddData.UseVisualStyleBackColor = true;
             this.bAddData.MouseClick += new System.Windows.Forms.MouseEventHandler(this.AddDataMouseClick);
@@ -106,12 +108,12 @@
             // tbQr
             // 
             this.tbQr.Location = new System.Drawing.Point(541, 14);
-            this.tbQr.Multiline = true;
             this.tbQr.Name = "tbQr";
-            this.tbQr.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbQr.Size = new System.Drawing.Size(458, 50);
-            this.tbQr.TabIndex = 6;
-            this.tbQr.TextChanged += new System.EventHandler(this.QrCodeEntered);
+            this.tbQr.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
+            this.tbQr.Size = new System.Drawing.Size(458, 20);
+            this.tbQr.TabIndex = 10;
+            this.tbQr.TextChanged += new System.EventHandler(this.QrCodeValueChanged);
+            this.tbQr.Enter += new System.EventHandler(this.QrCodeEntered);
             // 
             // lQr
             // 
@@ -127,7 +129,7 @@
             this.tbOrderNum.Location = new System.Drawing.Point(182, 43);
             this.tbOrderNum.Name = "tbOrderNum";
             this.tbOrderNum.Size = new System.Drawing.Size(194, 20);
-            this.tbOrderNum.TabIndex = 4;
+            this.tbOrderNum.TabIndex = 1;
             // 
             // lOrderNum
             // 
@@ -154,7 +156,7 @@
             this.miHelp});
             this.mMain.Location = new System.Drawing.Point(0, 0);
             this.mMain.Name = "mMain";
-            this.mMain.Size = new System.Drawing.Size(1315, 24);
+            this.mMain.Size = new System.Drawing.Size(1017, 24);
             this.mMain.TabIndex = 1;
             this.mMain.Text = "mGlavni";
             // 
@@ -187,7 +189,7 @@
             this.tlpLower.RowCount = 1;
             this.tlpLower.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpLower.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpLower.Size = new System.Drawing.Size(1315, 375);
+            this.tlpLower.Size = new System.Drawing.Size(1017, 375);
             this.tlpLower.TabIndex = 2;
             // 
             // pGreen
@@ -202,8 +204,17 @@
             this.pGreen.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pGreen.Location = new System.Drawing.Point(3, 3);
             this.pGreen.Name = "pGreen";
-            this.pGreen.Size = new System.Drawing.Size(322, 369);
+            this.pGreen.Size = new System.Drawing.Size(248, 369);
             this.pGreen.TabIndex = 0;
+            // 
+            // lGreenTableName
+            // 
+            this.lGreenTableName.AutoSize = true;
+            this.lGreenTableName.Location = new System.Drawing.Point(121, 9);
+            this.lGreenTableName.Name = "lGreenTableName";
+            this.lGreenTableName.Size = new System.Drawing.Size(55, 13);
+            this.lGreenTableName.TabIndex = 5;
+            this.lGreenTableName.Text = "Pozajmice";
             // 
             // lNumFilesGreen
             // 
@@ -234,7 +245,7 @@
             // 
             // tbGreen
             // 
-            this.tbGreen.Location = new System.Drawing.Point(124, 46);
+            this.tbGreen.Location = new System.Drawing.Point(13, 62);
             this.tbGreen.Name = "tbGreen";
             this.tbGreen.Size = new System.Drawing.Size(178, 20);
             this.tbGreen.TabIndex = 2;
@@ -244,7 +255,7 @@
             this.bCloseGreen.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.bCloseGreen.Location = new System.Drawing.Point(0, 334);
             this.bCloseGreen.Name = "bCloseGreen";
-            this.bCloseGreen.Size = new System.Drawing.Size(322, 35);
+            this.bCloseGreen.Size = new System.Drawing.Size(248, 35);
             this.bCloseGreen.TabIndex = 3;
             this.bCloseGreen.Text = "Otvori";
             this.bCloseGreen.UseVisualStyleBackColor = true;
@@ -260,10 +271,19 @@
             this.pRed.Controls.Add(this.lRed);
             this.pRed.Controls.Add(this.bCloseRed);
             this.pRed.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pRed.Location = new System.Drawing.Point(331, 3);
+            this.pRed.Location = new System.Drawing.Point(257, 3);
             this.pRed.Name = "pRed";
-            this.pRed.Size = new System.Drawing.Size(322, 369);
+            this.pRed.Size = new System.Drawing.Size(248, 369);
             this.pRed.TabIndex = 1;
+            // 
+            // lRedTableName
+            // 
+            this.lRedTableName.AutoSize = true;
+            this.lRedTableName.Location = new System.Drawing.Point(128, 9);
+            this.lRedTableName.Name = "lRedTableName";
+            this.lRedTableName.Size = new System.Drawing.Size(36, 13);
+            this.lRedTableName.TabIndex = 7;
+            this.lRedTableName.Text = "Krediti";
             // 
             // lNumFilesRed
             // 
@@ -285,7 +305,7 @@
             // 
             // tbRed
             // 
-            this.tbRed.Location = new System.Drawing.Point(131, 46);
+            this.tbRed.Location = new System.Drawing.Point(19, 62);
             this.tbRed.Name = "tbRed";
             this.tbRed.Size = new System.Drawing.Size(178, 20);
             this.tbRed.TabIndex = 4;
@@ -304,7 +324,7 @@
             this.bCloseRed.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.bCloseRed.Location = new System.Drawing.Point(0, 334);
             this.bCloseRed.Name = "bCloseRed";
-            this.bCloseRed.Size = new System.Drawing.Size(322, 35);
+            this.bCloseRed.Size = new System.Drawing.Size(248, 35);
             this.bCloseRed.TabIndex = 5;
             this.bCloseRed.Text = "Otvori";
             this.bCloseRed.UseVisualStyleBackColor = true;
@@ -320,10 +340,19 @@
             this.pYellow.Controls.Add(this.tbYellow);
             this.pYellow.Controls.Add(this.bCloseYellow);
             this.pYellow.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pYellow.Location = new System.Drawing.Point(659, 3);
+            this.pYellow.Location = new System.Drawing.Point(511, 3);
             this.pYellow.Name = "pYellow";
-            this.pYellow.Size = new System.Drawing.Size(322, 369);
+            this.pYellow.Size = new System.Drawing.Size(248, 369);
             this.pYellow.TabIndex = 2;
+            // 
+            // lYellowTableName
+            // 
+            this.lYellowTableName.AutoSize = true;
+            this.lYellowTableName.Location = new System.Drawing.Point(121, 9);
+            this.lYellowTableName.Name = "lYellowTableName";
+            this.lYellowTableName.Size = new System.Drawing.Size(41, 13);
+            this.lYellowTableName.TabIndex = 9;
+            this.lYellowTableName.Text = "Računi";
             // 
             // lNumFilesYellow
             // 
@@ -354,7 +383,7 @@
             // 
             // tbYellow
             // 
-            this.tbYellow.Location = new System.Drawing.Point(124, 43);
+            this.tbYellow.Location = new System.Drawing.Point(15, 62);
             this.tbYellow.Name = "tbYellow";
             this.tbYellow.Size = new System.Drawing.Size(178, 20);
             this.tbYellow.TabIndex = 6;
@@ -364,7 +393,7 @@
             this.bCloseYellow.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.bCloseYellow.Location = new System.Drawing.Point(0, 334);
             this.bCloseYellow.Name = "bCloseYellow";
-            this.bCloseYellow.Size = new System.Drawing.Size(322, 35);
+            this.bCloseYellow.Size = new System.Drawing.Size(248, 35);
             this.bCloseYellow.TabIndex = 7;
             this.bCloseYellow.Text = "Otvori";
             this.bCloseYellow.UseVisualStyleBackColor = true;
@@ -380,10 +409,19 @@
             this.pBlue.Controls.Add(this.lBlue);
             this.pBlue.Controls.Add(this.bCloseBlue);
             this.pBlue.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pBlue.Location = new System.Drawing.Point(987, 3);
+            this.pBlue.Location = new System.Drawing.Point(765, 3);
             this.pBlue.Name = "pBlue";
-            this.pBlue.Size = new System.Drawing.Size(325, 369);
+            this.pBlue.Size = new System.Drawing.Size(249, 369);
             this.pBlue.TabIndex = 3;
+            // 
+            // lBlueTableName
+            // 
+            this.lBlueTableName.AutoSize = true;
+            this.lBlueTableName.Location = new System.Drawing.Point(109, 9);
+            this.lBlueTableName.Name = "lBlueTableName";
+            this.lBlueTableName.Size = new System.Drawing.Size(50, 13);
+            this.lBlueTableName.TabIndex = 10;
+            this.lBlueTableName.Text = "Oročenja";
             // 
             // lNumFilesBlue
             // 
@@ -405,7 +443,7 @@
             // 
             // tbBlue
             // 
-            this.tbBlue.Location = new System.Drawing.Point(112, 43);
+            this.tbBlue.Location = new System.Drawing.Point(18, 62);
             this.tbBlue.Name = "tbBlue";
             this.tbBlue.Size = new System.Drawing.Size(178, 20);
             this.tbBlue.TabIndex = 8;
@@ -413,7 +451,7 @@
             // lBlue
             // 
             this.lBlue.AutoSize = true;
-            this.lBlue.Location = new System.Drawing.Point(-3, 46);
+            this.lBlue.Location = new System.Drawing.Point(15, 46);
             this.lBlue.Name = "lBlue";
             this.lBlue.Size = new System.Drawing.Size(109, 13);
             this.lBlue.TabIndex = 3;
@@ -424,7 +462,7 @@
             this.bCloseBlue.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.bCloseBlue.Location = new System.Drawing.Point(0, 334);
             this.bCloseBlue.Name = "bCloseBlue";
-            this.bCloseBlue.Size = new System.Drawing.Size(325, 35);
+            this.bCloseBlue.Size = new System.Drawing.Size(249, 35);
             this.bCloseBlue.TabIndex = 9;
             this.bCloseBlue.Text = "Otvori";
             this.bCloseBlue.UseVisualStyleBackColor = true;
@@ -434,47 +472,19 @@
             // 
             this.errorProvider.ContainerControl = this;
             // 
-            // lGreenTableName
+            // lNotification
             // 
-            this.lGreenTableName.AutoSize = true;
-            this.lGreenTableName.Location = new System.Drawing.Point(121, 9);
-            this.lGreenTableName.Name = "lGreenTableName";
-            this.lGreenTableName.Size = new System.Drawing.Size(55, 13);
-            this.lGreenTableName.TabIndex = 5;
-            this.lGreenTableName.Text = "Pozajmice";
-            // 
-            // lRedTableName
-            // 
-            this.lRedTableName.AutoSize = true;
-            this.lRedTableName.Location = new System.Drawing.Point(128, 9);
-            this.lRedTableName.Name = "lRedTableName";
-            this.lRedTableName.Size = new System.Drawing.Size(36, 13);
-            this.lRedTableName.TabIndex = 7;
-            this.lRedTableName.Text = "Krediti";
-            // 
-            // lYellowTableName
-            // 
-            this.lYellowTableName.AutoSize = true;
-            this.lYellowTableName.Location = new System.Drawing.Point(121, 9);
-            this.lYellowTableName.Name = "lYellowTableName";
-            this.lYellowTableName.Size = new System.Drawing.Size(41, 13);
-            this.lYellowTableName.TabIndex = 9;
-            this.lYellowTableName.Text = "Računi";
-            // 
-            // lBlueTableName
-            // 
-            this.lBlueTableName.AutoSize = true;
-            this.lBlueTableName.Location = new System.Drawing.Point(109, 9);
-            this.lBlueTableName.Name = "lBlueTableName";
-            this.lBlueTableName.Size = new System.Drawing.Size(50, 13);
-            this.lBlueTableName.TabIndex = 10;
-            this.lBlueTableName.Text = "Oročenja";
+            this.lNotification.AutoSize = true;
+            this.lNotification.Location = new System.Drawing.Point(538, 43);
+            this.lNotification.Name = "lNotification";
+            this.lNotification.Size = new System.Drawing.Size(0, 13);
+            this.lNotification.TabIndex = 12;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1315, 473);
+            this.ClientSize = new System.Drawing.Size(1017, 473);
             this.Controls.Add(this.tlpLower);
             this.Controls.Add(this.pUpper);
             this.Controls.Add(this.mMain);
@@ -543,6 +553,7 @@
         private System.Windows.Forms.Label lRedTableName;
         private System.Windows.Forms.Label lYellowTableName;
         private System.Windows.Forms.Label lBlueTableName;
+        private System.Windows.Forms.Label lNotification;
     }
 }
 

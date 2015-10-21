@@ -94,19 +94,20 @@ namespace QR_Code
         /// <param name="doctype">Input document type.</param>
         /// <returns>Output box code.</returns>
         private string GetBoxCodeFromDocType(string doctype)
-        {
-       
-            doctype = doctype.ToUpper();
-            if (doctype.Equals("ODTR"))
+        {      
+            switch(Helper.DoctypeBoxCode[doctype])
             {
-                return tbYellow.Text;
-            }
-            else
-            {
-                return null;
-            }
-
-          
+                case BoxTypeEnum.KREDITI:
+                    return tbRed.Text;
+                case BoxTypeEnum.OROCENJA:
+                    return tbBlue.Text;
+                case BoxTypeEnum.POZAJMICE:
+                    return tbGreen.Text;
+                case BoxTypeEnum.RACUNI:
+                    return tbYellow.Text;
+                default:
+                    return null;
+            }          
         }
 
         /// <summary>
@@ -129,9 +130,94 @@ namespace QR_Code
             conn.Close();
         }
 
+        /// <summary>
+        /// Using parameter input code parses json object and gets clientinfos and values.
+        /// </summary>
+        /// <param name="code">Unparsed json objects.</param>
+        private void GetQrCodeAndWrite(string code)
+        {
+            
+            string startCode = code;
+            // ID of scanned code.
+            string id = null;
+            // Type of docyment of scanned code.
+            string doctype = null;
+
+            // Remove all non-ASCII characters.
+            code = Regex.Replace(code, @"[^\u0000-\u007F]", string.Empty);
+
+            // Remove { and }.
+            code = Regex.Replace(code, "{", string.Empty);
+            code = Regex.Replace(code, "}", string.Empty);
+
+            // Separate client infos and remove ".
+            string[] stringSeparators = new string[] { "," };
+            string[] tokens = code.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
+
+
+
+            foreach (string clientInfo in tokens)
+            {
+                string tmp = Regex.Replace(clientInfo, "\"", string.Empty);
+                string[] tmpSeparator = new string[] { ":" };
+                string[] tmpTokens = tmp.Split(tmpSeparator, StringSplitOptions.RemoveEmptyEntries);
+                if (tmpTokens[0].Equals("id"))
+                {
+                    // Get id.
+                    id = tmpTokens[1];
+                }
+                else if (tmpTokens[0].Equals("doctype"))
+                {
+                    // Get type of document.
+                    doctype = tmpTokens[1];
+                }
+
+                // Both found break.
+                if (id != null && doctype != null)
+                {
+                    break;
+                }
+            }
+
+            string boxCode = GetBoxCodeFromDocType(doctype);
+
+            try
+            {
+                InsertoBankTable(id, boxCode, startCode);
+                lNotification.Text = "Uspešno ste upisali.";
+
+            }
+            catch (SqlException)
+            {
+                lNotification.Text = "QR kod koji ste uneli ne može biti raspoređen ili je kod već upisan.";
+            }
+        }
+
+        /// <summary>
+        /// Using parameter box code checks database for existing box and if true checks types of boxes, if not creates new box.
+        /// NOT FINISHED.
+        /// </summary>
+        /// <param name="boxCode">Code of box.</param>
+        /// <returns>Indicator of success.</returns>
+        private bool OpenOrCreateBox(string boxCode, BoxTypeEnum boxType)
+        {
+            SqlConnection conn = new SqlConnection("Data Source=DESKTOP-DMTBJFE;Integrated Security=True");
+            conn.Open();
+            SqlCommand command = new SqlCommand("INSERT [TYPE] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn);
+            command.Parameters.AddWithValue("@boxCode", boxCode);
+            SqlDataReader reader =  command.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+
+            }
+            return true;
+            conn.Close();
+        }
+
         #region Event handlers
         /// <summary>
-        /// Triggered when QR Code is scanned or manually entered.
+        /// Triggered when QR Code text box has focus.
         /// </summary>
         /// <param name="sender">Text field.</param>
         /// <param name="e">Following arguments.</param>
@@ -186,6 +272,7 @@ namespace QR_Code
             }
 
         }
+
         /// <summary>
         /// Triggered when open/close button is clicked and changes the current state of green box.
         /// </summary>
@@ -218,6 +305,7 @@ namespace QR_Code
                 }
             }
         }
+
         /// <summary>
         /// Triggered when open/close button is clicked and changes the current state of red box.
         /// </summary>
@@ -250,6 +338,7 @@ namespace QR_Code
                 }
             }
         }
+
         /// <summary>
         /// Triggered when open/close button is clicked and changes the current state of yellow box.
         /// </summary>
@@ -282,6 +371,7 @@ namespace QR_Code
                 }
             }
         }
+
         /// <summary>
         /// Triggered when open/close button is clicked and changes the current state of blue box.
         /// </summary>
@@ -314,7 +404,7 @@ namespace QR_Code
                 }
             }
         }
-        
+
         /// <summary>
         /// Triggers when new data is added.
         /// </summary>
@@ -331,66 +421,33 @@ namespace QR_Code
             else
             {
                 errorProvider.SetError((Button)sender, string.Empty);
-                // Get QR Code.
-                string startCode = tbQr.Text;
-                string code = tbQr.Text;
-                // ID of scanned code.
-                string id = null;
-                // Type of docyment of scanned code.
-                string doctype = null;
-
-                // Remove all non-ASCII characters.
-                code = Regex.Replace(code, @"[^\u0000-\u007F]", string.Empty);
-
-                // Remove { and }.
-                code = Regex.Replace(code, "{", string.Empty);
-                code = Regex.Replace(code, "}", string.Empty);
-                
-                // Separate client infos and remove ".
-                string[] stringSeparators = new string[] { "," };
-                string[] tokens = code.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-
-
-                
-                foreach (string clientInfo in tokens)
-                {
-                    string tmp = Regex.Replace(clientInfo, "\"", string.Empty);
-                    string[] tmpSeparator = new string[] { ":" };
-                    string[] tmpTokens = tmp.Split(tmpSeparator, StringSplitOptions.RemoveEmptyEntries);
-                    if (tmpTokens[0].Equals("id"))
-                    {
-                        // Get id.
-                        id = tmpTokens[1];
-                    }
-                    else if (tmpTokens[0].Equals("doctype"))
-                    {
-                        // Get type of document.
-                        doctype = tmpTokens[1];
-                    }
-
-                    // Both found break.
-                    if (id != null && doctype != null)
-                    {
-                        break;
-                    }
-                }
-
-                string boxCode = GetBoxCodeFromDocType(doctype);
-
-                try
-                {
-                    InsertoBankTable(id, boxCode, startCode);
-                }
-                catch (Exception)
-                {
-
-                }
-                
+                GetQrCodeAndWrite(tbQr.Text); 
             }
 
         }
 
+        /// <summary>
+        /// Triggered when QrCode is scanned or manually entered.
+        /// </summary>
+        /// <param name="sender">Text field.</param>
+        /// <param name="e">Following arguments.</param>
+        private void QrCodeValueChanged(object sender, EventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            int textLength = textBox.Text.Length;
+            textBox.Text.Trim();
+            if (textLength > 0 && textBox.Text.Last().Equals('}'))
+            {
+                GetQrCodeAndWrite(textBox.Text);
+                textBox.Clear();
+                textBox.SelectionStart = 0;
+            }
+        }
+
         #endregion
+
+
+
         #endregion
     }
 }
