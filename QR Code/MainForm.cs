@@ -45,6 +45,28 @@ namespace QR_Code
         private bool blueBoxOpened;
         #endregion
 
+        #region Number of files in boxes
+
+        /// <summary>
+        /// Number of files in currently opened green box.
+        /// </summary>
+        private int greenBoxNumOfFiles;
+
+        /// <summary>
+        /// Number of files in currently opened red box.
+        /// </summary>
+        private int redBoxNumOfFiles;
+        /// <summary>
+        /// Number of files in currently opened yellow box.
+        /// </summary>
+        private int yellowBoxNumOfFiles;
+        /// <summary>
+        /// Number of files in currently opened blue box.
+        /// </summary>
+        private int blueBoxNumOfFiles;
+
+        #endregion
+
         #endregion
 
         #region Constructors
@@ -53,6 +75,7 @@ namespace QR_Code
         /// </summary>
         public MainForm()
         {
+            InitializePrivateMembers();
             InitializeComponent();
         }
 
@@ -63,6 +86,7 @@ namespace QR_Code
         /// <param name="jmbg">Unique parameter of every user.</param>
         public MainForm(string name, string jmbg)
         {
+            InitializePrivateMembers();
             InitializeComponent();
             lWorker.Text += name;
             this.jmbg = jmbg;
@@ -81,10 +105,16 @@ namespace QR_Code
             yellowBoxOpened = false;
             blueBoxOpened = false;
 
+            greenBoxNumOfFiles = 0;
+            redBoxNumOfFiles = 0;
+            yellowBoxNumOfFiles = 0;
+            blueBoxNumOfFiles = 0;
+
             // Used for signalising when some codes are not properly inserted (box or order code).
             errorProvider = new System.Windows.Forms.ErrorProvider();
             errorProvider.BlinkRate = 1000;
             errorProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.AlwaysBlink;
+
         }
 
         // NOT FINISHED IMPLEMENTING. CHECK THEIR EXAMPLE TO SEE MISTAKES AND PROBLEM.
@@ -95,7 +125,7 @@ namespace QR_Code
         /// <returns>Output box code.</returns>
         private string GetBoxCodeFromDocType(string doctype)
         {      
-            switch(Helper.DoctypeBoxCode[doctype])
+            switch (Helper.DoctypeBoxCode[doctype])
             {
                 case BoxTypeEnum.KREDITI:
                     return tbRed.Text;
@@ -198,21 +228,57 @@ namespace QR_Code
         /// NOT FINISHED.
         /// </summary>
         /// <param name="boxCode">Code of box.</param>
-        /// <returns>Indicator of success.</returns>
-        private bool OpenOrCreateBox(string boxCode, BoxTypeEnum boxType)
+        /// <returns>Indicator of success. 
+        /// -1 failed.
+        /// 0 new table created.
+        /// >= 1 found existing table, current number of files.</returns>
+        private int OpenOrCreateBox(string boxCode, BoxTypeEnum boxType)
         {
             SqlConnection conn = new SqlConnection("Data Source=DESKTOP-DMTBJFE;Integrated Security=True");
             conn.Open();
-            SqlCommand command = new SqlCommand("INSERT [TYPE] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn);
+            SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn);
             command.Parameters.AddWithValue("@boxCode", boxCode);
-            SqlDataReader reader =  command.ExecuteReader();
-
+            SqlDataReader reader = command.ExecuteReader();
+            // Try to find table.
             if (reader.HasRows)
             {
+                reader.Read();
+                var code = (string)reader["Code"];
+                var type = (int)reader["Type"];
+                var fileNum = (int)reader["NumberOfFIles"];
+                reader.Close();
+                // Box must be opened sa same type as previously.
+                if (type == (int)boxType)
+                {
+                    conn.Close();
+                    return fileNum;
+                }
+                else
+                {
+                    // Box types are not same.
+                    conn.Close();
+                    return -1;
+                }
 
             }
-            return true;
-            conn.Close();
+            else if (!reader.HasRows)
+            {
+                // Create new box entry.
+                reader.Close();
+                SqlCommand insertCommand = new SqlCommand("INSERT INTO [QRCode].[dbo].[Box] VALUES(@boxCode, @boxType, @numberOfFiles)", conn);
+                insertCommand.Parameters.AddWithValue("@boxCode", boxCode);
+                insertCommand.Parameters.AddWithValue("@boxType", (int)boxType);
+                insertCommand.Parameters.AddWithValue("@numberOfFiles", (int)0);
+                insertCommand.ExecuteNonQuery();
+                conn.Close();
+                return 0;
+            }
+            else
+            {
+                conn.Close();
+                return -1;
+            }
+            
         }
 
         #region Event handlers
@@ -284,9 +350,11 @@ namespace QR_Code
             {
                 // Box was opened, remove box code and close it.
                 greenBoxOpened = false;
+                lNumFilesGreen.Text = string.Empty;
                 lStatusGreen.Text = "Status: Zatvorena";
                 ((Button)sender).Text = "Otvori";
                 tbGreen.Clear();
+                greenBoxNumOfFiles = 0;
             }
             else if (greenBoxOpened == false)
             {
@@ -295,13 +363,23 @@ namespace QR_Code
                 {
                     errorProvider.SetError(tbGreen, "Da biste otvorili kutiju, morate uneti šifru.");
                     tbGreen.Focus();
+                    
                 }
                 else
                 {
-                    errorProvider.SetError(tbGreen, string.Empty);
-                    greenBoxOpened = true;
-                    lStatusGreen.Text = "Status: Otvorena";
-                    ((Button)sender).Text = "Zatvori";
+                    greenBoxNumOfFiles = OpenOrCreateBox(tbGreen.Text, BoxTypeEnum.POZAJMICE);
+                    if (greenBoxNumOfFiles == -1)
+                    {
+                        MessageBox.Show("Neuspešno otvorena kutija, proverite da li je i prošli put otvarati kao tog tipa - POZAJMICE.");
+                    }
+                    else
+                    {
+                        errorProvider.SetError(tbGreen, string.Empty);
+                        greenBoxOpened = true;
+                        lStatusGreen.Text = "Status: Otvorena";
+                        ((Button)sender).Text = "Zatvori";
+                        lNumFilesGreen.Text = "Broj fajlova u kutiji: " + greenBoxNumOfFiles;
+                    }
                 }
             }
         }
@@ -319,6 +397,8 @@ namespace QR_Code
                 redBoxOpened = false;
                 lStatusRed.Text = "Status: Zatvorena";
                 ((Button)sender).Text = "Otvori";
+                lNumFilesRed.Text = string.Empty;
+                redBoxNumOfFiles = 0;
                 tbRed.Clear();
             }
             else if (redBoxOpened == false)
@@ -331,10 +411,20 @@ namespace QR_Code
                 }
                 else
                 {
-                    errorProvider.SetError(tbRed, string.Empty);
-                    redBoxOpened = true;
-                    lStatusRed.Text = "Status: Otvorena";
-                    ((Button)sender).Text = "Zatvori";
+                    
+                    redBoxNumOfFiles = OpenOrCreateBox(tbRed.Text, BoxTypeEnum.KREDITI);
+                    if (redBoxNumOfFiles == -1)
+                    {
+                        MessageBox.Show("Neuspešno otvorena kutija, proverite da li je i prošli put otvarati kao tog tipa - KREDITI.");
+                    }
+                    else
+                    {
+                        errorProvider.SetError(tbRed, string.Empty);
+                        redBoxOpened = true;
+                        lStatusRed.Text = "Status: Otvorena";
+                        ((Button)sender).Text = "Zatvori";
+                        lNumFilesRed.Text = "Broj fajlova u kutiji: " + redBoxNumOfFiles;
+                    }
                 }
             }
         }
@@ -353,6 +443,8 @@ namespace QR_Code
                 lStatusYellow.Text = "Status: Zatvorena";
                 ((Button)sender).Text = "Otvori";
                 tbYellow.Clear();
+                yellowBoxNumOfFiles = 0;
+                lNumFilesYellow.Text = string.Empty;
             }
             else if (yellowBoxOpened == false)
             {
@@ -364,10 +456,20 @@ namespace QR_Code
                 }
                 else
                 {
-                    errorProvider.SetError(tbYellow, string.Empty);
-                    yellowBoxOpened = true;
-                    lStatusYellow.Text = "Status: Otvorena";
-                    ((Button)sender).Text = "Zatvori";
+                    yellowBoxNumOfFiles = OpenOrCreateBox(tbYellow.Text, BoxTypeEnum.RACUNI);
+                    if (yellowBoxNumOfFiles == -1)
+                    {
+                        MessageBox.Show("Neuspešno otvorena kutija, proverite da li je i prošli put otvarati kao tog tipa - RAČUNI.");
+                    }
+                    else
+                    {
+                        errorProvider.SetError(tbYellow, string.Empty);
+                        yellowBoxOpened = true;
+                        lStatusYellow.Text = "Status: Otvorena";
+                        ((Button)sender).Text = "Zatvori";
+                        lNumFilesYellow.Text = "Broj fajlova u kutiji: " + yellowBoxNumOfFiles; 
+                    }
+
                 }
             }
         }
@@ -386,6 +488,8 @@ namespace QR_Code
                 lStatusBlue.Text = "Status: Zatvorena";
                 ((Button)sender).Text = "Otvori";
                 tbBlue.Clear();
+                blueBoxNumOfFiles = 0;
+                lNumFilesBlue.Text = string.Empty;
             }
             else if (blueBoxOpened == false)
             {
@@ -397,10 +501,20 @@ namespace QR_Code
                 }
                 else
                 {
-                    errorProvider.SetError(tbBlue, string.Empty);
-                    blueBoxOpened = true;
-                    lStatusBlue.Text = "Status: Otvorena";
-                    ((Button)sender).Text = "Zatvori";
+                    blueBoxNumOfFiles = OpenOrCreateBox(tbBlue.Text, BoxTypeEnum.OROCENJA);
+                    if (blueBoxNumOfFiles == -1)
+                    {
+                        MessageBox.Show("Neuspešno otvorena kutija, proverite da li je i prošli put otvarati kao tog tipa - OROČENJA.");
+                    }
+                    else
+                    {
+                        errorProvider.SetError(tbBlue, string.Empty);
+                        blueBoxOpened = true;
+                        lStatusBlue.Text = "Status: Otvorena";
+                        ((Button)sender).Text = "Zatvori";
+                        lNumFilesBlue.Text = "Broj fajlova u kutiji: " + blueBoxNumOfFiles;
+                    }
+
                 }
             }
         }

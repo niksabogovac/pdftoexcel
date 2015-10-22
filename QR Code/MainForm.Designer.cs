@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.pUpper = new System.Windows.Forms.Panel();
+            this.lNotification = new System.Windows.Forms.Label();
             this.bAddData = new System.Windows.Forms.Button();
             this.tbQr = new System.Windows.Forms.TextBox();
             this.lQr = new System.Windows.Forms.Label();
@@ -69,7 +70,6 @@
             this.lBlue = new System.Windows.Forms.Label();
             this.bCloseBlue = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.lNotification = new System.Windows.Forms.Label();
             this.pUpper.SuspendLayout();
             this.mMain.SuspendLayout();
             this.tlpLower.SuspendLayout();
@@ -94,6 +94,14 @@
             this.pUpper.Name = "pUpper";
             this.pUpper.Size = new System.Drawing.Size(1017, 74);
             this.pUpper.TabIndex = 0;
+            // 
+            // lNotification
+            // 
+            this.lNotification.AutoSize = true;
+            this.lNotification.Location = new System.Drawing.Point(538, 43);
+            this.lNotification.Name = "lNotification";
+            this.lNotification.Size = new System.Drawing.Size(0, 13);
+            this.lNotification.TabIndex = 12;
             // 
             // bAddData
             // 
@@ -221,9 +229,8 @@
             this.lNumFilesGreen.AutoSize = true;
             this.lNumFilesGreen.Location = new System.Drawing.Point(15, 259);
             this.lNumFilesGreen.Name = "lNumFilesGreen";
-            this.lNumFilesGreen.Size = new System.Drawing.Size(104, 13);
+            this.lNumFilesGreen.Size = new System.Drawing.Size(0, 13);
             this.lNumFilesGreen.TabIndex = 4;
-            this.lNumFilesGreen.Text = "Broj fajlova u kutiji: 0";
             // 
             // lStatusGreen
             // 
@@ -290,9 +297,8 @@
             this.lNumFilesRed.AutoSize = true;
             this.lNumFilesRed.Location = new System.Drawing.Point(21, 259);
             this.lNumFilesRed.Name = "lNumFilesRed";
-            this.lNumFilesRed.Size = new System.Drawing.Size(104, 13);
+            this.lNumFilesRed.Size = new System.Drawing.Size(0, 13);
             this.lNumFilesRed.TabIndex = 6;
-            this.lNumFilesRed.Text = "Broj fajlova u kutiji: 0";
             // 
             // lStatusRed
             // 
@@ -359,9 +365,8 @@
             this.lNumFilesYellow.AutoSize = true;
             this.lNumFilesYellow.Location = new System.Drawing.Point(17, 259);
             this.lNumFilesYellow.Name = "lNumFilesYellow";
-            this.lNumFilesYellow.Size = new System.Drawing.Size(104, 13);
+            this.lNumFilesYellow.Size = new System.Drawing.Size(0, 13);
             this.lNumFilesYellow.TabIndex = 8;
-            this.lNumFilesYellow.Text = "Broj fajlova u kutiji: 0";
             // 
             // lStatusYellow
             // 
@@ -428,9 +433,8 @@
             this.lNumFilesBlue.AutoSize = true;
             this.lNumFilesBlue.Location = new System.Drawing.Point(20, 259);
             this.lNumFilesBlue.Name = "lNumFilesBlue";
-            this.lNumFilesBlue.Size = new System.Drawing.Size(104, 13);
+            this.lNumFilesBlue.Size = new System.Drawing.Size(0, 13);
             this.lNumFilesBlue.TabIndex = 8;
-            this.lNumFilesBlue.Text = "Broj fajlova u kutiji: 0";
             // 
             // lStatusBlue
             // 
@@ -471,14 +475,6 @@
             // errorProvider
             // 
             this.errorProvider.ContainerControl = this;
-            // 
-            // lNotification
-            // 
-            this.lNotification.AutoSize = true;
-            this.lNotification.Location = new System.Drawing.Point(538, 43);
-            this.lNotification.Name = "lNotification";
-            this.lNotification.Size = new System.Drawing.Size(0, 13);
-            this.lNotification.TabIndex = 12;
             // 
             // MainForm
             // 
