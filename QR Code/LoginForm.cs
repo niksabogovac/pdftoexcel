@@ -66,8 +66,8 @@ namespace QR_Code
             {
                 MessageBox.Show("Neuspesno ste se prijavili pokusajte ponovo.");
                 DialogResult = DialogResult.Cancel;
-            }   
-            
+            }
+
             Close();
         }
     }

@@ -53,8 +53,6 @@ namespace Specifikacija4
         #endregion
 
 
-
-
        static void Main(string[] args)
         {
 

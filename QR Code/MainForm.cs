@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ExcelLibrary.SpreadSheet;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -124,7 +125,7 @@ namespace QR_Code
         /// <param name="doctype">Input document type.</param>
         /// <returns>Output box code.</returns>
         private string GetBoxCodeFromDocType(string doctype)
-        {      
+        {
             switch (Helper.DoctypeBoxCode[doctype])
             {
                 case BoxTypeEnum.KREDITI:
@@ -137,7 +138,7 @@ namespace QR_Code
                     return tbYellow.Text;
                 default:
                     return null;
-            }          
+            }
         }
 
         /// <summary>
@@ -146,14 +147,15 @@ namespace QR_Code
         /// <param name="id">Unique id.</param>
         /// <param name="boxCode">Code of open box.</param>
         /// <param name="code">Read QR code.</param>
-        private void InsertoBankTable(string id, string boxCode, string code)
+        private void InserToBankTable(string id, string boxCode, string code)
         {
             SqlConnection conn = new SqlConnection("Data Source=DESKTOP-DMTBJFE;Integrated Security=True");
             conn.Open();
-            SqlCommand command = new SqlCommand("INSERT INTO [QRCode].[dbo].[BankTable] VALUES (@id, @orderNum, @boxCode, @jmbg, @code)", conn);
+            SqlCommand command = new SqlCommand("INSERT INTO [QRCode].[dbo].[BankTable] VALUES (@id, @orderNum, @boxCode, @date, @jmbg, @code)", conn);
             command.Parameters.AddWithValue("@id", id);
             command.Parameters.AddWithValue("@orderNum", tbOrderNum.Text);
             command.Parameters.AddWithValue("@boxCode", boxCode);
+            command.Parameters.AddWithValue("@date", DateTime.Now.ToString("yyyy-MM-dd"));
             command.Parameters.AddWithValue("@jmbg", jmbg);
             command.Parameters.AddWithValue("@code", code);
             command.ExecuteNonQuery();
@@ -166,7 +168,7 @@ namespace QR_Code
         /// <param name="code">Unparsed json objects.</param>
         private void GetQrCodeAndWrite(string code)
         {
-            
+
             string startCode = code;
             // ID of scanned code.
             string id = null;
@@ -213,7 +215,7 @@ namespace QR_Code
 
             try
             {
-                InsertoBankTable(id, boxCode, startCode);
+                InserToBankTable(id, boxCode, startCode);
                 lNotification.Text = "Uspešno ste upisali.";
 
             }
@@ -278,7 +280,7 @@ namespace QR_Code
                 conn.Close();
                 return -1;
             }
-            
+
         }
 
         #region Event handlers
@@ -289,7 +291,7 @@ namespace QR_Code
         /// <param name="e">Following arguments.</param>
         private void QrCodeEntered(object sender, EventArgs e)
         {
-            
+
             // Check if all boxes are opened.
             if (!(greenBoxOpened && redBoxOpened && yellowBoxOpened && blueBoxOpened))
             {
@@ -363,7 +365,7 @@ namespace QR_Code
                 {
                     errorProvider.SetError(tbGreen, "Da biste otvorili kutiju, morate uneti šifru.");
                     tbGreen.Focus();
-                    
+
                 }
                 else
                 {
@@ -411,7 +413,7 @@ namespace QR_Code
                 }
                 else
                 {
-                    
+
                     redBoxNumOfFiles = OpenOrCreateBox(tbRed.Text, BoxTypeEnum.KREDITI);
                     if (redBoxNumOfFiles == -1)
                     {
@@ -467,7 +469,7 @@ namespace QR_Code
                         yellowBoxOpened = true;
                         lStatusYellow.Text = "Status: Otvorena";
                         ((Button)sender).Text = "Zatvori";
-                        lNumFilesYellow.Text = "Broj fajlova u kutiji: " + yellowBoxNumOfFiles; 
+                        lNumFilesYellow.Text = "Broj fajlova u kutiji: " + yellowBoxNumOfFiles;
                     }
 
                 }
@@ -535,7 +537,7 @@ namespace QR_Code
             else
             {
                 errorProvider.SetError((Button)sender, string.Empty);
-                GetQrCodeAndWrite(tbQr.Text); 
+                GetQrCodeAndWrite(tbQr.Text);
             }
 
         }
@@ -559,6 +561,62 @@ namespace QR_Code
         }
 
         #endregion
+
+        private void OpštiToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string outPath = null;
+            outPath += Application.StartupPath + @"\tabelaZaBanku.xls";
+            // Create default output sheet and workbook
+            Worksheet outputSheet = new Worksheet("Output");
+            Workbook outputBook = new Workbook();
+
+            // Set it to beginning of the document
+            int curRow = 0;
+            int curCol = 0;
+
+            outputSheet.Cells[curRow, curCol++] = new Cell("Unique ID");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Broj naloga/primopredaje");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Šifra kutije");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Datum očitavanja");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Operater");
+            outputSheet.Cells[curRow++, curCol++] = new Cell("Sadržaj QR koda");
+            curCol = 0;
+
+            SqlConnection conn = new SqlConnection("Data Source=DESKTOP-DMTBJFE;Integrated Security=True");
+            conn.Open();
+            SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[BankTable]", conn);
+            SqlDataReader reader = command.ExecuteReader();
+
+
+            while(reader.HasRows)
+            {
+                reader.Read();
+                outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["ID"]);
+                outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["OrderNum"]);
+                outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["BoxCode"]);
+                DateTime date = (DateTime)reader["Date"];
+                outputSheet.Cells[curRow, curCol++] = new Cell(date.ToShortDateString());
+                outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["MBR"]);
+                outputSheet.Cells[curRow++, curCol++] = new Cell((string)reader["QRCode"]);
+                reader.NextResult();
+                curCol = 0;
+            }
+            conn.Close();
+            try
+            {
+                outputBook.Worksheets.Add(outputSheet);
+                outputBook.Save(outPath);
+                MessageBox.Show("Uspešno kreiran izveštaj.");
+            } 
+            catch(Exception)
+            {
+                MessageBox.Show("Nije moguće kreirati izveštaj!");
+            }
+            
+
+            curCol = 0;
+            
+        }
 
 
 

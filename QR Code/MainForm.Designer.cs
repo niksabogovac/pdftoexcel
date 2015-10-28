@@ -70,6 +70,11 @@
             this.lBlue = new System.Windows.Forms.Label();
             this.bCloseBlue = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.izveštajiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.zaBankuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.opštiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.detaljanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.yToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pUpper.SuspendLayout();
             this.mMain.SuspendLayout();
             this.tlpLower.SuspendLayout();
@@ -161,7 +166,8 @@
             // 
             this.mMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miOption,
-            this.miHelp});
+            this.miHelp,
+            this.izveštajiToolStripMenuItem});
             this.mMain.Location = new System.Drawing.Point(0, 0);
             this.mMain.Name = "mMain";
             this.mMain.Size = new System.Drawing.Size(1017, 24);
@@ -476,6 +482,43 @@
             // 
             this.errorProvider.ContainerControl = this;
             // 
+            // izveštajiToolStripMenuItem
+            // 
+            this.izveštajiToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.zaBankuToolStripMenuItem,
+            this.yToolStripMenuItem});
+            this.izveštajiToolStripMenuItem.Name = "izveštajiToolStripMenuItem";
+            this.izveštajiToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
+            this.izveštajiToolStripMenuItem.Text = "Izveštaji";
+            // 
+            // zaBankuToolStripMenuItem
+            // 
+            this.zaBankuToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.opštiToolStripMenuItem,
+            this.detaljanToolStripMenuItem});
+            this.zaBankuToolStripMenuItem.Name = "zaBankuToolStripMenuItem";
+            this.zaBankuToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.zaBankuToolStripMenuItem.Text = "Za banku";
+            // 
+            // opštiToolStripMenuItem
+            // 
+            this.opštiToolStripMenuItem.Name = "opštiToolStripMenuItem";
+            this.opštiToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.opštiToolStripMenuItem.Text = "Opšti";
+            this.opštiToolStripMenuItem.Click += new System.EventHandler(this.OpštiToolStripMenuItem_Click);
+            // 
+            // detaljanToolStripMenuItem
+            // 
+            this.detaljanToolStripMenuItem.Name = "detaljanToolStripMenuItem";
+            this.detaljanToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.detaljanToolStripMenuItem.Text = "Detaljan";
+            // 
+            // yToolStripMenuItem
+            // 
+            this.yToolStripMenuItem.Name = "yToolStripMenuItem";
+            this.yToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.yToolStripMenuItem.Text = "Za import u RWAS";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -550,6 +593,11 @@
         private System.Windows.Forms.Label lYellowTableName;
         private System.Windows.Forms.Label lBlueTableName;
         private System.Windows.Forms.Label lNotification;
+        private System.Windows.Forms.ToolStripMenuItem izveštajiToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem zaBankuToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem opštiToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem detaljanToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem yToolStripMenuItem;
     }
 }
 

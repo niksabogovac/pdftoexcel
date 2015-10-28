@@ -56,7 +56,7 @@ namespace QR_Code
 
         };
 
-       
+
         #endregion
 
         #region Properties
@@ -72,6 +72,9 @@ namespace QR_Code
             }
         }
 
+        /// <summary>
+        /// Gets the support <see cref="doctypeBoxCode"/> dictionary.
+        /// </summary>
         public static Dictionary<string, BoxTypeEnum> DoctypeBoxCode
         {
             get
@@ -86,7 +89,7 @@ namespace QR_Code
         /// </summary>
         public Helper()
         {
-            
+
         }
         #endregion
 
