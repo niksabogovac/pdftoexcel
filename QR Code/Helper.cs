@@ -18,20 +18,17 @@ namespace QR_Code
         /// </summary>
         private static Dictionary<string, string> clientInfoNamesHistoricalNames = new Dictionary<string, string>()
         {
-            { "PotTR", "Potvrde_DinarskiTekuciRacun" },
-            { "OstDevAR", "OstalaDokumenta_DinarskiTekuciRacun" },
-            { "ODDinAR", "OsnovnaDokumenta_DinarskiAvistaRacun" },
-            { "ODKR", "Krediti - ugovaranje" },
-            { "ODDevOR", "OsnovnaDokumenta_DevizniOroceniRacun" },
-            { "ODDinOR", "OsnovnaDokumenta_DinarskiOroceniRacun" },
-            { "ODTR", "OsnovnaDokumenta_DinarskiTekuciRacun" },
-            { "OPDDevOR", "OsnovniPodaciODepozitu_DevizniOroceniRacun" },
-            { "OPDDinOR", "OsnovnaDokumenta_DinarskiOroceniRacun" },
-            { "PozTR",  "Pozajmice_DinarskiTekuciRacun" },
-            { "DKDevAR", null },
-            { "DKDinAR", null },
-            { "DKTR", null },
-            { "UruKK", "Kreditne kartice - ugovaranje" },
+            { "Potvrde_DinarskiTekuciRacun" ,"PotTR"},
+            { "OstalaDokumenta_DinarskiTekuciRacun","OstDevAR"},
+            { "OsnovnaDokumenta_DinarskiAvistaRacun","ODDinAR" },
+            { "Krediti - ugovaranje","ODKR"},
+            { "OsnovnaDokumenta_DevizniOroceniRacun", "ODDevOR" },
+            { "OsnovnaDokumenta_DinarskiOroceniRacun" ,"ODDinOR"},
+            { "OsnovnaDokumenta_DinarskiTekuciRacun" ,"ODTR" },
+            { "OsnovniPodaciODepozitu_DevizniOroceniRacun" , "OPDDevOR"},
+            { "OsnovniPodaciODepozitu_DinarskiOroceniRacun" ,"OPDDinOR"},
+            { "Pozajmice_DinarskiTekuciRacun" , "PozTR"  },
+            { "Kreditne kartice - ugovaranje" , "UruKK"},
 
         };
 

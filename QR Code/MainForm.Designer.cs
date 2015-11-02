@@ -40,6 +40,11 @@
             this.mMain = new System.Windows.Forms.MenuStrip();
             this.miOption = new System.Windows.Forms.ToolStripMenuItem();
             this.miHelp = new System.Windows.Forms.ToolStripMenuItem();
+            this.izveštajiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.zaBankuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.opštiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.detaljanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.yToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tlpLower = new System.Windows.Forms.TableLayoutPanel();
             this.pGreen = new System.Windows.Forms.Panel();
             this.lGreenTableName = new System.Windows.Forms.Label();
@@ -70,11 +75,6 @@
             this.lBlue = new System.Windows.Forms.Label();
             this.bCloseBlue = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.izveštajiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.zaBankuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.opštiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.detaljanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.yToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pUpper.SuspendLayout();
             this.mMain.SuspendLayout();
             this.tlpLower.SuspendLayout();
@@ -185,6 +185,44 @@
             this.miHelp.Name = "miHelp";
             this.miHelp.Size = new System.Drawing.Size(57, 20);
             this.miHelp.Text = "Pomoć";
+            // 
+            // izveštajiToolStripMenuItem
+            // 
+            this.izveštajiToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.zaBankuToolStripMenuItem,
+            this.yToolStripMenuItem});
+            this.izveštajiToolStripMenuItem.Name = "izveštajiToolStripMenuItem";
+            this.izveštajiToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
+            this.izveštajiToolStripMenuItem.Text = "Izveštaji";
+            // 
+            // zaBankuToolStripMenuItem
+            // 
+            this.zaBankuToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.opštiToolStripMenuItem,
+            this.detaljanToolStripMenuItem});
+            this.zaBankuToolStripMenuItem.Name = "zaBankuToolStripMenuItem";
+            this.zaBankuToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.zaBankuToolStripMenuItem.Text = "Za banku";
+            // 
+            // opštiToolStripMenuItem
+            // 
+            this.opštiToolStripMenuItem.Name = "opštiToolStripMenuItem";
+            this.opštiToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.opštiToolStripMenuItem.Text = "Opšti";
+            this.opštiToolStripMenuItem.Click += new System.EventHandler(this.OpštiToolStripMenuItem_Click);
+            // 
+            // detaljanToolStripMenuItem
+            // 
+            this.detaljanToolStripMenuItem.Name = "detaljanToolStripMenuItem";
+            this.detaljanToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.detaljanToolStripMenuItem.Text = "Detaljan";
+            this.detaljanToolStripMenuItem.Click += new System.EventHandler(this.DetaljanToolStripMenuItem_Click);
+            // 
+            // yToolStripMenuItem
+            // 
+            this.yToolStripMenuItem.Name = "yToolStripMenuItem";
+            this.yToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.yToolStripMenuItem.Text = "Za import u RWAS";
             // 
             // tlpLower
             // 
@@ -481,43 +519,6 @@
             // errorProvider
             // 
             this.errorProvider.ContainerControl = this;
-            // 
-            // izveštajiToolStripMenuItem
-            // 
-            this.izveštajiToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.zaBankuToolStripMenuItem,
-            this.yToolStripMenuItem});
-            this.izveštajiToolStripMenuItem.Name = "izveštajiToolStripMenuItem";
-            this.izveštajiToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
-            this.izveštajiToolStripMenuItem.Text = "Izveštaji";
-            // 
-            // zaBankuToolStripMenuItem
-            // 
-            this.zaBankuToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.opštiToolStripMenuItem,
-            this.detaljanToolStripMenuItem});
-            this.zaBankuToolStripMenuItem.Name = "zaBankuToolStripMenuItem";
-            this.zaBankuToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
-            this.zaBankuToolStripMenuItem.Text = "Za banku";
-            // 
-            // opštiToolStripMenuItem
-            // 
-            this.opštiToolStripMenuItem.Name = "opštiToolStripMenuItem";
-            this.opštiToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.opštiToolStripMenuItem.Text = "Opšti";
-            this.opštiToolStripMenuItem.Click += new System.EventHandler(this.OpštiToolStripMenuItem_Click);
-            // 
-            // detaljanToolStripMenuItem
-            // 
-            this.detaljanToolStripMenuItem.Name = "detaljanToolStripMenuItem";
-            this.detaljanToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.detaljanToolStripMenuItem.Text = "Detaljan";
-            // 
-            // yToolStripMenuItem
-            // 
-            this.yToolStripMenuItem.Name = "yToolStripMenuItem";
-            this.yToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
-            this.yToolStripMenuItem.Text = "Za import u RWAS";
             // 
             // MainForm
             // 
