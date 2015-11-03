@@ -306,21 +306,25 @@ namespace QR_Code
                         greenBoxNumOfFiles = GetNumberOfFilesFromBox(boxCode);
                         UpdateBoxTable(boxCode, ++greenBoxNumOfFiles);
                         lNumFilesGreen.Text = "Broj fajlova u kutiji: " + greenBoxNumOfFiles;
+                        ColorPanels(true, false, false, false);
                         break;
                     case 148:
                         redBoxNumOfFiles = GetNumberOfFilesFromBox(boxCode);
                         UpdateBoxTable(boxCode, ++redBoxNumOfFiles);
                         lNumFilesRed.Text = "Broj fajlova u kutiji: " + redBoxNumOfFiles;
+                        ColorPanels(false, true, false, false);
                         break;
                     case 82:
                         yellowBoxNumOfFiles = GetNumberOfFilesFromBox(boxCode);
                         UpdateBoxTable(boxCode, ++yellowBoxNumOfFiles);
                         lNumFilesYellow.Text = "Broj fajlova u kutiji: " + yellowBoxNumOfFiles;
+                        ColorPanels(false, false, true, false);
                         break;
                     case 83:
                         blueBoxNumOfFiles = GetNumberOfFilesFromBox(boxCode);
                         UpdateBoxTable(boxCode, ++blueBoxNumOfFiles);
                         lNumFilesBlue.Text = "Broj fajlova u kutiji: " + blueBoxNumOfFiles;
+                        ColorPanels(false, false, false, true);
                         break;
                     default:
                         lNotification.Text = "Nije moguće.";
@@ -393,6 +397,49 @@ namespace QR_Code
 
         }
 
+        /// <summary>
+        /// Sets background color of panel depending on input parameters.
+        /// </summary>
+        /// <param name="green">Should green box be colored.</param>
+        /// <param name="red">Should red box be colored.</param>
+        /// <param name="yellow">Should yellow box be colored.</param>
+        /// <param name="blue">Should blue box be colored.</param>
+        private void ColorPanels(bool green,bool red, bool yellow, bool blue)
+        {
+            if (green)
+            {
+                pGreen.BackColor = Color.Green;
+            }
+            else
+            {
+                pGreen.BackColor = Color.White;
+            }
+            if (red)
+            {
+                pRed.BackColor = Color.Red;
+            }
+            else
+            {
+                pRed.BackColor = Color.White;
+            }
+            if (yellow)
+            {
+                pYellow.BackColor = Color.Yellow;
+            }
+            else
+            {
+                pYellow.BackColor = Color.White;
+            }
+            if (blue)
+            {
+                pBlue.BackColor = Color.Blue;
+            }
+            else
+            {
+                pBlue.BackColor = Color.White;
+            }
+
+        }
         #region Event handlers
         /// <summary>
         /// Triggered when QR Code text box has focus.
