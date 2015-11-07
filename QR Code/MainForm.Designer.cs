@@ -42,8 +42,6 @@
             this.miHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.izveštajiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zaBankuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.opštiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.detaljanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.yToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tlpLower = new System.Windows.Forms.TableLayoutPanel();
             this.pGreen = new System.Windows.Forms.Panel();
@@ -197,26 +195,10 @@
             // 
             // zaBankuToolStripMenuItem
             // 
-            this.zaBankuToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.opštiToolStripMenuItem,
-            this.detaljanToolStripMenuItem});
             this.zaBankuToolStripMenuItem.Name = "zaBankuToolStripMenuItem";
             this.zaBankuToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.zaBankuToolStripMenuItem.Text = "Za banku";
-            // 
-            // opštiToolStripMenuItem
-            // 
-            this.opštiToolStripMenuItem.Name = "opštiToolStripMenuItem";
-            this.opštiToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.opštiToolStripMenuItem.Text = "Opšti";
-            this.opštiToolStripMenuItem.Click += new System.EventHandler(this.OpštiToolStripMenuItem_Click);
-            // 
-            // detaljanToolStripMenuItem
-            // 
-            this.detaljanToolStripMenuItem.Name = "detaljanToolStripMenuItem";
-            this.detaljanToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.detaljanToolStripMenuItem.Text = "Detaljan";
-            this.detaljanToolStripMenuItem.Click += new System.EventHandler(this.DetaljanToolStripMenuItem_Click);
+            this.zaBankuToolStripMenuItem.Click += new System.EventHandler(this.ReportMenuStripItemClick);
             // 
             // yToolStripMenuItem
             // 
@@ -308,6 +290,7 @@
             this.bCloseGreen.Name = "bCloseGreen";
             this.bCloseGreen.Size = new System.Drawing.Size(248, 35);
             this.bCloseGreen.TabIndex = 3;
+            this.bCloseGreen.TabStop = false;
             this.bCloseGreen.Text = "Otvori";
             this.bCloseGreen.UseVisualStyleBackColor = true;
             this.bCloseGreen.Click += new System.EventHandler(this.OpenCloseGreenBoxMouseClick);
@@ -376,6 +359,7 @@
             this.bCloseRed.Name = "bCloseRed";
             this.bCloseRed.Size = new System.Drawing.Size(248, 35);
             this.bCloseRed.TabIndex = 5;
+            this.bCloseRed.TabStop = false;
             this.bCloseRed.Text = "Otvori";
             this.bCloseRed.UseVisualStyleBackColor = true;
             this.bCloseRed.Click += new System.EventHandler(this.OpenCloseRedBoxMouseClick);
@@ -444,6 +428,7 @@
             this.bCloseYellow.Name = "bCloseYellow";
             this.bCloseYellow.Size = new System.Drawing.Size(248, 35);
             this.bCloseYellow.TabIndex = 7;
+            this.bCloseYellow.TabStop = false;
             this.bCloseYellow.Text = "Otvori";
             this.bCloseYellow.UseVisualStyleBackColor = true;
             this.bCloseYellow.Click += new System.EventHandler(this.OpenCloseYellowBoxMouseClick);
@@ -512,6 +497,7 @@
             this.bCloseBlue.Name = "bCloseBlue";
             this.bCloseBlue.Size = new System.Drawing.Size(249, 35);
             this.bCloseBlue.TabIndex = 9;
+            this.bCloseBlue.TabStop = false;
             this.bCloseBlue.Text = "Otvori";
             this.bCloseBlue.UseVisualStyleBackColor = true;
             this.bCloseBlue.Click += new System.EventHandler(this.OpenCloseBlueBoxMouseClick);
@@ -596,8 +582,6 @@
         private System.Windows.Forms.Label lNotification;
         private System.Windows.Forms.ToolStripMenuItem izveštajiToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem zaBankuToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem opštiToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem detaljanToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem yToolStripMenuItem;
     }
 }

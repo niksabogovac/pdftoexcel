@@ -140,6 +140,7 @@ namespace QR_Code
                 return -1;
             }
         }
+
         /// <summary>
         /// Calculates box code of existing opened boxes from input document type.
         /// </summary>
@@ -333,7 +334,7 @@ namespace QR_Code
                 lNotification.Text = "Uspešno ste upisali.";
 
             }
-            catch (SqlException e)
+            catch (SqlException)
             {
                 lNotification.Text = "QR kod koji ste uneli ne može biti raspoređen ili je kod već upisan.";
             }
@@ -440,6 +441,38 @@ namespace QR_Code
             }
 
         }
+        
+        /// <summary>
+        /// Calculates number of needed codes for RW reports.
+        /// </summary>
+        /// <param name="numberOfFiles">Number of files.</param>
+        /// <returns>Calculated number of boxes</returns>
+        private int CalculateNumberOfCodes(int numberOfFiles)
+        {
+            int ret = 0;
+            ret = numberOfFiles / 30;
+            if (numberOfFiles % 30 != 0)
+            {
+                ret++;
+            }
+            return ret;
+        }
+
+        /// <summary>
+        /// Validates if codes are inserted into database for box.
+        /// </summary>
+        /// <param name="boxCode">Box code.</param>
+        /// <param name="fileNum">Current number of files.</param>
+        /// <returns>Difference between number of codes in database and number of files in box</returns>
+        private int CheckNumberOfCodes(string boxCode,int fileNum)
+        {
+            int ret = 0;
+            SqlConnection conn = new SqlConnection("Data Source=DESKTOP-DMTBJFE;Integrated Security=True");
+            conn.Open();
+            SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[RWTable] WHERE [BoxCode] = @boxCode", conn);
+            command.Parameters.AddWithValue("@boxCode", boxCode);
+            return ret;
+        }
         #region Event handlers
         /// <summary>
         /// Triggered when QR Code text box has focus.
@@ -508,6 +541,10 @@ namespace QR_Code
             if (greenBoxOpened)
             {
                 // Box was opened, remove box code and close it.
+                // Check if codes for RW report are inserted into database.
+
+                CloseBoxDialog diag = new CloseBoxDialog(CalculateNumberOfCodes(greenBoxNumOfFiles), tbGreen.Text);
+                diag.ShowDialog();
                 greenBoxOpened = false;
                 lNumFilesGreen.Text = string.Empty;
                 lStatusGreen.Text = "Status: Zatvorena";
@@ -515,6 +552,7 @@ namespace QR_Code
                 tbGreen.Clear();
                 greenBoxNumOfFiles = 0;
                 tbGreen.Enabled = true;
+                tbGreen.Focus();
             }
             else if (greenBoxOpened == false)
             {
@@ -540,6 +578,23 @@ namespace QR_Code
                         ((Button)sender).Text = "Zatvori";
                         lNumFilesGreen.Text = "Broj fajlova u kutiji: " + greenBoxNumOfFiles;
                         tbGreen.Enabled = false;
+                        //Focus next open text box.
+                        if (tbRed.Enabled)
+                        {
+                            tbRed.Focus();
+                        }
+                        else if (tbYellow.Enabled)
+                        {
+                            tbYellow.Focus();
+                        }
+                        else if (tbBlue.Enabled)
+                        {
+                            tbBlue.Focus();
+                        }
+                        else
+                        {
+                            tbQr.Focus();
+                        }
                     }
                 }
             }
@@ -587,6 +642,23 @@ namespace QR_Code
                         ((Button)sender).Text = "Zatvori";
                         lNumFilesRed.Text = "Broj fajlova u kutiji: " + redBoxNumOfFiles;
                         tbRed.Enabled = false;
+                        //Focus next open text box.
+                        if (tbGreen.Enabled)
+                        {
+                            tbGreen.Focus();
+                        }
+                        else if (tbYellow.Enabled)
+                        {
+                            tbYellow.Focus();
+                        }
+                        else if (tbBlue.Enabled)
+                        {
+                            tbBlue.Focus();
+                        }
+                        else
+                        {
+                            tbQr.Focus();
+                        }
                     }
                 }
             }
@@ -633,6 +705,23 @@ namespace QR_Code
                         ((Button)sender).Text = "Zatvori";
                         lNumFilesYellow.Text = "Broj fajlova u kutiji: " + yellowBoxNumOfFiles;
                         tbYellow.Enabled = false;
+                        //Focus next open text box.
+                        if (tbGreen.Enabled)
+                        {
+                            tbGreen.Focus();
+                        }
+                        else if (tbRed.Enabled)
+                        {
+                            tbRed.Focus();
+                        }
+                        else if (tbBlue.Enabled)
+                        {
+                            tbBlue.Focus();
+                        }
+                        else
+                        {
+                            tbQr.Focus();
+                        }
                     }
 
                 }
@@ -680,6 +769,23 @@ namespace QR_Code
                         ((Button)sender).Text = "Zatvori";
                         lNumFilesBlue.Text = "Broj fajlova u kutiji: " + blueBoxNumOfFiles;
                         tbBlue.Enabled = false;
+                        //Focus next open text box.
+                        if (tbGreen.Enabled)
+                        {
+                            tbGreen.Focus();
+                        }
+                        else if (tbRed.Enabled)
+                        {
+                            tbRed.Focus();
+                        }
+                        else if (tbYellow.Enabled)
+                        {
+                            tbYellow.Focus();
+                        }
+                        else
+                        {
+                            tbQr.Focus();
+                        }
                     }
 
                 }
@@ -726,258 +832,19 @@ namespace QR_Code
         }
 
         /// <summary>
-        /// Triggered when report creation from menu bar is clicked.
+        /// Triggered when report from menu item is clicked.
         /// </summary>
-        /// <param name="sender">Menu strip item.</param>
-        /// <param name="e">Following arguments.</param>
-        private void OpštiToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ReportMenuStripItemClick(object sender, EventArgs e)
         {
-            string outPath = null;
-            outPath += Application.StartupPath + @"\tabelaZaBanku.xls";
-            // Create default output sheet and workbook
-            Worksheet outputSheet = new Worksheet("Output");
-            Workbook outputBook = new Workbook();
-
-            // Set it to beginning of the document
-            int curRow = 0;
-            int curCol = 0;
-
-            outputSheet.Cells[curRow, curCol++] = new Cell("Unique ID");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Broj naloga/primopredaje");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Šifra kutije");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Datum očitavanja");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Operater");
-            outputSheet.Cells[curRow++, curCol++] = new Cell("Sadržaj QR koda");
-            curCol = 0;
-
-            SqlConnection conn = new SqlConnection("Data Source=DESKTOP-DMTBJFE;Integrated Security=True");
-            conn.Open();
-            SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[BankTable]", conn);
-            SqlDataReader reader = command.ExecuteReader();
-
-
-            while(reader.Read())
-            {
-                outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["ID"]);
-                outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["OrderNum"]);
-                outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["BoxCode"]);
-                DateTime date = (DateTime)reader["Date"];
-                outputSheet.Cells[curRow, curCol++] = new Cell(date.ToShortDateString());
-                outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["MBR"]);
-                outputSheet.Cells[curRow++, curCol++] = new Cell((string)reader["QRCode"]);
-                curCol = 0;
-            }
-            conn.Close();
-            try
-            {
-                outputBook.Worksheets.Add(outputSheet);
-                outputBook.Save(outPath);
-                MessageBox.Show("Uspešno kreiran izveštaj.");
-            } 
-            catch(Exception)
-            {
-                MessageBox.Show("Nije moguće kreirati izveštaj!");
-            }
-            
-
-            curCol = 0;
-
-        }
-
-       
-        /// <summary>
-        /// Triggered when detailed report creation from menu bar is clicked.
-        /// </summary>
-        /// <param name="sender">Menu strip item.</param>
-        /// <param name="e">Following arguments.</param>
-        private void DetaljanToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string outPath = null;
-            outPath += Application.StartupPath + @"\tabelaZaBankuDetaljna.xls";
-            // Create default output sheet and workbook
-            Worksheet outputSheet = new Worksheet("Output");
-            Workbook outputBook = new Workbook();
-
-            // Set it to beginning of the document
-            int curRow = 0;
-            int curCol = 0;
-
-            outputSheet.Cells[curRow, curCol++] = new Cell("Unique ID");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Broj naloga/primopredaje");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Vrsta kutije");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Broj fajlova u kutiji");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Šifra kutije");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Doctype");
-            outputSheet.Cells[curRow, curCol++] = new Cell("ID");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Mbr");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Partija");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Zahtev");
-            outputSheet.Cells[curRow, curCol++] = new Cell("ID kartice");
-            outputSheet.Cells[curRow++, curCol++] = new Cell("Paket");
-            curCol = 0;
-
-            SqlConnection conn = new SqlConnection("Data Source=DESKTOP-DMTBJFE;Integrated Security=True");
-            conn.Open();
-            SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[BankTable]", conn);
-            SqlDataReader reader = command.ExecuteReader();
-
-            string doctype = null, id = null, mbr = null, partija = null, zahtev = null, idKartice = null, paket = null;
-
-            while (reader.Read())
-            {
-                outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["ID"]);
-                outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["OrderNum"]);
-                string boxCode = (string)reader["BoxCode"];
-                int boxType = GetTypeFromBoxCode(boxCode);
-                switch(boxType)
-                {
-                    case 86:
-                        outputSheet.Cells[curRow, curCol++] = new Cell("POZAJMICE");
-                        break;
-                    case 148:
-                        outputSheet.Cells[curRow, curCol++] = new Cell("KREDITI");
-                        break;
-                    case 82:
-                        outputSheet.Cells[curRow, curCol++] = new Cell("RAČUNI");
-                        break;
-                    case 83:
-                        outputSheet.Cells[curRow, curCol++] = new Cell("OROČENJA");
-                        break;
-                    default:
-                        break;
-
-                }
-                outputSheet.Cells[curRow, curCol++] = new Cell(GetNumberOfFilesFromBox(boxCode).ToString());
-                outputSheet.Cells[curRow, curCol++] = new Cell(boxCode);
-
-                #region handle Code
-                string code = (string)reader["QRCode"];
-                code = Regex.Replace(code, "{", string.Empty);
-                code = Regex.Replace(code, "}", string.Empty);
-                code = Regex.Replace(code, " ", string.Empty);
-                // Separate client infos and remove ".
-                string[] stringSeparators = new string[] { "," };
-                string[] tokens = code.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string clientInfo in tokens)
-                {
-                    string tmp = Regex.Replace(clientInfo, "\"", string.Empty);
-                    string[] tmpSeparator = new string[] { ":" };
-                    string[] tmpTokens = tmp.Split(tmpSeparator, StringSplitOptions.RemoveEmptyEntries);
-                    if (tmpTokens[0].Equals("id"))
-                    {
-                        // Get id.
-                        id = tmpTokens[1];
-                    }
-                    else if (tmpTokens[0].Equals("doctype"))
-                    {
-                        // Get type of document.
-                        doctype = tmpTokens[1];
-                    }
-                    else if (tmpTokens[0].Equals("mbr"))
-                    {
-                        mbr = tmpTokens[1];
-                    }
-                    else if (tmpTokens[0].Equals("partija"))
-                    {
-                        partija = tmpTokens[1];
-                    }
-                    else if (tmpTokens[0].Equals("zahtev"))
-                    {
-                        zahtev = tmpTokens[1];
-                    } 
-                    else if (tmpTokens[0].Equals("Id_kartice"))
-                    {
-                        idKartice = tmpTokens[1];
-                    }
-                    else if (tmpTokens[0].Equals("paket"))
-                    {
-                        paket = tmpTokens[1];
-                    }
-
-                }
-                #endregion
-
-                if (doctype != null)
-                {
-                    outputSheet.Cells[curRow, curCol++] = new Cell(doctype);
-                }
-                else
-                {
-                    outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
-                }
-
-                if (id != null)
-                {
-                    outputSheet.Cells[curRow, curCol++] = new Cell(id);
-                }
-                else
-                {
-                    outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
-                }
-
-                if (mbr != null)
-                {
-                    outputSheet.Cells[curRow, curCol++] = new Cell(mbr);
-                }
-                else
-                {
-                    outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
-                }
-
-                if (partija!= null)
-                {
-                    outputSheet.Cells[curRow, curCol++] = new Cell(partija);
-                }
-                else
-                {
-                    outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
-                }
-
-                if (zahtev != null)
-                {
-                    outputSheet.Cells[curRow, curCol++] = new Cell(zahtev);
-                }
-                else
-                {
-                    outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
-                }
-                if (idKartice != null)
-                {
-                    outputSheet.Cells[curRow, curCol++] = new Cell(idKartice);
-                }
-                else
-                {
-                    outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
-                }
-                if (paket != null)
-                {
-                    outputSheet.Cells[curRow++, curCol++] = new Cell(paket);
-                }
-                else
-                {
-                    outputSheet.Cells[curRow++, curCol++] = new Cell(string.Empty);
-                }
-
-                curCol = 0;
-            }
-            conn.Close();
-            try
-            {
-                outputBook.Worksheets.Add(outputSheet);
-                outputBook.Save(outPath);
-                MessageBox.Show("Uspešno kreiran izveštaj.");
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Nije moguće kreirati izveštaj!");
-            }
-
-
-            curCol = 0;
-
+            ReportDialog diag = new ReportDialog();
+            diag.ShowDialog();
         }
 
         #endregion
+
+
         #endregion
     }
 }
