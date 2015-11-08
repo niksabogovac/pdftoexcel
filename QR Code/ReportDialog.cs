@@ -36,23 +36,23 @@ namespace QR_Code
                         MessageBox.Show("Izaberite vrstu izveštaja.");
                         break;
                     case 0:
-                        OpstiIzvestaj();
+                        GeneralReport();
                         break;
                     case 1:
-                        DetaljanIzvestaj();
+                        DetailedReport();
                         break;
-
+                    case 2:
+                        RWReport();
+                        break;
                 }
             }
             
         }
 
         /// <summary>
-        /// Triggered when detailed report creation from menu bar is clicked.
+        /// Triggered when detailed report creation from combo box is selected.
         /// </summary>
-        /// <param name="sender">Menu strip item.</param>
-        /// <param name="e">Following arguments.</param>
-        private void DetaljanIzvestaj()
+        private void DetailedReport()
         {
             string outPath = string.Empty;
             outPath += Application.StartupPath + @"\tabelaZaBankuDetaljna.xls";
@@ -239,11 +239,9 @@ namespace QR_Code
         }
 
         /// <summary>
-        /// Triggered when report creation from menu bar is clicked.
+        /// Triggered when report creation from combo box is selected.
         /// </summary>
-        /// <param name="sender">Menu strip item.</param>
-        /// <param name="e">Following arguments.</param>
-        private void OpstiIzvestaj()
+        private void GeneralReport()
         {
             string outPath = null;
             outPath += Application.StartupPath + @"\tabelaZaBanku.xls";
@@ -295,6 +293,14 @@ namespace QR_Code
 
 
             curCol = 0;
+
+        }
+
+        /// <summary>
+        /// Triggered when RW report creation from combo box is selected.
+        /// </summary>
+        private void RWReport()
+        {
 
         }
 

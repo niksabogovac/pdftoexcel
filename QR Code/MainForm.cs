@@ -471,6 +471,12 @@ namespace QR_Code
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[RWTable] WHERE [BoxCode] = @boxCode", conn);
             command.Parameters.AddWithValue("@boxCode", boxCode);
+            SqlDataReader reader = command.ExecuteReader();
+            reader.Close();
+            command.CommandText = "select @@ROWCOUNT";
+            int totalCodes = (int)command.ExecuteScalar();
+            // Difference between current number of files and inserted number of codes in database.
+            ret = CalculateNumberOfCodes(fileNum) - totalCodes;
             return ret;
         }
         #region Event handlers
@@ -542,9 +548,12 @@ namespace QR_Code
             {
                 // Box was opened, remove box code and close it.
                 // Check if codes for RW report are inserted into database.
-
-                CloseBoxDialog diag = new CloseBoxDialog(CalculateNumberOfCodes(greenBoxNumOfFiles), tbGreen.Text);
-                diag.ShowDialog();
+                int newCodes = CheckNumberOfCodes(tbGreen.Text,greenBoxNumOfFiles);
+                if (newCodes > 0)
+                {
+                    CloseBoxDialog diag = new CloseBoxDialog(newCodes, tbGreen.Text);
+                    diag.ShowDialog();
+                }
                 greenBoxOpened = false;
                 lNumFilesGreen.Text = string.Empty;
                 lStatusGreen.Text = "Status: Zatvorena";
@@ -610,6 +619,13 @@ namespace QR_Code
             if (redBoxOpened)
             {
                 // Box was opened, remove box code and close it.
+                // Check if codes for RW report are inserted into database.
+                int newCodes = CheckNumberOfCodes(tbRed.Text, redBoxNumOfFiles);
+                if (newCodes > 0)
+                {
+                    CloseBoxDialog diag = new CloseBoxDialog(newCodes, tbRed.Text);
+                    diag.ShowDialog();
+                }
                 redBoxOpened = false;
                 lStatusRed.Text = "Status: Zatvorena";
                 ((Button)sender).Text = "Otvori";
@@ -674,6 +690,13 @@ namespace QR_Code
             if (yellowBoxOpened)
             {
                 // Box was opened, remove box code and close it.
+                // Check if codes for RW report are inserted into database.
+                int newCodes = CheckNumberOfCodes(tbYellow.Text, yellowBoxNumOfFiles);
+                if (newCodes > 0)
+                {
+                    CloseBoxDialog diag = new CloseBoxDialog(newCodes, tbYellow.Text);
+                    diag.ShowDialog();
+                }
                 yellowBoxOpened = false;
                 lStatusYellow.Text = "Status: Zatvorena";
                 ((Button)sender).Text = "Otvori";
@@ -738,6 +761,13 @@ namespace QR_Code
             if (blueBoxOpened)
             {
                 // Box was opened, remove box code and close it.
+                // Check if codes for RW report are inserted into database.
+                int newCodes = CheckNumberOfCodes(tbBlue.Text, blueBoxNumOfFiles);
+                if (newCodes > 0)
+                {
+                    CloseBoxDialog diag = new CloseBoxDialog(newCodes, tbBlue.Text);
+                    diag.ShowDialog();
+                }
                 blueBoxOpened = false;
                 lStatusBlue.Text = "Status: Zatvorena";
                 ((Button)sender).Text = "Otvori";

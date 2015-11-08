@@ -62,7 +62,7 @@ namespace QR_Code
                 }
                 else
                 {
-                    Application.Exit();
+                    this.Dispose();
                 }
             }
             catch(Exception)

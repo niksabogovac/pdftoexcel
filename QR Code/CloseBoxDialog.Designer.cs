@@ -68,6 +68,7 @@
             this.Controls.Add(this.tbCode);
             this.Controls.Add(this.lText);
             this.Name = "CloseBoxDialog";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Zatvaranje kutije";
             this.ResumeLayout(false);
             this.PerformLayout();
