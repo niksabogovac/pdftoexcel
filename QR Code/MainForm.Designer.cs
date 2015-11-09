@@ -41,8 +41,6 @@
             this.miOption = new System.Windows.Forms.ToolStripMenuItem();
             this.miHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.izveštajiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.zaBankuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.yToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tlpLower = new System.Windows.Forms.TableLayoutPanel();
             this.pGreen = new System.Windows.Forms.Panel();
             this.lGreenTableName = new System.Windows.Forms.Label();
@@ -186,25 +184,10 @@
             // 
             // izveštajiToolStripMenuItem
             // 
-            this.izveštajiToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.zaBankuToolStripMenuItem,
-            this.yToolStripMenuItem});
             this.izveštajiToolStripMenuItem.Name = "izveštajiToolStripMenuItem";
             this.izveštajiToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
             this.izveštajiToolStripMenuItem.Text = "Izveštaji";
-            // 
-            // zaBankuToolStripMenuItem
-            // 
-            this.zaBankuToolStripMenuItem.Name = "zaBankuToolStripMenuItem";
-            this.zaBankuToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
-            this.zaBankuToolStripMenuItem.Text = "Za banku";
-            this.zaBankuToolStripMenuItem.Click += new System.EventHandler(this.ReportMenuStripItemClick);
-            // 
-            // yToolStripMenuItem
-            // 
-            this.yToolStripMenuItem.Name = "yToolStripMenuItem";
-            this.yToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
-            this.yToolStripMenuItem.Text = "Za import u RWAS";
+            this.izveštajiToolStripMenuItem.Click += new System.EventHandler(this.ReportMenuStripItemClick);
             // 
             // tlpLower
             // 
@@ -581,8 +564,6 @@
         private System.Windows.Forms.Label lBlueTableName;
         private System.Windows.Forms.Label lNotification;
         private System.Windows.Forms.ToolStripMenuItem izveštajiToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem zaBankuToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem yToolStripMenuItem;
     }
 }
 

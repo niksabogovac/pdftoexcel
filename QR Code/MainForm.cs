@@ -479,7 +479,9 @@ namespace QR_Code
             ret = CalculateNumberOfCodes(fileNum) - totalCodes;
             return ret;
         }
+
         #region Event handlers
+
         /// <summary>
         /// Triggered when QR Code text box has focus.
         /// </summary>
