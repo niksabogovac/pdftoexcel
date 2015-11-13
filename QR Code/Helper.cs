@@ -50,7 +50,20 @@ namespace QR_Code
             { "OPDDinOR", BoxTypeEnum.OROCENJA },
             { "DKDevAR", BoxTypeEnum.RACUNI },
             { "ODTR", BoxTypeEnum.RACUNI },
-
+            { "OstDevOR" ,BoxTypeEnum.OROCENJA },
+            { "PotDevOR",BoxTypeEnum.OROCENJA },
+            { "OvlDevAR", BoxTypeEnum.RACUNI },
+            { "DKTR", BoxTypeEnum.RACUNI },
+            { "LDSDK", BoxTypeEnum.RACUNI },
+            { "OstKK", BoxTypeEnum.RACUNI },
+            { "OstDTR", BoxTypeEnum.RACUNI },
+            { "OvlTR", BoxTypeEnum.RACUNI },
+            { "ODDevAR", BoxTypeEnum.RACUNI },
+            { "DKDinAR", BoxTypeEnum.RACUNI },
+            { "PriSDK" , BoxTypeEnum.RACUNI },
+            { "OstDevAR", BoxTypeEnum.RACUNI },
+            { "OstDKR", BoxTypeEnum.KREDITI },
+            { "PotKR", BoxTypeEnum.KREDITI },
         };
 
 
