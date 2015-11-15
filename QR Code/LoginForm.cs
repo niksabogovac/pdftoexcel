@@ -44,10 +44,10 @@ namespace QR_Code
         {
             try
             {
-                SqlConnection conn = new SqlConnection("Data Source=DESKTOP-DMTBJFE;Integrated Security=True");
+                SqlConnection conn = new SqlConnection("Data Source=DMTBJFE;Integrated Security=True");
                 conn.Open();
-                SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[Users] WHERE [JMBG]=" + tbPass.Text, conn);
-
+                SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[Users] WHERE [Name]= @name", conn);
+                command.Parameters.AddWithValue("@name", tbPass.Text);
                 SqlDataReader reader = command.ExecuteReader();
                 if (reader.HasRows)
                 {

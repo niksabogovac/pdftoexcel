@@ -39,6 +39,7 @@
             this.lWorker = new System.Windows.Forms.Label();
             this.mMain = new System.Windows.Forms.MenuStrip();
             this.miOption = new System.Windows.Forms.ToolStripMenuItem();
+            this.izbrišiBazuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.miHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.izveštajiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tlpLower = new System.Windows.Forms.TableLayoutPanel();
@@ -71,6 +72,10 @@
             this.lBlue = new System.Windows.Forms.Label();
             this.bCloseBlue = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.pUpper.SuspendLayout();
             this.mMain.SuspendLayout();
             this.tlpLower.SuspendLayout();
@@ -99,9 +104,10 @@
             // lNotification
             // 
             this.lNotification.AutoSize = true;
+            this.lNotification.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lNotification.Location = new System.Drawing.Point(538, 43);
             this.lNotification.Name = "lNotification";
-            this.lNotification.Size = new System.Drawing.Size(0, 13);
+            this.lNotification.Size = new System.Drawing.Size(0, 31);
             this.lNotification.TabIndex = 12;
             // 
             // bAddData
@@ -172,9 +178,18 @@
             // 
             // miOption
             // 
+            this.miOption.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.izbrišiBazuToolStripMenuItem});
             this.miOption.Name = "miOption";
             this.miOption.Size = new System.Drawing.Size(53, 20);
             this.miOption.Text = "Opcije";
+            // 
+            // izbrišiBazuToolStripMenuItem
+            // 
+            this.izbrišiBazuToolStripMenuItem.Name = "izbrišiBazuToolStripMenuItem";
+            this.izbrišiBazuToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.izbrišiBazuToolStripMenuItem.Text = "Izbriši bazu";
+            this.izbrišiBazuToolStripMenuItem.Click += new System.EventHandler(this.izbrišiBazuToolStripMenuItem_Click);
             // 
             // miHelp
             // 
@@ -206,12 +221,13 @@
             this.tlpLower.RowCount = 1;
             this.tlpLower.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpLower.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpLower.Size = new System.Drawing.Size(1017, 375);
+            this.tlpLower.Size = new System.Drawing.Size(1017, 396);
             this.tlpLower.TabIndex = 2;
             // 
             // pGreen
             // 
             this.pGreen.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.pGreen.Controls.Add(this.label1);
             this.pGreen.Controls.Add(this.lGreenTableName);
             this.pGreen.Controls.Add(this.lNumFilesGreen);
             this.pGreen.Controls.Add(this.lStatusGreen);
@@ -221,7 +237,7 @@
             this.pGreen.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pGreen.Location = new System.Drawing.Point(3, 3);
             this.pGreen.Name = "pGreen";
-            this.pGreen.Size = new System.Drawing.Size(248, 369);
+            this.pGreen.Size = new System.Drawing.Size(248, 390);
             this.pGreen.TabIndex = 0;
             // 
             // lGreenTableName
@@ -269,7 +285,7 @@
             // bCloseGreen
             // 
             this.bCloseGreen.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.bCloseGreen.Location = new System.Drawing.Point(0, 334);
+            this.bCloseGreen.Location = new System.Drawing.Point(0, 355);
             this.bCloseGreen.Name = "bCloseGreen";
             this.bCloseGreen.Size = new System.Drawing.Size(248, 35);
             this.bCloseGreen.TabIndex = 3;
@@ -281,6 +297,7 @@
             // pRed
             // 
             this.pRed.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.pRed.Controls.Add(this.label2);
             this.pRed.Controls.Add(this.lRedTableName);
             this.pRed.Controls.Add(this.lNumFilesRed);
             this.pRed.Controls.Add(this.lStatusRed);
@@ -290,7 +307,7 @@
             this.pRed.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pRed.Location = new System.Drawing.Point(257, 3);
             this.pRed.Name = "pRed";
-            this.pRed.Size = new System.Drawing.Size(248, 369);
+            this.pRed.Size = new System.Drawing.Size(248, 390);
             this.pRed.TabIndex = 1;
             // 
             // lRedTableName
@@ -338,7 +355,7 @@
             // bCloseRed
             // 
             this.bCloseRed.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.bCloseRed.Location = new System.Drawing.Point(0, 334);
+            this.bCloseRed.Location = new System.Drawing.Point(0, 355);
             this.bCloseRed.Name = "bCloseRed";
             this.bCloseRed.Size = new System.Drawing.Size(248, 35);
             this.bCloseRed.TabIndex = 5;
@@ -350,6 +367,7 @@
             // pYellow
             // 
             this.pYellow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.pYellow.Controls.Add(this.label3);
             this.pYellow.Controls.Add(this.lYellowTableName);
             this.pYellow.Controls.Add(this.lNumFilesYellow);
             this.pYellow.Controls.Add(this.lStatusYellow);
@@ -359,7 +377,7 @@
             this.pYellow.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pYellow.Location = new System.Drawing.Point(511, 3);
             this.pYellow.Name = "pYellow";
-            this.pYellow.Size = new System.Drawing.Size(248, 369);
+            this.pYellow.Size = new System.Drawing.Size(248, 390);
             this.pYellow.TabIndex = 2;
             // 
             // lYellowTableName
@@ -407,7 +425,7 @@
             // bCloseYellow
             // 
             this.bCloseYellow.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.bCloseYellow.Location = new System.Drawing.Point(0, 334);
+            this.bCloseYellow.Location = new System.Drawing.Point(0, 355);
             this.bCloseYellow.Name = "bCloseYellow";
             this.bCloseYellow.Size = new System.Drawing.Size(248, 35);
             this.bCloseYellow.TabIndex = 7;
@@ -419,6 +437,7 @@
             // pBlue
             // 
             this.pBlue.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.pBlue.Controls.Add(this.label4);
             this.pBlue.Controls.Add(this.lBlueTableName);
             this.pBlue.Controls.Add(this.lNumFilesBlue);
             this.pBlue.Controls.Add(this.lStatusBlue);
@@ -428,7 +447,7 @@
             this.pBlue.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pBlue.Location = new System.Drawing.Point(765, 3);
             this.pBlue.Name = "pBlue";
-            this.pBlue.Size = new System.Drawing.Size(249, 369);
+            this.pBlue.Size = new System.Drawing.Size(249, 390);
             this.pBlue.TabIndex = 3;
             // 
             // lBlueTableName
@@ -476,7 +495,7 @@
             // bCloseBlue
             // 
             this.bCloseBlue.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.bCloseBlue.Location = new System.Drawing.Point(0, 334);
+            this.bCloseBlue.Location = new System.Drawing.Point(0, 355);
             this.bCloseBlue.Name = "bCloseBlue";
             this.bCloseBlue.Size = new System.Drawing.Size(249, 35);
             this.bCloseBlue.TabIndex = 9;
@@ -489,11 +508,51 @@
             // 
             this.errorProvider.ContainerControl = this;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(9, 98);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(46, 51);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "1";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(15, 98);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(46, 51);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "2";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(21, 98);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(46, 51);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "3";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(14, 98);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(46, 51);
+            this.label4.TabIndex = 11;
+            this.label4.Text = "4";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1017, 473);
+            this.ClientSize = new System.Drawing.Size(1017, 494);
             this.Controls.Add(this.tlpLower);
             this.Controls.Add(this.pUpper);
             this.Controls.Add(this.mMain);
@@ -564,6 +623,11 @@
         private System.Windows.Forms.Label lBlueTableName;
         private System.Windows.Forms.Label lNotification;
         private System.Windows.Forms.ToolStripMenuItem izveštajiToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem izbrišiBazuToolStripMenuItem;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
     }
 }
 

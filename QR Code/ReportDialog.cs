@@ -78,7 +78,7 @@ namespace QR_Code
             outputSheet.Cells[curRow++, curCol++] = new Cell("Paket");
             curCol = 0;
 
-            SqlConnection conn = new SqlConnection("Data Source=DESKTOP-DMTBJFE;Integrated Security=True");
+            SqlConnection conn = new SqlConnection("Data Source=DMTBJFE;Integrated Security=True");
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[BankTable] WHERE [OrderNum] = @orderNum", conn);
             command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
@@ -114,6 +114,7 @@ namespace QR_Code
 
                 #region handle Code
                 string code = (string)reader["QRCode"];
+                code = Regex.Replace(code, @"\\000021", string.Empty);
                 code = Regex.Replace(code, "{", string.Empty);
                 code = Regex.Replace(code, "}", string.Empty);
                 code = Regex.Replace(code, " ", string.Empty);
@@ -125,35 +126,39 @@ namespace QR_Code
                     string tmp = Regex.Replace(clientInfo, "\"", string.Empty);
                     string[] tmpSeparator = new string[] { ":" };
                     string[] tmpTokens = tmp.Split(tmpSeparator, StringSplitOptions.RemoveEmptyEntries);
-                    if (tmpTokens[0].Equals("id"))
+                    if (tmpTokens.Length > 1)
                     {
-                        // Get id.
-                        id = tmpTokens[1];
-                    }
-                    else if (tmpTokens[0].Equals("doctype"))
-                    {
-                        // Get type of document.
-                        doctype = tmpTokens[1];
-                    }
-                    else if (tmpTokens[0].Equals("mbr"))
-                    {
-                        mbr = tmpTokens[1];
-                    }
-                    else if (tmpTokens[0].Equals("partija"))
-                    {
-                        partija = tmpTokens[1];
-                    }
-                    else if (tmpTokens[0].Equals("zahtev"))
-                    {
-                        zahtev = tmpTokens[1];
-                    }
-                    else if (tmpTokens[0].Equals("id_kartice"))
-                    {
-                        idKartice = tmpTokens[1];
-                    }
-                    else if (tmpTokens[0].Equals("paket"))
-                    {
-                        paket = tmpTokens[1];
+
+                        if (tmpTokens[0].Equals("id"))
+                        {
+                            // Get id.
+                            id = tmpTokens[1];
+                        }
+                        else if (tmpTokens[0].Equals("doctype"))
+                        {
+                            // Get type of document.
+                            doctype = tmpTokens[1];
+                        }
+                        else if (tmpTokens[0].Equals("mbr"))
+                        {
+                            mbr = tmpTokens[1];
+                        }
+                        else if (tmpTokens[0].Equals("partija"))
+                        {
+                            partija = tmpTokens[1];
+                        }
+                        else if (tmpTokens[0].Equals("zahtev"))
+                        {
+                            zahtev = tmpTokens[1];
+                        }
+                        else if (tmpTokens[0].Equals("id_kartice"))
+                        {
+                            idKartice = tmpTokens[1];
+                        }
+                        else if (tmpTokens[0].Equals("paket"))
+                        {
+                            paket = tmpTokens[1];
+                        }
                     }
 
                 }
@@ -261,7 +266,7 @@ namespace QR_Code
             outputSheet.Cells[curRow++, curCol++] = new Cell("Sadržaj QR koda");
             curCol = 0;
 
-            SqlConnection conn = new SqlConnection("Data Source=DESKTOP-DMTBJFE;Integrated Security=True");
+            SqlConnection conn = new SqlConnection("Data Source=DMTBJFE;Integrated Security=True");
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[BankTable] WHERE [OrderNum] = @orderNum", conn);
             command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
@@ -276,7 +281,10 @@ namespace QR_Code
                 DateTime date = (DateTime)reader["Date"];
                 outputSheet.Cells[curRow, curCol++] = new Cell(date.ToShortDateString());
                 outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["MBR"]);
-                outputSheet.Cells[curRow++, curCol++] = new Cell((string)reader["QRCode"]);
+                // Don't show messages.
+                string qrCode = (string)reader["QRCode"];
+                qrCode = Regex.Replace(qrCode, @"\\000021", string.Empty);
+                outputSheet.Cells[curRow++, curCol++] = new Cell(qrCode);
                 curCol = 0;
             }
             conn.Close();
@@ -327,7 +335,7 @@ namespace QR_Code
             curCol = 0;
 
             // Get all box codes  for RW report.
-            SqlConnection conn = new SqlConnection("Data Source=DESKTOP-DMTBJFE;Integrated Security=True");
+            SqlConnection conn = new SqlConnection("Data Source=DMTBJFE;Integrated Security=True");
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [OrderNum] = @orderNum", conn);
             command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
@@ -377,6 +385,7 @@ namespace QR_Code
                     hbCode = (string)reader["BoxCode"];
                     #region handle Code
                     string code = (string)reader["QRCode"];
+                    code = Regex.Replace(code, @"\\000021", string.Empty);
                     code = Regex.Replace(code, "{", string.Empty);
                     code = Regex.Replace(code, "}", string.Empty);
                     code = Regex.Replace(code, " ", string.Empty);
@@ -395,35 +404,38 @@ namespace QR_Code
                         string tmp = Regex.Replace(clientInfo, "\"", string.Empty);
                         string[] tmpSeparator = new string[] { ":" };
                         string[] tmpTokens = tmp.Split(tmpSeparator, StringSplitOptions.RemoveEmptyEntries);
-                        if (tmpTokens[0].Equals("id"))
+                        if (tmpTokens.Length > 1)
                         {
-                            // Get id.
-                            tmpid =i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString(); 
-                        }
-                        else if (tmpTokens[0].Equals("doctype"))
-                        {
-                            // Get type of document.
-                            tmpdoctype = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
-                        }
-                        else if (tmpTokens[0].Equals("mbr"))
-                        {
-                            tmpmbr = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
-                        }
-                        else if (tmpTokens[0].Equals("partija"))
-                        {
-                            tmppartija = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
-                        }
-                        else if (tmpTokens[0].Equals("zahtev"))
-                        {
-                            tmpzahtev = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
-                        }
-                        else if (tmpTokens[0].Equals("id_kartice"))
-                        {
-                            tmpidKartice = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
-                        }
-                        else if (tmpTokens[0].Equals("paket"))
-                        {
-                            tmppaket = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
+                            if (tmpTokens[0].Equals("id"))
+                            {
+                                // Get id.
+                                tmpid = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
+                            }
+                            else if (tmpTokens[0].Equals("doctype"))
+                            {
+                                // Get type of document.
+                                tmpdoctype = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
+                            }
+                            else if (tmpTokens[0].Equals("mbr"))
+                            {
+                                tmpmbr = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
+                            }
+                            else if (tmpTokens[0].Equals("partija"))
+                            {
+                                tmppartija = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
+                            }
+                            else if (tmpTokens[0].Equals("zahtev"))
+                            {
+                                tmpzahtev = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
+                            }
+                            else if (tmpTokens[0].Equals("id_kartice"))
+                            {
+                                tmpidKartice = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
+                            }
+                            else if (tmpTokens[0].Equals("paket"))
+                            {
+                                tmppaket = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
+                            }
                         }
 
                     }
@@ -664,7 +676,7 @@ namespace QR_Code
         /// <returns>Output box type.</returns>
         private int GetTypeFromBoxCode(string boxCode)
         {
-            SqlConnection conn = new SqlConnection("Data Source=DESKTOP-DMTBJFE;Integrated Security=True");
+            SqlConnection conn = new SqlConnection("Data Source=DMTBJFE;Integrated Security=True");
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT [Type] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn);
             command.Parameters.AddWithValue("@boxCode", boxCode);
@@ -689,7 +701,7 @@ namespace QR_Code
         {
             int fileNum = -1;
 
-            SqlConnection conn = new SqlConnection("Data Source=DESKTOP-DMTBJFE;Integrated Security=True");
+            SqlConnection conn = new SqlConnection("Data Source=DMTBJFE;Integrated Security=True");
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn);
             command.Parameters.AddWithValue("@boxCode", boxCode);

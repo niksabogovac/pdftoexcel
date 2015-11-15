@@ -125,7 +125,7 @@ namespace QR_Code
         /// <returns>Output box type.</returns>
         private int GetTypeFromBoxCode(string boxCode)
         {
-            SqlConnection conn = new SqlConnection("Data Source=DESKTOP-DMTBJFE;Integrated Security=True");
+            SqlConnection conn = new SqlConnection("Data Source=DMTBJFE;Integrated Security=True");
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT [Type] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn);
             command.Parameters.AddWithValue("@boxCode", boxCode);
@@ -185,7 +185,7 @@ namespace QR_Code
         /// <param name="code">Read QR code.</param>
         private void InserToBankTable(string id, string boxCode, string code)
         {
-            SqlConnection conn = new SqlConnection("Data Source=DESKTOP-DMTBJFE;Integrated Security=True");
+            SqlConnection conn = new SqlConnection("Data Source=DMTBJFE;Integrated Security=True");
             conn.Open();
             SqlCommand command = new SqlCommand("INSERT INTO [QRCode].[dbo].[BankTable] VALUES (@id, @orderNum, @boxCode, @date, @jmbg, @code)", conn);
             command.Parameters.AddWithValue("@id", id);
@@ -205,7 +205,7 @@ namespace QR_Code
         /// <param name="numberOfFiles"></param>
         private void UpdateBoxTable(string boxCode, int numberOfFiles)
         {
-            SqlConnection conn = new SqlConnection("Data Source=DESKTOP-DMTBJFE;Integrated Security=True");
+            SqlConnection conn = new SqlConnection("Data Source=DMTBJFE;Integrated Security=True");
             conn.Open();
             SqlCommand command = new SqlCommand("UPDATE [QRCode].[dbo].[Box] SET [NumberOfFiles] = @fileNum WHERE [Code] = @boxCode", conn);
             command.Parameters.AddWithValue("@fileNum", numberOfFiles);
@@ -223,7 +223,7 @@ namespace QR_Code
         {
             int fileNum = -1;
 
-            SqlConnection conn = new SqlConnection("Data Source=DESKTOP-DMTBJFE;Integrated Security=True");
+            SqlConnection conn = new SqlConnection("Data Source=DMTBJFE;Integrated Security=True");
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn);
             command.Parameters.AddWithValue("@boxCode", boxCode);
@@ -252,7 +252,8 @@ namespace QR_Code
 
             // Remove all non-ASCII characters.
             code = Regex.Replace(code, @"[^\u0000-\u007F]", string.Empty);
-
+            // Remove \000021 from code.
+            code = Regex.Replace(code, @"\\000021", string.Empty);
             // Remove { and }.
             code = Regex.Replace(code, "{", string.Empty);
             code = Regex.Replace(code, "}", string.Empty);
@@ -294,6 +295,7 @@ namespace QR_Code
             if (boxCode == null)
             {
                 lNotification.Text = "QR kod koji ste uneli ne može biti raspoređen jer ne postoji doctype - " + doctype + ".";
+                lNotification.ForeColor = Color.Red;
                 return;
             }
             try
@@ -332,11 +334,13 @@ namespace QR_Code
                         return;
                 }
                 lNotification.Text = "Uspešno ste upisali.";
+                lNotification.ForeColor = Color.Green;
 
             }
             catch (SqlException)
             {
                 lNotification.Text = "QR kod koji ste uneli ne može biti raspoređen ili je kod već upisan.";
+                lNotification.ForeColor = Color.Red;
             }
         }
 
@@ -351,7 +355,7 @@ namespace QR_Code
         /// >= 1 found existing table, current number of files.</returns>
         private int OpenOrCreateBox(string boxCode, BoxTypeEnum boxType)
         {
-            SqlConnection conn = new SqlConnection("Data Source=DESKTOP-DMTBJFE;Integrated Security=True");
+            SqlConnection conn = new SqlConnection("Data Source=DMTBJFE;Integrated Security=True");
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn);
             command.Parameters.AddWithValue("@boxCode", boxCode);
@@ -467,7 +471,7 @@ namespace QR_Code
         private int CheckNumberOfCodes(string boxCode,int fileNum)
         {
             int ret = 0;
-            SqlConnection conn = new SqlConnection("Data Source=DESKTOP-DMTBJFE;Integrated Security=True");
+            SqlConnection conn = new SqlConnection("Data Source=DMTBJFE;Integrated Security=True");
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[RWTable] WHERE [BoxCode] = @boxCode", conn);
             command.Parameters.AddWithValue("@boxCode", boxCode);
@@ -875,6 +879,11 @@ namespace QR_Code
         }
 
         #endregion
+
+        private void izbrišiBazuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
 
 
         #endregion

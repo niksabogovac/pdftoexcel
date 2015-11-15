@@ -58,10 +58,8 @@ namespace QR_Code
             { "OstKK", BoxTypeEnum.RACUNI },
             { "OstDTR", BoxTypeEnum.RACUNI },
             { "OvlTR", BoxTypeEnum.RACUNI },
-            { "ODDevAR", BoxTypeEnum.RACUNI },
             { "DKDinAR", BoxTypeEnum.RACUNI },
             { "PriSDK" , BoxTypeEnum.RACUNI },
-            { "OstDevAR", BoxTypeEnum.RACUNI },
             { "OstDKR", BoxTypeEnum.KREDITI },
             { "PotKR", BoxTypeEnum.KREDITI },
         };

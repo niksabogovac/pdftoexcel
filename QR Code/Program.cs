@@ -20,11 +20,9 @@ namespace QR_Code
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // LoginForm loginForm = new LoginForm();
-
-            MainForm mainForm = new MainForm("milan", "nesto");
-            DialogResult result = mainForm.ShowDialog();
-            /*while (result != DialogResult.Cancel)
+            LoginForm loginForm = new LoginForm();
+            DialogResult result = loginForm.ShowDialog();
+            while (result != DialogResult.Cancel)
             {
                 if (result == DialogResult.OK)
                 {
@@ -36,7 +34,7 @@ namespace QR_Code
                     MessageBox.Show("Pogrešno ste uneli parametre za logovanje, pokušajte ponovo!");
                     loginForm.ShowDialog();
                 }
-            }   */
+            }   
         }
     }
 }
