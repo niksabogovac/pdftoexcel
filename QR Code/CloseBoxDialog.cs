@@ -77,12 +77,13 @@ namespace QR_Code
         /// </summary>
         private void InsertIntoRWTable(string code)
         {
-            SqlConnection conn = new SqlConnection("Data Source=DMTBJFE;Integrated Security=True");
+            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
             conn.Open();
             SqlCommand command = new SqlCommand("INSERT INTO [QRCode].[dbo].[RWTable] VALUES (@boxCode, @code)", conn);
             command.Parameters.AddWithValue("@boxCode", boxCode);
             command.Parameters.AddWithValue("@code", code);
             command.ExecuteNonQuery();
+            conn.Close();
         }
 
       

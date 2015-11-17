@@ -61,9 +61,9 @@
             this.lPass.AutoSize = true;
             this.lPass.Location = new System.Drawing.Point(9, 65);
             this.lPass.Name = "lPass";
-            this.lPass.Size = new System.Drawing.Size(97, 13);
+            this.lPass.Size = new System.Drawing.Size(93, 13);
             this.lPass.TabIndex = 2;
-            this.lPass.Text = "Unesite svoj JMBG";
+            this.lPass.Text = "Unesite svoju šifru";
             // 
             // tbPass
             // 

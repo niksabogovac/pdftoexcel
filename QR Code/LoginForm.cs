@@ -44,7 +44,7 @@ namespace QR_Code
         {
             try
             {
-                SqlConnection conn = new SqlConnection("Data Source=DMTBJFE;Integrated Security=True");
+                SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
                 conn.Open();
                 SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[Users] WHERE [Name]= @name", conn);
                 command.Parameters.AddWithValue("@name", tbPass.Text);
@@ -60,6 +60,7 @@ namespace QR_Code
                     DialogResult = DialogResult.Cancel;
 
                 }
+                reader.Close();
                 conn.Close();
             }
             catch (Exception)

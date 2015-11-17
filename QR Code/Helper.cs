@@ -62,6 +62,8 @@ namespace QR_Code
             { "PriSDK" , BoxTypeEnum.RACUNI },
             { "OstDKR", BoxTypeEnum.KREDITI },
             { "PotKR", BoxTypeEnum.KREDITI },
+            { "OstDinOR", BoxTypeEnum.OROCENJA},
+            { "PotDinOR", BoxTypeEnum.OROCENJA},
         };
 
 
@@ -90,6 +92,8 @@ namespace QR_Code
                 return doctypeBoxCode;
             }
         }
+
+        public static string ConnectionString = "DMTBJFE";
         #endregion
         #region Constructors
         /// <summary>

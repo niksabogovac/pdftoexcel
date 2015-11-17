@@ -78,12 +78,11 @@ namespace QR_Code
             outputSheet.Cells[curRow++, curCol++] = new Cell("Paket");
             curCol = 0;
 
-            SqlConnection conn = new SqlConnection("Data Source=DMTBJFE;Integrated Security=True");
+            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[BankTable] WHERE [OrderNum] = @orderNum", conn);
             command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
             SqlDataReader reader = command.ExecuteReader();
-
             string doctype = null, id = null, mbr = null, partija = null, zahtev = null, idKartice = null, paket = null;
 
             while (reader.Read())
@@ -266,7 +265,7 @@ namespace QR_Code
             outputSheet.Cells[curRow++, curCol++] = new Cell("Sadržaj QR koda");
             curCol = 0;
 
-            SqlConnection conn = new SqlConnection("Data Source=DMTBJFE;Integrated Security=True");
+            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[BankTable] WHERE [OrderNum] = @orderNum", conn);
             command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
@@ -335,7 +334,7 @@ namespace QR_Code
             curCol = 0;
 
             // Get all box codes  for RW report.
-            SqlConnection conn = new SqlConnection("Data Source=DMTBJFE;Integrated Security=True");
+            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [OrderNum] = @orderNum", conn);
             command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
@@ -676,20 +675,27 @@ namespace QR_Code
         /// <returns>Output box type.</returns>
         private int GetTypeFromBoxCode(string boxCode)
         {
-            SqlConnection conn = new SqlConnection("Data Source=DMTBJFE;Integrated Security=True");
-            conn.Open();
-            SqlCommand command = new SqlCommand("SELECT [Type] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn);
-            command.Parameters.AddWithValue("@boxCode", boxCode);
-            SqlDataReader reader = command.ExecuteReader();
-            if (reader.HasRows)
+            using (SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True"))
             {
-                reader.Read();
-                return (int)reader[0];
-            }
-            else
-            {
-                return -1;
-            }
+                conn.Open();
+                SqlCommand command = new SqlCommand("SELECT [Type] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn);
+                command.Parameters.AddWithValue("@boxCode", boxCode);
+                SqlDataReader reader = command.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    int ret = (int)reader[0];
+                    reader.Close();
+                    conn.Close();
+                    return ret;
+                }
+                else
+                {
+                    reader.Close();
+                    conn.Close();
+                    return -1;
+                }
+            }     
         }
 
         /// <summary>
@@ -701,17 +707,19 @@ namespace QR_Code
         {
             int fileNum = -1;
 
-            SqlConnection conn = new SqlConnection("Data Source=DMTBJFE;Integrated Security=True");
-            conn.Open();
-            SqlCommand command = new SqlCommand("SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn);
-            command.Parameters.AddWithValue("@boxCode", boxCode);
-            SqlDataReader reader = command.ExecuteReader();
-            if (reader.HasRows)
+            using (SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString + ";Integrated Security=True"))
             {
-                reader.Read();
-                fileNum = (int)reader["NumberOfFiles"];
+                conn.Open();
+                SqlCommand command = new SqlCommand("SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn);
+                command.Parameters.AddWithValue("@boxCode", boxCode);
+                SqlDataReader reader = command.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    fileNum = (int)reader["NumberOfFiles"];
+                }
+                return fileNum;
             }
-            return fileNum;
         }
     }
 }
