@@ -13,9 +13,9 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && (this.components != null))
             {
-                components.Dispose();
+                this.components.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -40,10 +40,13 @@
             this.mMain = new System.Windows.Forms.MenuStrip();
             this.miOption = new System.Windows.Forms.ToolStripMenuItem();
             this.izbrišiBazuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dodajToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.doctypeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.miHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.izveštajiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tlpLower = new System.Windows.Forms.TableLayoutPanel();
             this.pGreen = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             this.lGreenTableName = new System.Windows.Forms.Label();
             this.lNumFilesGreen = new System.Windows.Forms.Label();
             this.lStatusGreen = new System.Windows.Forms.Label();
@@ -51,6 +54,7 @@
             this.tbGreen = new System.Windows.Forms.TextBox();
             this.bCloseGreen = new System.Windows.Forms.Button();
             this.pRed = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
             this.lRedTableName = new System.Windows.Forms.Label();
             this.lNumFilesRed = new System.Windows.Forms.Label();
             this.lStatusRed = new System.Windows.Forms.Label();
@@ -58,6 +62,7 @@
             this.lRed = new System.Windows.Forms.Label();
             this.bCloseRed = new System.Windows.Forms.Button();
             this.pYellow = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
             this.lYellowTableName = new System.Windows.Forms.Label();
             this.lNumFilesYellow = new System.Windows.Forms.Label();
             this.lStatusYellow = new System.Windows.Forms.Label();
@@ -65,6 +70,7 @@
             this.tbYellow = new System.Windows.Forms.TextBox();
             this.bCloseYellow = new System.Windows.Forms.Button();
             this.pBlue = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
             this.lBlueTableName = new System.Windows.Forms.Label();
             this.lNumFilesBlue = new System.Windows.Forms.Label();
             this.lStatusBlue = new System.Windows.Forms.Label();
@@ -72,10 +78,6 @@
             this.lBlue = new System.Windows.Forms.Label();
             this.bCloseBlue = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.pUpper.SuspendLayout();
             this.mMain.SuspendLayout();
             this.tlpLower.SuspendLayout();
@@ -179,7 +181,8 @@
             // miOption
             // 
             this.miOption.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.izbrišiBazuToolStripMenuItem});
+            this.izbrišiBazuToolStripMenuItem,
+            this.dodajToolStripMenuItem});
             this.miOption.Name = "miOption";
             this.miOption.Size = new System.Drawing.Size(53, 20);
             this.miOption.Text = "Opcije";
@@ -189,7 +192,22 @@
             this.izbrišiBazuToolStripMenuItem.Name = "izbrišiBazuToolStripMenuItem";
             this.izbrišiBazuToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.izbrišiBazuToolStripMenuItem.Text = "Izbriši bazu";
-            this.izbrišiBazuToolStripMenuItem.Click += new System.EventHandler(this.izbrišiBazuToolStripMenuItem_Click);
+            this.izbrišiBazuToolStripMenuItem.Click += new System.EventHandler(this.IzbrišiBazuToolStripMenuItem_Click);
+            // 
+            // dodajToolStripMenuItem
+            // 
+            this.dodajToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.doctypeToolStripMenuItem});
+            this.dodajToolStripMenuItem.Name = "dodajToolStripMenuItem";
+            this.dodajToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.dodajToolStripMenuItem.Text = "Dodaj";
+            // 
+            // doctypeToolStripMenuItem
+            // 
+            this.doctypeToolStripMenuItem.Name = "doctypeToolStripMenuItem";
+            this.doctypeToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.doctypeToolStripMenuItem.Text = "Doctype";
+            this.doctypeToolStripMenuItem.Click += new System.EventHandler(this.DoctypeToolStripMenuItem_Click);
             // 
             // miHelp
             // 
@@ -220,7 +238,7 @@
             this.tlpLower.Name = "tlpLower";
             this.tlpLower.RowCount = 1;
             this.tlpLower.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpLower.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpLower.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 396F));
             this.tlpLower.Size = new System.Drawing.Size(1017, 396);
             this.tlpLower.TabIndex = 2;
             // 
@@ -239,6 +257,16 @@
             this.pGreen.Name = "pGreen";
             this.pGreen.Size = new System.Drawing.Size(248, 390);
             this.pGreen.TabIndex = 0;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(9, 98);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(46, 51);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "1";
             // 
             // lGreenTableName
             // 
@@ -310,6 +338,16 @@
             this.pRed.Size = new System.Drawing.Size(248, 390);
             this.pRed.TabIndex = 1;
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(15, 98);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(46, 51);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "2";
+            // 
             // lRedTableName
             // 
             this.lRedTableName.AutoSize = true;
@@ -379,6 +417,16 @@
             this.pYellow.Name = "pYellow";
             this.pYellow.Size = new System.Drawing.Size(248, 390);
             this.pYellow.TabIndex = 2;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(21, 98);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(46, 51);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "3";
             // 
             // lYellowTableName
             // 
@@ -450,6 +498,16 @@
             this.pBlue.Size = new System.Drawing.Size(249, 390);
             this.pBlue.TabIndex = 3;
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(14, 98);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(46, 51);
+            this.label4.TabIndex = 11;
+            this.label4.Text = "4";
+            // 
             // lBlueTableName
             // 
             this.lBlueTableName.AutoSize = true;
@@ -507,46 +565,6 @@
             // errorProvider
             // 
             this.errorProvider.ContainerControl = this;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(9, 98);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(46, 51);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "1";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(15, 98);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(46, 51);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "2";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(21, 98);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(46, 51);
-            this.label3.TabIndex = 10;
-            this.label3.Text = "3";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(14, 98);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(46, 51);
-            this.label4.TabIndex = 11;
-            this.label4.Text = "4";
             // 
             // MainForm
             // 
@@ -628,6 +646,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ToolStripMenuItem dodajToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem doctypeToolStripMenuItem;
     }
 }
 

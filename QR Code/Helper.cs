@@ -93,6 +93,7 @@ namespace QR_Code
             }
         }
 
+        public static string ConnectionStringDataGridView = "Data Source=DMTBJFE;Initial Catalog=QRCode;Integrated Security=True";
         public static string ConnectionString = "DMTBJFE";
         #endregion
         #region Constructors

@@ -57,7 +57,7 @@ namespace QR_Code
             string outPath = string.Empty;
             outPath += Application.StartupPath + @"\tabelaZaBankuDetaljna.xls";
             // Create default output sheet and workbook
-            Worksheet outputSheet = new Worksheet("Output");
+            Worksheet outputSheet = new Worksheet("Sheet1");
             Workbook outputBook = new Workbook();
 
 
@@ -250,7 +250,7 @@ namespace QR_Code
             string outPath = null;
             outPath += Application.StartupPath + @"\tabelaZaBanku.xls";
             // Create default output sheet and workbook
-            Worksheet outputSheet = new Worksheet("Output");
+            Worksheet outputSheet = new Worksheet("Sheet1");
             Workbook outputBook = new Workbook();
 
             // Set it to beginning of the document
@@ -311,7 +311,7 @@ namespace QR_Code
             string outPath = string.Empty;
             outPath += Application.StartupPath + @"\tabelaZaRW.xls";
             // Create default output sheet and workbook
-            Worksheet outputSheet = new Worksheet("Output");
+            Worksheet outputSheet = new Worksheet("Sheet1");
             Workbook outputBook = new Workbook();
 
 

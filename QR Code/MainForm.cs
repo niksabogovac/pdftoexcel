@@ -116,8 +116,43 @@ namespace QR_Code
             errorProvider.BlinkRate = 1000;
             errorProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.AlwaysBlink;
 
+            AddDatabaseDoctypes();
         }
 
+        /// <summary>
+        /// Adds database doctypes to dictionary.
+        /// </summary>
+        private void AddDatabaseDoctypes()
+        {
+            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
+            conn.Open();
+            SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[DocTypes]", conn);
+            SqlDataReader reader = command.ExecuteReader();
+            if (reader.HasRows)
+            {
+                 while (reader.Read())
+                 {
+                     string value = (string)reader[1];
+                     value.ToUpper();
+                     if (value.Equals("RACUNI"))
+                     {
+                         Helper.DoctypeBoxCode.Add((string)reader[0], BoxTypeEnum.RACUNI);
+                     }
+                     else if (value.Equals("POZAJMICE"))
+                     {
+                         Helper.DoctypeBoxCode.Add((string)reader[0], BoxTypeEnum.POZAJMICE);
+                     }
+                     else if (value.Equals("KREDITI"))
+                     {
+                         Helper.DoctypeBoxCode.Add((string)reader[0], BoxTypeEnum.KREDITI);
+                     }
+                     else if (value.Equals("OROCENJA"))
+                     {
+                         Helper.DoctypeBoxCode.Add((string)reader[0], BoxTypeEnum.OROCENJA);
+                     }
+                 }
+            }
+        }
         /// <summary>
         /// Reades input box code type from database.
         /// </summary>
@@ -188,7 +223,7 @@ namespace QR_Code
         /// <param name="id">Unique id.</param>
         /// <param name="boxCode">Code of open box.</param>
         /// <param name="code">Read QR code.</param>
-        private void InserToBankTable(string id, string boxCode, string code)
+        private void InsertToBankTable(string id, string boxCode, string code)
         {
             SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
             conn.Open();
@@ -196,7 +231,7 @@ namespace QR_Code
             command.Parameters.AddWithValue("@id", id);
             command.Parameters.AddWithValue("@orderNum", tbOrderNum.Text);
             command.Parameters.AddWithValue("@boxCode", boxCode);
-            command.Parameters.AddWithValue("@date", DateTime.Now.ToString("yyyy-MM-dd"));
+            command.Parameters.AddWithValue("@date", DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss.fff"));
             command.Parameters.AddWithValue("@jmbg", jmbg);
             command.Parameters.AddWithValue("@code", code);
             command.ExecuteNonQuery();
@@ -308,7 +343,7 @@ namespace QR_Code
             }
             try
             {
-                InserToBankTable(id, boxCode, startCode);
+                InsertToBankTable(id, boxCode, startCode);
                 int boxType = GetTypeFromBoxCode(boxCode);
                 switch(boxType)
                 {
@@ -493,6 +528,21 @@ namespace QR_Code
             return ret;
         }
 
+        /// <summary>
+        /// Deletes data from tables BankTable, Box and RW table.
+        /// </summary>
+        private void DeleteDatabaseData()
+        {
+            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString + ";Integrated Security=True");
+            conn.Open();
+            SqlCommand command = new SqlCommand("DELETE FROM [dbo].[BankTable]", conn);
+            command.ExecuteNonQuery();
+            command.CommandText = "DELETE FROM [dbo].[Box]";
+            command.ExecuteNonQuery();
+            command.CommandText = "DELETE FROM [dbo].[RWTable]";
+            command.ExecuteNonQuery();
+            conn.Close();
+        }
         #region Event handlers
 
         /// <summary>
@@ -887,14 +937,31 @@ namespace QR_Code
             diag.ShowDialog();
         }
 
-        #endregion
-
-        private void izbrišiBazuToolStripMenuItem_Click(object sender, EventArgs e)
+        private void IzbrišiBazuToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            if(MessageBox.Show("Da li ste sigurni da želite da izbrišete podatke iz baze?",string.Empty,MessageBoxButtons.OKCancel) == DialogResult.OK)
+            {
+                DeleteDatabaseData();
+            }
         }
 
+        /// <summary>
+        /// Show dialog for adding, updating and deleting doctypes.
+        /// </summary>
+        /// <param name="sender">Object sender.</param>
+        /// <param name="e">Following args.</param>
+        private void DoctypeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DoctypeDialog diag = new DoctypeDialog();
+            diag.ShowDialog();
+        }
+        #endregion
+
+
+
 
         #endregion
+
+  
     }
 }
