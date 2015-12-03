@@ -448,7 +448,7 @@ namespace QR_Code
                     #endregion
 
                    
-                    if ( i % 30 == 0)
+                    if ( i % 20 == 0)
                     {
 
                         #region Write header data

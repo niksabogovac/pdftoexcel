@@ -63,6 +63,7 @@ namespace QR_Code
             {
                 bindingSource1.EndEdit();
                 dataAdapter.Update((DataTable)bindingSource1.DataSource);
+                Helper.UpdateDocTypesFromDatabase();
             }
             catch (SqlException)
             {

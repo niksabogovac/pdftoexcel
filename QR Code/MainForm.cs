@@ -116,11 +116,18 @@ namespace QR_Code
             errorProvider.BlinkRate = 1000;
             errorProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.AlwaysBlink;
 
-            AddDatabaseDoctypes();
+            try
+            {
+                Helper.UpdateDocTypesFromDatabase();
+            } catch(SqlException e)
+            {
+                MessageBox.Show(e.StackTrace);
+            }
         }
 
         /// <summary>
         /// Adds database doctypes to dictionary.
+        /// NOT USED.
         /// </summary>
         private void AddDatabaseDoctypes()
         {
@@ -132,23 +139,30 @@ namespace QR_Code
             {
                  while (reader.Read())
                  {
-                     string value = (string)reader[1];
-                     value.ToUpper();
-                     if (value.Equals("RACUNI"))
+                     if (Helper.DoctypeBoxCode.ContainsKey((string)reader[0]))
                      {
-                         Helper.DoctypeBoxCode.Add((string)reader[0], BoxTypeEnum.RACUNI);
+
                      }
-                     else if (value.Equals("POZAJMICE"))
+                     else
                      {
-                         Helper.DoctypeBoxCode.Add((string)reader[0], BoxTypeEnum.POZAJMICE);
-                     }
-                     else if (value.Equals("KREDITI"))
-                     {
-                         Helper.DoctypeBoxCode.Add((string)reader[0], BoxTypeEnum.KREDITI);
-                     }
-                     else if (value.Equals("OROCENJA"))
-                     {
-                         Helper.DoctypeBoxCode.Add((string)reader[0], BoxTypeEnum.OROCENJA);
+                         string value = (string)reader[1];
+                         value.ToUpper();
+                         if (value.Equals("RACUNI"))
+                         {
+                             Helper.DoctypeBoxCode.Add((string)reader[0], BoxTypeEnum.RACUNI);
+                         }
+                         else if (value.Equals("POZAJMICE"))
+                         {
+                             Helper.DoctypeBoxCode.Add((string)reader[0], BoxTypeEnum.POZAJMICE);
+                         }
+                         else if (value.Equals("KREDITI"))
+                         {
+                             Helper.DoctypeBoxCode.Add((string)reader[0], BoxTypeEnum.KREDITI);
+                         }
+                         else if (value.Equals("OROCENJA"))
+                         {
+                             Helper.DoctypeBoxCode.Add((string)reader[0], BoxTypeEnum.OROCENJA);
+                         }
                      }
                  }
             }
@@ -243,12 +257,11 @@ namespace QR_Code
         /// </summary>
         /// <param name="boxCode"></param>
         /// <param name="numberOfFiles"></param>
-        private void UpdateBoxTable(string boxCode, int numberOfFiles)
+        private void UpdateBoxTable(string boxCode)
         {
             SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
             conn.Open();
-            SqlCommand command = new SqlCommand("UPDATE [QRCode].[dbo].[Box] SET [NumberOfFiles] = @fileNum WHERE [Code] = @boxCode", conn);
-            command.Parameters.AddWithValue("@fileNum", numberOfFiles);
+            SqlCommand command = new SqlCommand("UPDATE [QRCode].[dbo].[Box] SET [NumberOfFiles] = (SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode) + 1  WHERE [Code] = @boxCode", conn);
             command.Parameters.AddWithValue("@boxCode", boxCode);
 
             command.ExecuteNonQuery();
@@ -284,9 +297,7 @@ namespace QR_Code
         /// </summary>
         /// <param name="code">Unparsed json objects.</param>
         private void GetQrCodeAndWrite(string code)
-        {
-
-            
+        {   
             string startCode = code;
             // ID of scanned code.
             string id = null;
@@ -304,9 +315,6 @@ namespace QR_Code
             // Separate client infos and remove ".
             string[] stringSeparators = new string[] { "," };
             string[] tokens = code.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-
-
-
             foreach (string clientInfo in tokens)
             {
                 string tmp = Regex.Replace(clientInfo, "\"", string.Empty);
@@ -330,11 +338,7 @@ namespace QR_Code
                 }
             }
 
-            string boxCode = GetBoxCodeFromDocType(doctype);
-            
-            
-            
-            
+            string boxCode = GetBoxCodeFromDocType(doctype);     
             if (boxCode == null)
             {
                 lNotification.Text = "QR kod koji ste uneli ne može biti raspoređen jer ne postoji doctype - " + doctype + ".";
@@ -348,27 +352,26 @@ namespace QR_Code
                 switch(boxType)
                 {
                     case 86:
-                        
+                        UpdateBoxTable(boxCode);
                         greenBoxNumOfFiles = GetNumberOfFilesFromBox(boxCode);
-                        UpdateBoxTable(boxCode, ++greenBoxNumOfFiles);
                         lNumFilesGreen.Text = "Broj fajlova u kutiji: " + greenBoxNumOfFiles;
                         ColorPanels(true, false, false, false);
                         break;
                     case 148:
+                        UpdateBoxTable(boxCode);
                         redBoxNumOfFiles = GetNumberOfFilesFromBox(boxCode);
-                        UpdateBoxTable(boxCode, ++redBoxNumOfFiles);
                         lNumFilesRed.Text = "Broj fajlova u kutiji: " + redBoxNumOfFiles;
                         ColorPanels(false, true, false, false);
                         break;
                     case 82:
+                        UpdateBoxTable(boxCode);
                         yellowBoxNumOfFiles = GetNumberOfFilesFromBox(boxCode);
-                        UpdateBoxTable(boxCode, ++yellowBoxNumOfFiles);
                         lNumFilesYellow.Text = "Broj fajlova u kutiji: " + yellowBoxNumOfFiles;
                         ColorPanels(false, false, true, false);
                         break;
                     case 83:
+                        UpdateBoxTable(boxCode);
                         blueBoxNumOfFiles = GetNumberOfFilesFromBox(boxCode);
-                        UpdateBoxTable(boxCode, ++blueBoxNumOfFiles);
                         lNumFilesBlue.Text = "Broj fajlova u kutiji: " + blueBoxNumOfFiles;
                         ColorPanels(false, false, false, true);
                         break;
@@ -535,11 +538,11 @@ namespace QR_Code
         {
             SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString + ";Integrated Security=True");
             conn.Open();
-            SqlCommand command = new SqlCommand("DELETE FROM [dbo].[BankTable]", conn);
+            SqlCommand command = new SqlCommand("DELETE FROM [QRCode].[dbo].[BankTable]", conn);
             command.ExecuteNonQuery();
-            command.CommandText = "DELETE FROM [dbo].[Box]";
+            command.CommandText = "DELETE FROM [QRCode].[dbo].[Box]";
             command.ExecuteNonQuery();
-            command.CommandText = "DELETE FROM [dbo].[RWTable]";
+            command.CommandText = "DELETE FROM [QRCode].[dbo].[RWTable]";
             command.ExecuteNonQuery();
             conn.Close();
         }
@@ -941,7 +944,15 @@ namespace QR_Code
         {
             if(MessageBox.Show("Da li ste sigurni da želite da izbrišete podatke iz baze?",string.Empty,MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
-                DeleteDatabaseData();
+                try
+                {
+                    DeleteDatabaseData();
+                    MessageBox.Show("Uspešno ste počistili bazu.");
+                }
+                catch(SqlException)
+                {
+                    MessageBox.Show("Greška prilikom brisanja baze.");
+                }
             }
         }
 

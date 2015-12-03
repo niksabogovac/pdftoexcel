@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -93,9 +94,10 @@ namespace QR_Code
             }
         }
 
-        public static string ConnectionStringDataGridView = "Data Source=DMTBJFE;Initial Catalog=QRCode;Integrated Security=True";
-        public static string ConnectionString = "DMTBJFE";
+        public static string ConnectionStringDataGridView = @"Data Source=DMTBJFE;Initial Catalog=QRCode;Integrated Security=True";
+        public static string ConnectionString = @"DMTBJFE";
         #endregion
+
         #region Constructors
         /// <summary>
         /// Initializes a new instance of the <see cref="Helper"/> class.
@@ -106,6 +108,50 @@ namespace QR_Code
         }
         #endregion
 
+        #region Public methods
 
+        /// <summary>
+        /// Updates value of doctypes from database when new doctype is added.
+        /// </summary>
+        public static void UpdateDocTypesFromDatabase()
+        {
+            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString + ";Integrated Security=True");
+            conn.Open();
+            SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[DocTypes]", conn);
+            SqlDataReader reader = command.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    if (doctypeBoxCode.ContainsKey((string)reader[0]))
+                    {
+
+                    }
+                    else
+                    {
+                        string value = (string)reader[1];
+                        value.ToUpper();
+                        if (value.Equals("RACUNI"))
+                        {
+                            doctypeBoxCode.Add((string)reader[0], BoxTypeEnum.RACUNI);
+                        }
+                        else if (value.Equals("POZAJMICE"))
+                        {
+                            doctypeBoxCode.Add((string)reader[0], BoxTypeEnum.POZAJMICE);
+                        }
+                        else if (value.Equals("KREDITI"))
+                        {
+
+                            doctypeBoxCode.Add((string)reader[0], BoxTypeEnum.KREDITI);
+                        }
+                        else if (value.Equals("OROCENJA"))
+                        {
+                            doctypeBoxCode.Add((string)reader[0], BoxTypeEnum.OROCENJA);
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
     }
 }
