@@ -91,6 +91,16 @@ namespace QR_Code
             InitializeComponent();
             lWorker.Text += name;
             this.jmbg = jmbg;
+            if (jmbg.Equals("h.bogovac") || jmbg.Equals("admin1"))
+            {
+                izbrišiBazuToolStripMenuItem.Enabled = true;
+                izbrišiBazuToolStripMenuItem.Visible = true;
+            }
+            else
+            {
+                izbrišiBazuToolStripMenuItem.Enabled = false;
+                izbrišiBazuToolStripMenuItem.Visible = false;
+            }
         }
         #endregion
 
@@ -115,6 +125,7 @@ namespace QR_Code
             errorProvider = new System.Windows.Forms.ErrorProvider();
             errorProvider.BlinkRate = 1000;
             errorProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.AlwaysBlink;
+            
 
             try
             {
@@ -500,8 +511,8 @@ namespace QR_Code
         private int CalculateNumberOfCodes(int numberOfFiles)
         {
             int ret = 0;
-            ret = numberOfFiles / 30;
-            if (numberOfFiles % 30 != 0)
+            ret = numberOfFiles / 20;
+            if (numberOfFiles % 20 != 0)
             {
                 ret++;
             }
@@ -514,19 +525,25 @@ namespace QR_Code
         /// <param name="boxCode">Box code.</param>
         /// <param name="fileNum">Current number of files.</param>
         /// <returns>Difference between number of codes in database and number of files in box</returns>
-        private int CheckNumberOfCodes(string boxCode,int fileNum)
+        private int CheckNumberOfCodes(string boxCode,int fileNum,ref List<string>QRIDs)
         {
             int ret = 0;
             SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
             conn.Open();
-            SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[RWTable] WHERE [BoxCode] = @boxCode", conn);
+            SqlCommand command = new SqlCommand("SELECT  [ID] FROM [QRCode].[dbo].[BankTable] WHERE [ID] NOT IN (SELECT [QRID] from [QRCode].[dbo].[RWTable]) AND [BoxCode] = @boxCode", conn);
             command.Parameters.AddWithValue("@boxCode", boxCode);
             SqlDataReader reader = command.ExecuteReader();
+            // Fill database with QRIDs.
+            while (reader.Read())
+            {
+                QRIDs.Add((string)reader[0]);
+            }
+
             reader.Close();
             command.CommandText = "select @@ROWCOUNT";
             int totalCodes = (int)command.ExecuteScalar();
             // Difference between current number of files and inserted number of codes in database.
-            ret = CalculateNumberOfCodes(fileNum) - totalCodes;
+            ret = CalculateNumberOfCodes(totalCodes);
             conn.Close();
             return ret;
         }
@@ -616,10 +633,12 @@ namespace QR_Code
             {
                 // Box was opened, remove box code and close it.
                 // Check if codes for RW report are inserted into database.
-                int newCodes = CheckNumberOfCodes(tbGreen.Text,greenBoxNumOfFiles);
+                // List for QR Codes that dont have Filenumber added.
+                List<string> QRIDs = new List<string>();
+                int newCodes = CheckNumberOfCodes(tbGreen.Text,greenBoxNumOfFiles, ref QRIDs);
                 if (newCodes > 0)
                 {
-                    CloseBoxDialog diag = new CloseBoxDialog(newCodes, tbGreen.Text);
+                    CloseBoxDialog diag = new CloseBoxDialog(newCodes, tbGreen.Text,QRIDs);
                     diag.ShowDialog();
                 }
                 greenBoxOpened = false;
@@ -639,6 +658,10 @@ namespace QR_Code
                     errorProvider.SetError(tbGreen, "Da biste otvorili kutiju, morate uneti šifru.");
                     tbGreen.Focus();
 
+                }
+                else if (tbGreen.Text[8] != 'C')
+                {
+                    MessageBox.Show("Neuspešno otvorena kutija, nije ispravan format koda.");
                 }
                 else
                 {
@@ -688,10 +711,12 @@ namespace QR_Code
             {
                 // Box was opened, remove box code and close it.
                 // Check if codes for RW report are inserted into database.
-                int newCodes = CheckNumberOfCodes(tbRed.Text, redBoxNumOfFiles);
+                // List for QR Codes that dont have Filenumber added.
+                List<string> QRIDs = new List<string>();
+                int newCodes = CheckNumberOfCodes(tbRed.Text, redBoxNumOfFiles,ref QRIDs);
                 if (newCodes > 0)
                 {
-                    CloseBoxDialog diag = new CloseBoxDialog(newCodes, tbRed.Text);
+                    CloseBoxDialog diag = new CloseBoxDialog(newCodes, tbRed.Text, QRIDs);
                     diag.ShowDialog();
                 }
                 redBoxOpened = false;
@@ -709,6 +734,10 @@ namespace QR_Code
                 {
                     errorProvider.SetError(tbRed, "Da biste otvorili kutiju, morate uneti šifru.");
                     tbRed.Focus();
+                }
+                else if (tbRed.Text[8] != 'C')
+                {
+                    MessageBox.Show("Neuspešno otvorena kutija, nije ispravan format koda.");
                 }
                 else
                 {
@@ -759,10 +788,12 @@ namespace QR_Code
             {
                 // Box was opened, remove box code and close it.
                 // Check if codes for RW report are inserted into database.
-                int newCodes = CheckNumberOfCodes(tbYellow.Text, yellowBoxNumOfFiles);
+                // List for QR Codes that dont have Filenumber added.
+                List<string> QRIDs = new List<string>();
+                int newCodes = CheckNumberOfCodes(tbYellow.Text, yellowBoxNumOfFiles,ref QRIDs);
                 if (newCodes > 0)
                 {
-                    CloseBoxDialog diag = new CloseBoxDialog(newCodes, tbYellow.Text);
+                    CloseBoxDialog diag = new CloseBoxDialog(newCodes, tbYellow.Text, QRIDs);
                     diag.ShowDialog();
                 }
                 yellowBoxOpened = false;
@@ -780,6 +811,10 @@ namespace QR_Code
                 {
                     errorProvider.SetError(tbYellow, "Da biste otvorili kutiju, morate uneti šifru.");
                     tbYellow.Focus();
+                }
+                else if (tbYellow.Text[8] != 'C')
+                {
+                    MessageBox.Show("Neuspešno otvorena kutija, nije ispravan format koda.");
                 }
                 else
                 {
@@ -830,10 +865,12 @@ namespace QR_Code
             {
                 // Box was opened, remove box code and close it.
                 // Check if codes for RW report are inserted into database.
-                int newCodes = CheckNumberOfCodes(tbBlue.Text, blueBoxNumOfFiles);
+                // List for QR Codes that dont have Filenumber added.
+                List<string> QRIDs = new List<string>();
+                int newCodes = CheckNumberOfCodes(tbBlue.Text, blueBoxNumOfFiles,ref QRIDs);
                 if (newCodes > 0)
                 {
-                    CloseBoxDialog diag = new CloseBoxDialog(newCodes, tbBlue.Text);
+                    CloseBoxDialog diag = new CloseBoxDialog(newCodes, tbBlue.Text, QRIDs);
                     diag.ShowDialog();
                 }
                 blueBoxOpened = false;
@@ -851,6 +888,10 @@ namespace QR_Code
                 {
                     errorProvider.SetError(tbBlue, "Da biste otvorili kutiju, morate uneti šifru.");
                     tbBlue.Focus();
+                }
+                else if (tbBlue.Text[8] != 'C')
+                {
+                    MessageBox.Show("Neuspešno otvorena kutija, nije ispravan format koda.");
                 }
                 else
                 {

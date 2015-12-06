@@ -48,15 +48,18 @@
             this.tbCode.Name = "tbCode";
             this.tbCode.Size = new System.Drawing.Size(100, 20);
             this.tbCode.TabIndex = 1;
+            this.tbCode.TextChanged += new System.EventHandler(this.tbCode_TextChanged);
             // 
             // bConfirm
             // 
+            this.bConfirm.Enabled = false;
             this.bConfirm.Location = new System.Drawing.Point(93, 42);
             this.bConfirm.Name = "bConfirm";
             this.bConfirm.Size = new System.Drawing.Size(100, 23);
             this.bConfirm.TabIndex = 2;
             this.bConfirm.Text = "Potvrdi";
             this.bConfirm.UseVisualStyleBackColor = true;
+            this.bConfirm.Visible = false;
             this.bConfirm.Click += new System.EventHandler(this.BConfirmClick);
             // 
             // CloseBoxDialog

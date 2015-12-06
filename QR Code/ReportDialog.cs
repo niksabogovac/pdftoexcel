@@ -68,6 +68,7 @@ namespace QR_Code
             outputSheet.Cells[curRow, curCol++] = new Cell("Broj naloga/primopredaje");
             outputSheet.Cells[curRow, curCol++] = new Cell("Vrsta kutije");
             outputSheet.Cells[curRow, curCol++] = new Cell("Broj fajlova u kutiji");
+            outputSheet.Cells[curRow, curCol++] = new Cell("File number");
             outputSheet.Cells[curRow, curCol++] = new Cell("Šifra kutije");
             outputSheet.Cells[curRow, curCol++] = new Cell("Doctype");
             outputSheet.Cells[curRow, curCol++] = new Cell("ID");
@@ -80,7 +81,7 @@ namespace QR_Code
 
             SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
             conn.Open();
-            SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[BankTable] WHERE [OrderNum] = @orderNum", conn);
+            SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[BankTable] INNER JOIN [QRCode].[dbo].[RWTable] on [QRCode].[dbo].[BankTable].[ID] = [QRCode].[dbo].[RWTable].[QRID] WHERE [OrderNum] =@orderNum", conn);
             command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
             SqlDataReader reader = command.ExecuteReader();
             string doctype = null, id = null, mbr = null, partija = null, zahtev = null, idKartice = null, paket = null;
@@ -109,6 +110,7 @@ namespace QR_Code
 
                 }
                 outputSheet.Cells[curRow, curCol++] = new Cell(GetNumberOfFilesFromBox(boxCode).ToString());
+                outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["Code"]);
                 outputSheet.Cells[curRow, curCol++] = new Cell(boxCode);
 
                 #region handle Code
@@ -277,8 +279,8 @@ namespace QR_Code
                 outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["ID"]);
                 outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["OrderNum"]);
                 outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["BoxCode"]);
-                DateTime date = (DateTime)reader["Date"];
-                outputSheet.Cells[curRow, curCol++] = new Cell(date.ToShortDateString());
+                DateTime date =  (DateTime)reader["Date"];
+                outputSheet.Cells[curRow, curCol++] = new Cell(date.ToString("yyyy-MM-dd hh:mm:ss.fff"));
                 outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["MBR"]);
                 // Don't show messages.
                 string qrCode = (string)reader["QRCode"];
@@ -333,6 +335,328 @@ namespace QR_Code
             outputSheet.Cells[curRow++, curCol++] = new Cell("Paket");
             curCol = 0;
 
+            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
+            conn.Open();
+            SqlCommand command = new SqlCommand("SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [OrderNum] = @orderNum", conn);
+            command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
+            SqlDataReader reader = command.ExecuteReader();
+
+            List<string> boxCodes = new List<string>();
+
+            while(reader.Read())
+            {
+                string tmp = (string)reader[0];
+                if (!boxCodes.Contains(tmp))
+                {
+                    boxCodes.Add(tmp);
+                }
+            }
+            reader.Close();
+
+
+            foreach (string boxCode in boxCodes)
+            {
+                command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[BankTable] INNER JOIN [QRCode].[dbo].[RWTable] ON [QRCode].[dbo].[BankTable].[ID] = [QRCode].[dbo].[RWTable].[QRID] AND [QRCode].[dbo].[BankTable].[BoxCode] = @boxCode AND [QRCode].[dbo].[BankTable].[OrderNum] = @orderNum INNER JOIN [QRCode].[dbo].[Box] ON [QRCode].[dbo].[BankTable].[BoxCode] = [QRCode].[dbo].[Box].Code", conn);
+                command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
+                command.Parameters.AddWithValue("@boxCode", boxCode);
+                reader = command.ExecuteReader();
+                int i = 0;
+                // hbCode - current boxcode
+                string orderNum = null, hbCode = null;
+                string doctype = null, id = "", mbr = null, partija = null, zahtev = null, idKartice = null, paket = null;
+                // current filenumber
+                string tmpCode = null;
+                // old filenumber
+                string oldcode = null;
+                // first filenumber
+                string firstCode = null;
+                int numfiles = 0;
+                int counter = 0;
+                // indicates whether is first of filenum in box.
+                bool first = true;
+                while (reader.Read())
+                {
+                    i++;
+                    counter++;
+                    orderNum = (string)reader["OrderNum"];
+                    hbCode = (string)reader["BoxCode"];
+                    oldcode = tmpCode;
+                    tmpCode = (string)reader[7];
+
+                    if ((tmpCode == oldcode && i % 21 == 0 ) || (tmpCode != oldcode && oldcode != null && i>1))
+                    {
+
+                        #region Write header data
+                        // Always read from the beggining of list and remove codes added to cells.
+                        outputSheet.Cells[curRow, curCol++] = new Cell(oldcode);
+                        outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["OrderNum"]);
+                        string bCode = (string)reader["BoxCode"];
+                        int boxType = GetTypeFromBoxCode(bCode);
+                        switch (boxType)
+                        {
+                            case 86:
+                                outputSheet.Cells[curRow, curCol++] = new Cell("POZAJMICE");
+                                break;
+                            case 148:
+                                outputSheet.Cells[curRow, curCol++] = new Cell("KREDITI");
+                                break;
+                            case 82:
+                                outputSheet.Cells[curRow, curCol++] = new Cell("RAČUNI");
+                                break;
+                            case 83:
+                                outputSheet.Cells[curRow, curCol++] = new Cell("OROČENJA");
+                                break;
+                            default:
+                                break;
+
+                        }
+                        #endregion
+                        outputSheet.Cells[curRow, curCol++] = new Cell((int)reader["NumberOfFiles"]);
+                        outputSheet.Cells[curRow, curCol++] = new Cell(bCode);
+
+                        #region Write to cells
+                        if (doctype != null)
+                        {
+                            outputSheet.Cells[curRow, curCol++] = new Cell(doctype);
+                        }
+                        else
+                        {
+                            outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+                        }
+
+                        if (id != null)
+                        {
+                            outputSheet.Cells[curRow, curCol++] = new Cell(id);
+                        }
+                        else
+                        {
+                            outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+                        }
+
+                        if (mbr != null)
+                        {
+                            outputSheet.Cells[curRow, curCol++] = new Cell(mbr);
+                        }
+                        else
+                        {
+                            outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+                        }
+
+                        if (partija != null)
+                        {
+                            outputSheet.Cells[curRow, curCol++] = new Cell(partija);
+                        }
+                        else
+                        {
+                            outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+                        }
+
+                        if (zahtev != null)
+                        {
+                            outputSheet.Cells[curRow, curCol++] = new Cell(zahtev);
+                        }
+                        else
+                        {
+                            outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+                        }
+                        if (idKartice != null)
+                        {
+                            outputSheet.Cells[curRow, curCol++] = new Cell(idKartice);
+                        }
+                        else
+                        {
+                            outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+                        }
+                        if (paket != null)
+                        {
+                            outputSheet.Cells[curRow++, curCol++] = new Cell(paket);
+                        }
+                        else
+                        {
+                            outputSheet.Cells[curRow++, curCol++] = new Cell(string.Empty);
+                        }
+                        #endregion
+                        doctype = null;
+                        id = null;
+                        mbr = null;
+                        partija = null;
+                        zahtev = null;
+                        idKartice = null;
+                        paket = null;
+                        i = 1;
+                        curCol = 0;
+                        oldcode = tmpCode;
+                    }
+                    numfiles = (int)reader["NumberOfFiles"];
+                    #region handle Code
+                    string code = (string)reader["QRCode"];
+                    code = Regex.Replace(code, @"\\000021", string.Empty);
+                    code = Regex.Replace(code, "{", string.Empty);
+                    code = Regex.Replace(code, "}", string.Empty);
+                    code = Regex.Replace(code, " ", string.Empty);
+                    // Separate client infos and remove ".
+                    string[] stringSeparators = new string[] { "," };
+                    string[] tokens = code.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
+                    string tmpdoctype = i.ToString() + ". " + @"\\" + ((char)13).ToString();
+                    string tmpid = i.ToString() + ". " + @"\\" + ((char)13).ToString();
+                    string tmpmbr = i.ToString() + ". " + @"\\" + ((char)13).ToString();
+                    string tmppartija = i.ToString() + ". " + @"\\" + ((char)13).ToString();
+                    string tmpzahtev = i.ToString() + ". " + @"\\" + ((char)13).ToString();
+                    string tmpidKartice = i.ToString() + ". " + @"\\" + ((char)13).ToString();
+                    string tmppaket = i.ToString() + ". " + @"\\" + ((char)13).ToString();
+                    foreach (string clientInfo in tokens)
+                    {
+                        string tmp = Regex.Replace(clientInfo, "\"", string.Empty);
+                        string[] tmpSeparator = new string[] { ":" };
+                        string[] tmpTokens = tmp.Split(tmpSeparator, StringSplitOptions.RemoveEmptyEntries);
+                        if (tmpTokens.Length > 1)
+                        {
+                            if (tmpTokens[0].Equals("id"))
+                            {
+                                // Get id.
+                                tmpid = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
+                            }
+                            else if (tmpTokens[0].Equals("doctype"))
+                            {
+                                // Get type of document.
+                                tmpdoctype = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
+                            }
+                            else if (tmpTokens[0].Equals("mbr"))
+                            {
+                                tmpmbr = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
+                            }
+                            else if (tmpTokens[0].Equals("partija"))
+                            {
+                                tmppartija = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
+                            }
+                            else if (tmpTokens[0].Equals("zahtev"))
+                            {
+                                tmpzahtev = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
+                            }
+                            else if (tmpTokens[0].Equals("id_kartice"))
+                            {
+                                tmpidKartice = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
+                            }
+                            else if (tmpTokens[0].Equals("paket"))
+                            {
+                                tmppaket = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
+                            }
+                        }
+
+                    }
+                    id += tmpid;
+                    doctype += tmpdoctype;
+                    mbr += tmpmbr;
+                    partija += tmppartija;
+                    zahtev += tmpzahtev;
+                    idKartice += tmpidKartice;
+                    paket += tmppaket;
+                    #endregion
+                    
+
+                    
+                }
+                // Divide has less than 30 still need to write it
+                if (i != 0)
+                {
+                    #region Write header data
+                    // Always read from the beggining of list and remove codes added to cells.
+                    outputSheet.Cells[curRow, curCol++] = new Cell(tmpCode);
+                    outputSheet.Cells[curRow, curCol++] = new Cell(orderNum);
+                    int boxType = GetTypeFromBoxCode(hbCode);
+                    switch (boxType)
+                    {
+                        case 86:
+                            outputSheet.Cells[curRow, curCol++] = new Cell("POZAJMICE");
+                            break;
+                        case 148:
+                            outputSheet.Cells[curRow, curCol++] = new Cell("KREDITI");
+                            break;
+                        case 82:
+                            outputSheet.Cells[curRow, curCol++] = new Cell("RAČUNI");
+                            break;
+                        case 83:
+                            outputSheet.Cells[curRow, curCol++] = new Cell("OROČENJA");
+                            break;
+                        default:
+                            break;
+
+                    }
+                    #endregion
+                    outputSheet.Cells[curRow, curCol++] = new Cell(numfiles);
+                    outputSheet.Cells[curRow, curCol++] = new Cell(hbCode);
+
+                    #region Write to cells
+                    if (doctype != null)
+                    {
+                        outputSheet.Cells[curRow, curCol++] = new Cell(doctype);
+                    }
+                    else
+                    {
+                        outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+                    }
+
+                    if (id != null)
+                    {
+                        outputSheet.Cells[curRow, curCol++] = new Cell(id);
+                    }
+                    else
+                    {
+                        outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+                    }
+
+                    if (mbr != null)
+                    {
+                        outputSheet.Cells[curRow, curCol++] = new Cell(mbr);
+                    }
+                    else
+                    {
+                        outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+                    }
+
+                    if (partija != null)
+                    {
+                        outputSheet.Cells[curRow, curCol++] = new Cell(partija);
+                    }
+                    else
+                    {
+                        outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+                    }
+
+                    if (zahtev != null)
+                    {
+                        outputSheet.Cells[curRow, curCol++] = new Cell(zahtev);
+                    }
+                    else
+                    {
+                        outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+                    }
+                    if (idKartice != null)
+                    {
+                        outputSheet.Cells[curRow, curCol++] = new Cell(idKartice);
+                    }
+                    else
+                    {
+                        outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+                    }
+                    if (paket != null)
+                    {
+                        outputSheet.Cells[curRow++, curCol++] = new Cell(paket);
+                    }
+                    else
+                    {
+                        outputSheet.Cells[curRow++, curCol++] = new Cell(string.Empty);
+                    }
+                    #endregion
+                    reader.Close();
+                    curCol = 0;
+                }
+                reader.Close();
+            }
+            conn.Close();
+
+            #region Zakomentarisano
+            /*
             // Get all box codes  for RW report.
             SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
             conn.Open();
@@ -352,7 +676,17 @@ namespace QR_Code
             }
             reader.Close();
 
-           
+
+            foreach(string boxCode in boxCodes)
+            {
+                command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[BankTable] WHERE [BoxCode] = @boxCode AND [OrderNum] = @orderNum", conn);
+                command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
+                command.Parameters.AddWithValue("@boxCode", boxCode);
+                reader = command.ExecuteReader();
+
+            }*/
+
+            /*
             foreach (string boxCode in boxCodes)
             {
                 List<string> codes = new List<string>();
@@ -655,6 +989,9 @@ namespace QR_Code
             }
 
             conn.Close();
+
+            */
+            #endregion
             try
             {
                 outputBook.Worksheets.Add(outputSheet);
