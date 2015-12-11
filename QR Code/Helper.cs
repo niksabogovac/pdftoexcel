@@ -94,8 +94,8 @@ namespace QR_Code
             }
         }
 
-        public static string ConnectionStringDataGridView = @"Data Source=SERVER\SQLEXPRESS;Initial Catalog=QRCode;Integrated Security=True";
-        public static string ConnectionString = @"Server=SERVER\SQLEXPRESS;Database=QRCode;User Id=sa;Password=Niksa@2015;";
+        public static string ConnectionStringDataGridView = @"Data Source=DMTBJFE;Initial Catalog=QRCode;Integrated Security=True";
+        public static string ConnectionString = @"Data Source=192.168.1.253\SQLEXPRESS;Initial Catalog=QRCode;User ID=niksa;Password=Niksa2015;Integrated Security=false";
         #endregion
 
         #region Constructors
@@ -115,7 +115,7 @@ namespace QR_Code
         /// </summary>
         public static void UpdateDocTypesFromDatabase()
         {
-            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString + ";Integrated Security=True");
+            SqlConnection conn = new SqlConnection( Helper.ConnectionString );
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[DocTypes]", conn);
             SqlDataReader reader = command.ExecuteReader();

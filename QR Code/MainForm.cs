@@ -24,6 +24,11 @@ namespace QR_Code
         /// </summary>
         private string jmbg;
 
+        /// <summary>
+        /// Regex za kodove kutije.
+        /// </summary>
+        private Regex boxCodeRegex = new Regex(@"[A-Z]{6}[0-9]{2}C-[0-9]{5}");
+
         #region Box status
         /// <summary>
         /// Indicates whether the green box is opened or now.
@@ -659,7 +664,7 @@ namespace QR_Code
                     tbGreen.Focus();
 
                 }
-                else if (tbGreen.Text[8] != 'C')
+                else if (!boxCodeRegex.IsMatch(tbGreen.Text))
                 {
                     MessageBox.Show("Neuspešno otvorena kutija, nije ispravan format koda.");
                 }
@@ -735,7 +740,7 @@ namespace QR_Code
                     errorProvider.SetError(tbRed, "Da biste otvorili kutiju, morate uneti šifru.");
                     tbRed.Focus();
                 }
-                else if (tbRed.Text[8] != 'C')
+                else if (!boxCodeRegex.IsMatch(tbRed.Text))
                 {
                     MessageBox.Show("Neuspešno otvorena kutija, nije ispravan format koda.");
                 }
@@ -812,7 +817,7 @@ namespace QR_Code
                     errorProvider.SetError(tbYellow, "Da biste otvorili kutiju, morate uneti šifru.");
                     tbYellow.Focus();
                 }
-                else if (tbYellow.Text[8] != 'C')
+                else if (!boxCodeRegex.IsMatch(tbYellow.Text))
                 {
                     MessageBox.Show("Neuspešno otvorena kutija, nije ispravan format koda.");
                 }
@@ -889,7 +894,7 @@ namespace QR_Code
                     errorProvider.SetError(tbBlue, "Da biste otvorili kutiju, morate uneti šifru.");
                     tbBlue.Focus();
                 }
-                else if (tbBlue.Text[8] != 'C')
+                else if (!boxCodeRegex.IsMatch(tbBlue.Text))
                 {
                     MessageBox.Show("Neuspešno otvorena kutija, nije ispravan format koda.");
                 }
