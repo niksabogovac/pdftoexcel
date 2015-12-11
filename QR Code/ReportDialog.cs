@@ -79,7 +79,7 @@ namespace QR_Code
             outputSheet.Cells[curRow++, curCol++] = new Cell("Paket");
             curCol = 0;
 
-            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
+            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[BankTable] INNER JOIN [QRCode].[dbo].[RWTable] on [QRCode].[dbo].[BankTable].[ID] = [QRCode].[dbo].[RWTable].[QRID] WHERE [OrderNum] =@orderNum", conn);
             command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
@@ -267,7 +267,7 @@ namespace QR_Code
             outputSheet.Cells[curRow++, curCol++] = new Cell("Sadržaj QR koda");
             curCol = 0;
 
-            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
+            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[BankTable] WHERE [OrderNum] = @orderNum", conn);
             command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
@@ -335,7 +335,7 @@ namespace QR_Code
             outputSheet.Cells[curRow++, curCol++] = new Cell("Paket");
             curCol = 0;
 
-            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
+            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [OrderNum] = @orderNum", conn);
             command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
@@ -658,7 +658,7 @@ namespace QR_Code
             #region Zakomentarisano
             /*
             // Get all box codes  for RW report.
-            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
+            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [OrderNum] = @orderNum", conn);
             command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
@@ -1012,7 +1012,7 @@ namespace QR_Code
         /// <returns>Output box type.</returns>
         private int GetTypeFromBoxCode(string boxCode)
         {
-            using (SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True"))
+            using (SqlConnection conn = new SqlConnection(Helper.ConnectionString))
             {
                 conn.Open();
                 SqlCommand command = new SqlCommand("SELECT [Type] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn);

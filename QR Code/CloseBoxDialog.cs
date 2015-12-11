@@ -142,7 +142,7 @@ namespace QR_Code
             conn.Close();
 
             /*
-            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
+            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
             conn.Open();
             SqlCommand command = new SqlCommand("INSERT INTO [QRCode].[dbo].[RWTable] VALUES (@boxCode, @code)", conn);
             command.Parameters.AddWithValue("@boxCode", boxCode);

@@ -94,8 +94,8 @@ namespace QR_Code
             }
         }
 
-        public static string ConnectionStringDataGridView = @"Data Source=KNJG\SQLEXPRESS;Initial Catalog=QRCode;Integrated Security=True";
-        public static string ConnectionString = @"KNJG\SQLEXPRESS";
+        public static string ConnectionStringDataGridView = @"Data Source=SERVER\SQLEXPRESS;Initial Catalog=QRCode;Integrated Security=True";
+        public static string ConnectionString = @"Server=SERVER\SQLEXPRESS;Database=QRCode;User Id=sa;Password=Niksa@2015;";
         #endregion
 
         #region Constructors

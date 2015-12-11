@@ -142,7 +142,7 @@ namespace QR_Code
         /// </summary>
         private void AddDatabaseDoctypes()
         {
-            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
+            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[DocTypes]", conn);
             SqlDataReader reader = command.ExecuteReader();
@@ -185,7 +185,7 @@ namespace QR_Code
         /// <returns>Output box type.</returns>
         private int GetTypeFromBoxCode(string boxCode)
         {
-            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
+            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT [Type] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn);
             command.Parameters.AddWithValue("@boxCode", boxCode);
@@ -250,7 +250,7 @@ namespace QR_Code
         /// <param name="code">Read QR code.</param>
         private void InsertToBankTable(string id, string boxCode, string code)
         {
-            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
+            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
             conn.Open();
             SqlCommand command = new SqlCommand("INSERT INTO [QRCode].[dbo].[BankTable] VALUES (@id, @orderNum, @boxCode, @date, @jmbg, @code)", conn);
             command.Parameters.AddWithValue("@id", id);
@@ -270,7 +270,7 @@ namespace QR_Code
         /// <param name="numberOfFiles"></param>
         private void UpdateBoxTable(string boxCode)
         {
-            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
+            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
             conn.Open();
             SqlCommand command = new SqlCommand("UPDATE [QRCode].[dbo].[Box] SET [NumberOfFiles] = (SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode) + 1  WHERE [Code] = @boxCode", conn);
             command.Parameters.AddWithValue("@boxCode", boxCode);
@@ -288,7 +288,7 @@ namespace QR_Code
         {
             int fileNum = -1;
 
-            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
+            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn);
             command.Parameters.AddWithValue("@boxCode", boxCode);
@@ -412,7 +412,7 @@ namespace QR_Code
         /// >= 1 found existing table, current number of files.</returns>
         private int OpenOrCreateBox(string boxCode, BoxTypeEnum boxType)
         {
-            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
+            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn);
             command.Parameters.AddWithValue("@boxCode", boxCode);
@@ -528,7 +528,7 @@ namespace QR_Code
         private int CheckNumberOfCodes(string boxCode,int fileNum,ref List<string>QRIDs)
         {
             int ret = 0;
-            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString+";Integrated Security=True");
+            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT  [ID] FROM [QRCode].[dbo].[BankTable] WHERE [ID] NOT IN (SELECT [QRID] from [QRCode].[dbo].[RWTable]) AND [BoxCode] = @boxCode", conn);
             command.Parameters.AddWithValue("@boxCode", boxCode);
