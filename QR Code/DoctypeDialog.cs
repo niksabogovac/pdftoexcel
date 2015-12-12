@@ -76,7 +76,7 @@ namespace QR_Code
         /// </summary>
         /// <param name="sender">Sending object.</param>
         /// <param name="e">Following args.</param>
-        private void DoctypeDialog_Shown(object sender, EventArgs e)
+        private void UserDialog_Shown(object sender, EventArgs e)
         {
             dataGridView1.DataSource = bindingSource1;
             GetData();

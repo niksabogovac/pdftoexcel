@@ -357,8 +357,10 @@ namespace QR_Code
             string boxCode = GetBoxCodeFromDocType(doctype);     
             if (boxCode == null)
             {
-                lNotification.Text = "QR kod koji ste uneli ne može biti raspoređen jer ne postoji doctype - " + doctype + ".";
-                lNotification.ForeColor = Color.Red;
+                MessageBox.Show("QR kod koji ste uneli ne može biti raspoređen jer ne postoji doctype - " + doctype + ".");
+                lNotification.Text = string.Empty;
+                //lNotification.Text = "QR kod koji ste uneli ne može biti raspoređen jer ne postoji doctype - " + doctype + ".";
+                //lNotification.ForeColor = Color.Red;
                 return;
             }
             try
@@ -401,8 +403,20 @@ namespace QR_Code
             }
             catch (SqlException)
             {
-                lNotification.Text = "QR kod koji ste uneli ne može biti raspoređen ili je kod već upisan.";
-                lNotification.ForeColor = Color.Red;
+                SqlConnection conn = new SqlConnection(Helper.ConnectionString);
+                conn.Open();
+                SqlCommand command = new SqlCommand("SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id", conn);
+                command.Parameters.AddWithValue("@id", id);
+                SqlDataReader reader = command.ExecuteReader();
+                reader.Read();
+                string c = (string)reader[0];
+                reader.Close();
+                conn.Close();
+                MessageBox.Show("QR kod koji ste uneli ne može biti raspoređen jer je kod već upisan u kutiju " + c + ".");
+                lNotification.Text = string.Empty;
+                //lNotification.Text = "QR kod koji ste uneli ne može biti raspoređen ili je kod već upisan.";
+                //lNotification.ForeColor = Color.Red;
+                
             }
         }
 
@@ -986,6 +1000,11 @@ namespace QR_Code
             diag.ShowDialog();
         }
 
+        /// <summary>
+        /// Menu item strip delete.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void IzbrišiBazuToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if(MessageBox.Show("Da li ste sigurni da želite da izbrišete podatke iz baze?",string.Empty,MessageBoxButtons.OKCancel) == DialogResult.OK)
@@ -1012,13 +1031,24 @@ namespace QR_Code
             DoctypeDialog diag = new DoctypeDialog();
             diag.ShowDialog();
         }
+      
+
+        /// <summary>
+        /// Menu item strip manage users.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void korisnikaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UserForm form = new UserForm();
+            form.ShowDialog();
+        }
+
+
+        #endregion
+
         #endregion
 
 
-
-
-        #endregion
-
-  
     }
 }

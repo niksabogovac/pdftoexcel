@@ -59,7 +59,7 @@
             this.Name = "DoctypeDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "DoctypeDialog";
-            this.Shown += new System.EventHandler(this.DoctypeDialog_Shown);
+            this.Shown += new System.EventHandler(this.UserDialog_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);

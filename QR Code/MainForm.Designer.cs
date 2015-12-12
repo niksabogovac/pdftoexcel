@@ -42,7 +42,7 @@
             this.izbrišiBazuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dodajToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.doctypeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.miHelp = new System.Windows.Forms.ToolStripMenuItem();
+            this.korisnikaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.izveštajiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tlpLower = new System.Windows.Forms.TableLayoutPanel();
             this.pGreen = new System.Windows.Forms.Panel();
@@ -170,7 +170,6 @@
             // 
             this.mMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miOption,
-            this.miHelp,
             this.izveštajiToolStripMenuItem});
             this.mMain.Location = new System.Drawing.Point(0, 0);
             this.mMain.Name = "mMain";
@@ -190,30 +189,32 @@
             // izbrišiBazuToolStripMenuItem
             // 
             this.izbrišiBazuToolStripMenuItem.Name = "izbrišiBazuToolStripMenuItem";
-            this.izbrišiBazuToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.izbrišiBazuToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.izbrišiBazuToolStripMenuItem.Text = "Izbriši bazu";
             this.izbrišiBazuToolStripMenuItem.Click += new System.EventHandler(this.IzbrišiBazuToolStripMenuItem_Click);
             // 
             // dodajToolStripMenuItem
             // 
             this.dodajToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.doctypeToolStripMenuItem});
+            this.doctypeToolStripMenuItem,
+            this.korisnikaToolStripMenuItem});
             this.dodajToolStripMenuItem.Name = "dodajToolStripMenuItem";
-            this.dodajToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.dodajToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.dodajToolStripMenuItem.Text = "Dodaj";
             // 
             // doctypeToolStripMenuItem
             // 
             this.doctypeToolStripMenuItem.Name = "doctypeToolStripMenuItem";
-            this.doctypeToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.doctypeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.doctypeToolStripMenuItem.Text = "Doctype";
             this.doctypeToolStripMenuItem.Click += new System.EventHandler(this.DoctypeToolStripMenuItem_Click);
             // 
-            // miHelp
+            // korisnikaToolStripMenuItem
             // 
-            this.miHelp.Name = "miHelp";
-            this.miHelp.Size = new System.Drawing.Size(57, 20);
-            this.miHelp.Text = "Pomoć";
+            this.korisnikaToolStripMenuItem.Name = "korisnikaToolStripMenuItem";
+            this.korisnikaToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.korisnikaToolStripMenuItem.Text = "Korisnika";
+            this.korisnikaToolStripMenuItem.Click += new System.EventHandler(this.korisnikaToolStripMenuItem_Click);
             // 
             // izveštajiToolStripMenuItem
             // 
@@ -602,7 +603,6 @@
         private System.Windows.Forms.Panel pUpper;
         private System.Windows.Forms.MenuStrip mMain;
         private System.Windows.Forms.ToolStripMenuItem miOption;
-        private System.Windows.Forms.ToolStripMenuItem miHelp;
         private System.Windows.Forms.TableLayoutPanel tlpLower;
         private System.Windows.Forms.Panel pGreen;
         private System.Windows.Forms.Button bCloseGreen;
@@ -648,6 +648,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ToolStripMenuItem dodajToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem doctypeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem korisnikaToolStripMenuItem;
     }
 }
 
