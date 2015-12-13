@@ -78,6 +78,9 @@
             this.lBlue = new System.Windows.Forms.Label();
             this.bCloseBlue = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.izbrišiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.qRCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.kutijuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pUpper.SuspendLayout();
             this.mMain.SuspendLayout();
             this.tlpLower.SuspendLayout();
@@ -181,7 +184,8 @@
             // 
             this.miOption.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.izbrišiBazuToolStripMenuItem,
-            this.dodajToolStripMenuItem});
+            this.dodajToolStripMenuItem,
+            this.izbrišiToolStripMenuItem});
             this.miOption.Name = "miOption";
             this.miOption.Size = new System.Drawing.Size(53, 20);
             this.miOption.Text = "Opcije";
@@ -567,6 +571,29 @@
             // 
             this.errorProvider.ContainerControl = this;
             // 
+            // izbrišiToolStripMenuItem
+            // 
+            this.izbrišiToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.qRCodeToolStripMenuItem,
+            this.kutijuToolStripMenuItem});
+            this.izbrišiToolStripMenuItem.Name = "izbrišiToolStripMenuItem";
+            this.izbrišiToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.izbrišiToolStripMenuItem.Text = "Izbriši";
+            // 
+            // qRCodeToolStripMenuItem
+            // 
+            this.qRCodeToolStripMenuItem.Name = "qRCodeToolStripMenuItem";
+            this.qRCodeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.qRCodeToolStripMenuItem.Text = "QRCode";
+            this.qRCodeToolStripMenuItem.Click += new System.EventHandler(this.qRCodeToolStripMenuItem_Click);
+            // 
+            // kutijuToolStripMenuItem
+            // 
+            this.kutijuToolStripMenuItem.Name = "kutijuToolStripMenuItem";
+            this.kutijuToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.kutijuToolStripMenuItem.Text = "Kutiju";
+            this.kutijuToolStripMenuItem.Click += new System.EventHandler(this.kutijuToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -649,6 +676,9 @@
         private System.Windows.Forms.ToolStripMenuItem dodajToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem doctypeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem korisnikaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem izbrišiToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem qRCodeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem kutijuToolStripMenuItem;
     }
 }
 

@@ -121,7 +121,7 @@ namespace QR_Code
         private void InsertIntoRWTable()
         {
 
-            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString + ";Integrated Security=True");
+            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
             conn.Open();
             SqlCommand command = new SqlCommand("INSERT INTO [QRCode].[dbo].[RWTable] VALUES (@boxCode, @code,@qrid)", conn);
             //command.Parameters.AddWithValue("@boxCode", boxCode);
@@ -158,7 +158,7 @@ namespace QR_Code
         private List<string> LoadPreviousFilenums()
         {
             List<string> ret = new List<string>();
-            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString + ";Integrated Security=True");
+            SqlConnection conn = new SqlConnection( Helper.ConnectionString);
             conn.Open();
             SqlCommand command = new SqlCommand("SELECT [Code] FROM [QRCode].[dbo].[RWTable]", conn);
             SqlDataReader reader = command.ExecuteReader();

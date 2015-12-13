@@ -30,7 +30,7 @@ namespace QR_Code
             }
             else
             {
-                switch (cbReport.SelectedIndex)
+                /*switch (cbReport.SelectedIndex)
                 {
                     case -1:
                         MessageBox.Show("Izaberite vrstu izveštaja.");
@@ -44,6 +44,21 @@ namespace QR_Code
                     case 2:
                         RWReport();
                         break;
+                }*/
+                
+
+                
+                if (checkBox1.Checked)
+                {
+                    GeneralReport();
+                }
+                if (checkBox2.Checked)
+                {
+                    DetailedReport();
+                }
+                if (checkBox3.Checked)
+                {
+                    RWReport();
                 }
             }
             
@@ -55,7 +70,7 @@ namespace QR_Code
         private void DetailedReport()
         {
             string outPath = string.Empty;
-            outPath += Application.StartupPath + @"\tabelaZaBankuDetaljna.xls";
+            outPath += Application.StartupPath + @"\tabelaZaBankuDetaljna " + tbOrderNumber.Text + ".xls";
             // Create default output sheet and workbook
             Worksheet outputSheet = new Worksheet("Sheet1");
             Workbook outputBook = new Workbook();
@@ -233,11 +248,11 @@ namespace QR_Code
             {
                 outputBook.Worksheets.Add(outputSheet);
                 outputBook.Save(outPath);
-                MessageBox.Show("Uspešno kreiran izveštaj.");
+                MessageBox.Show("Uspešno kreiran detaljan izveštaj.");
             }
             catch (Exception)
             {
-                MessageBox.Show("Nije moguće kreirati izveštaj!");
+                MessageBox.Show("Nije moguće kreirati detaljan izveštaj!");
             }
 
 
@@ -250,7 +265,7 @@ namespace QR_Code
         private void GeneralReport()
         {
             string outPath = null;
-            outPath += Application.StartupPath + @"\tabelaZaBanku.xls";
+            outPath += Application.StartupPath + @"\tabelaZaBanku " + tbOrderNumber.Text + ".xls";
             // Create default output sheet and workbook
             Worksheet outputSheet = new Worksheet("Sheet1");
             Workbook outputBook = new Workbook();
@@ -293,11 +308,11 @@ namespace QR_Code
             {
                 outputBook.Worksheets.Add(outputSheet);
                 outputBook.Save(outPath);
-                MessageBox.Show("Uspešno kreiran izveštaj.");
+                MessageBox.Show("Uspešno kreiran opšti izveštaj.");
             }
             catch (Exception)
             {
-                MessageBox.Show("Nije moguće kreirati izveštaj!");
+                MessageBox.Show("Nije moguće kreirati opšti izveštaj!");
             }
 
 
@@ -311,7 +326,7 @@ namespace QR_Code
         private void RWReport()
         {
             string outPath = string.Empty;
-            outPath += Application.StartupPath + @"\tabelaZaRW.xls";
+            outPath += Application.StartupPath + @"\tabelaZaRW " + tbOrderNumber.Text + ".xls";
             // Create default output sheet and workbook
             Worksheet outputSheet = new Worksheet("Sheet1");
             Workbook outputBook = new Workbook();
@@ -996,11 +1011,11 @@ namespace QR_Code
             {
                 outputBook.Worksheets.Add(outputSheet);
                 outputBook.Save(outPath);
-                MessageBox.Show("Uspešno kreiran izveštaj.");
+                MessageBox.Show("Uspešno kreiran reisswolf izveštaj.");
             }
             catch (Exception)
             {
-                MessageBox.Show("Nije moguće kreirati izveštaj!");
+                MessageBox.Show("Nije moguće kreirati reisswolf izveštaj!");
             }
 
         }
@@ -1044,7 +1059,7 @@ namespace QR_Code
         {
             int fileNum = -1;
 
-            using (SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString + ";Integrated Security=True"))
+            using (SqlConnection conn = new SqlConnection(Helper.ConnectionString ))
             {
                 conn.Open();
                 SqlCommand command = new SqlCommand("SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn);

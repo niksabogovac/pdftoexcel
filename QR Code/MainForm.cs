@@ -100,11 +100,15 @@ namespace QR_Code
             {
                 izbrišiBazuToolStripMenuItem.Enabled = true;
                 izbrišiBazuToolStripMenuItem.Visible = true;
+                izbrišiToolStripMenuItem.Enabled = true;
+                izbrišiToolStripMenuItem.Visible = true;
             }
             else
             {
                 izbrišiBazuToolStripMenuItem.Enabled = false;
                 izbrišiBazuToolStripMenuItem.Visible = false;
+                izbrišiToolStripMenuItem.Enabled = false;
+                izbrišiToolStripMenuItem.Visible = false;
             }
         }
         #endregion
@@ -357,12 +361,14 @@ namespace QR_Code
             string boxCode = GetBoxCodeFromDocType(doctype);     
             if (boxCode == null)
             {
-                MessageBox.Show("QR kod koji ste uneli ne može biti raspoređen jer ne postoji doctype - " + doctype + ".");
-                lNotification.Text = string.Empty;
-                //lNotification.Text = "QR kod koji ste uneli ne može biti raspoređen jer ne postoji doctype - " + doctype + ".";
-                //lNotification.ForeColor = Color.Red;
+                //MessageBox.Show("QR kod koji ste uneli ne može biti raspoređen jer ne postoji doctype - " + doctype + ".");
+                //lNotification.Text = string.Empty;
+                lNotification.Text = "Ne postoji doctype - " + doctype + ".";
+                lNotification.ForeColor = Color.Red;
                 return;
             }
+            int error = 0;
+            string errorMessage = string.Empty;
             try
             {
                 InsertToBankTable(id, boxCode, startCode);
@@ -403,6 +409,7 @@ namespace QR_Code
             }
             catch (SqlException)
             {
+                error = 1;
                 SqlConnection conn = new SqlConnection(Helper.ConnectionString);
                 conn.Open();
                 SqlCommand command = new SqlCommand("SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id", conn);
@@ -412,12 +419,26 @@ namespace QR_Code
                 string c = (string)reader[0];
                 reader.Close();
                 conn.Close();
-                MessageBox.Show("QR kod koji ste uneli ne može biti raspoređen jer je kod već upisan u kutiju " + c + ".");
-                lNotification.Text = string.Empty;
-                //lNotification.Text = "QR kod koji ste uneli ne može biti raspoređen ili je kod već upisan.";
-                //lNotification.ForeColor = Color.Red;
+                lNotification.Text = "QR kod je već upisan, u kutiji: " + c;
+                lNotification.ForeColor = Color.Red;
                 
             }
+            /*
+            if (error == 1)
+            {
+                SqlConnection conn = new SqlConnection(Helper.ConnectionString);
+                conn.Open();
+                SqlCommand command = new SqlCommand("SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id", conn);
+                command.Parameters.AddWithValue("@id", id);
+                SqlDataReader reader = command.ExecuteReader();
+                reader.Read();
+                string c = (string)reader[0];
+                reader.Close();
+                conn.Close();
+                //lNotification.Text = string.Empty;
+                MessageBox.Show("QR kod koji ste uneli ne može biti raspoređen jer je kod već upisan u kutiju " + c + ".");
+                
+            }*/
         }
 
         /// <summary>
@@ -572,7 +593,7 @@ namespace QR_Code
         /// </summary>
         private void DeleteDatabaseData()
         {
-            SqlConnection conn = new SqlConnection("Data Source=" + Helper.ConnectionString + ";Integrated Security=True");
+            SqlConnection conn = new SqlConnection( Helper.ConnectionString);
             conn.Open();
             SqlCommand command = new SqlCommand("DELETE FROM [QRCode].[dbo].[BankTable]", conn);
             command.ExecuteNonQuery();
@@ -1047,7 +1068,19 @@ namespace QR_Code
 
         #endregion
 
+        private void qRCodeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DeleteForm form = new DeleteForm(1);
+            form.ShowDialog();
+        }
+
         #endregion
+
+        private void kutijuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DeleteForm form = new DeleteForm(2);
+            form.ShowDialog();
+        }
 
 
     }
