@@ -27,7 +27,7 @@ namespace QR_Code
         /// <summary>
         /// Regex za kodove kutije.
         /// </summary>
-        private Regex boxCodeRegex = new Regex(@"[A-Z]{6}[0-9]{2}C-[0-9]{5}");
+        private Regex boxCodeRegex = new Regex(@"(RSRFBA)[0-9]{2}C-[0-9]{5}");
 
         #region Box status
         /// <summary>
@@ -699,7 +699,7 @@ namespace QR_Code
                     tbGreen.Focus();
 
                 }
-                else if (!boxCodeRegex.IsMatch(tbGreen.Text))
+                else if (!boxCodeRegex.IsMatch(tbGreen.Text) || tbGreen.Text.Length != 15)
                 {
                     MessageBox.Show("Neuspešno otvorena kutija, nije ispravan format koda.");
                 }
@@ -775,7 +775,7 @@ namespace QR_Code
                     errorProvider.SetError(tbRed, "Da biste otvorili kutiju, morate uneti šifru.");
                     tbRed.Focus();
                 }
-                else if (!boxCodeRegex.IsMatch(tbRed.Text))
+                else if (!boxCodeRegex.IsMatch(tbRed.Text) || tbRed.Text.Length != 15)
                 {
                     MessageBox.Show("Neuspešno otvorena kutija, nije ispravan format koda.");
                 }
@@ -852,7 +852,7 @@ namespace QR_Code
                     errorProvider.SetError(tbYellow, "Da biste otvorili kutiju, morate uneti šifru.");
                     tbYellow.Focus();
                 }
-                else if (!boxCodeRegex.IsMatch(tbYellow.Text))
+                else if (!boxCodeRegex.IsMatch(tbYellow.Text) || tbYellow.Text.Length != 15)
                 {
                     MessageBox.Show("Neuspešno otvorena kutija, nije ispravan format koda.");
                 }
@@ -929,7 +929,7 @@ namespace QR_Code
                     errorProvider.SetError(tbBlue, "Da biste otvorili kutiju, morate uneti šifru.");
                     tbBlue.Focus();
                 }
-                else if (!boxCodeRegex.IsMatch(tbBlue.Text))
+                else if (!boxCodeRegex.IsMatch(tbBlue.Text) || tbBlue.Text.Length != 15)
                 {
                     MessageBox.Show("Neuspešno otvorena kutija, nije ispravan format koda.");
                 }
@@ -1080,6 +1080,12 @@ namespace QR_Code
         {
             DeleteForm form = new DeleteForm(2);
             form.ShowDialog();
+        }
+
+        private void brojNalogaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OrderNumDialog diag = new OrderNumDialog();
+            diag.ShowDialog();
         }
 
 

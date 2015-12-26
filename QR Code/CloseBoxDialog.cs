@@ -40,7 +40,7 @@ namespace QR_Code
         /// </summary>
         private List<string> PreviousFilenums;
 
-        private Regex reg = new Regex(@"([A-Z]){6}[0-9]{2}\-[0-9]{6}");
+        private Regex reg = new Regex(@"(RSRFBA)[0-9]{2}\-[0-9]{6}");
         /// <summary>
         /// Initializes a new instance of the <see cref="CloseBoxDialog"/> class.
         /// </summary>
@@ -74,7 +74,11 @@ namespace QR_Code
         /// <param name="e">Following arguments.</param>
         private void BConfirmClick(object sender, EventArgs e)
         {
-            if (!PreviousFilenums.Contains(tbCode.Text) && !Filenums.Contains(tbCode.Text))
+            if (!reg.IsMatch(tbCode.Text))
+            {
+                MessageBox.Show("Nije ispravan format kod.");
+            }
+            else if (!PreviousFilenums.Contains(tbCode.Text) && !Filenums.Contains(tbCode.Text))
             {
                 Filenums.Add(tbCode.Text);
                 lText.Text = "Preostali broj kodova za unos: " + --codeNums;
@@ -171,7 +175,7 @@ namespace QR_Code
 
         private void tbCode_TextChanged(object sender, EventArgs e)
         {
-            if (reg.IsMatch(tbCode.Text))
+            if (reg.IsMatch(tbCode.Text) && tbCode.Text.Length == 15)
             {
                 if (!PreviousFilenums.Contains(tbCode.Text) && !Filenums.Contains(tbCode.Text))
                 {
