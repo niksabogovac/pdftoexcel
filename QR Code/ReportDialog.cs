@@ -51,7 +51,9 @@ namespace QR_Code
         /// <summary>
         /// Triggered when detailed report creation from combo box is selected.
         /// </summary>
-        private void DetailedReport()
+        /// <param name="start">Start date if provided.</param>
+        /// <param name="end">End date if provided.</param>
+        private void DetailedReport(DateTime? start, DateTime? end)
         {
             string outPath = string.Empty;
             outPath += Application.StartupPath + @"\tabelaZaBankuDetaljna " + tbOrderNumber.Text + ".xls";
@@ -80,8 +82,22 @@ namespace QR_Code
 
             SqlConnection conn = new SqlConnection(Helper.ConnectionString);
             conn.Open();
-            SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[BankTable] INNER JOIN [QRCode].[dbo].[RWTable] on [QRCode].[dbo].[BankTable].[ID] = [QRCode].[dbo].[RWTable].[QRID] WHERE [OrderNum] =@orderNum", conn);
-            command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
+            SqlCommand command;
+            string commandText = "SELECT * FROM [QRCode].[dbo].[BankTable] INNER JOIN [QRCode].[dbo].[RWTable] on [QRCode].[dbo].[BankTable].[ID] = [QRCode].[dbo].[RWTable].[QRID] WHERE ";
+            if (start == null && end == null)
+            {
+                commandText += "[OrderNum] = @orderNum";
+                command = new SqlCommand(commandText, conn);
+                command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
+            }
+            else
+            {
+                commandText += "[Date] BETWEEN @startDate AND @stopDate";
+                command = new SqlCommand(commandText, conn);
+                command.Parameters.AddWithValue("@startDate", dateTimeFrom.Value);
+                command.Parameters.AddWithValue("@stopDate", dateTimeUntil.Value);
+            }
+            
             SqlDataReader reader = command.ExecuteReader();
             string doctype = null, id = null, mbr = null, partija = null, zahtev = null, idKartice = null, paket = null;
 
@@ -322,7 +338,9 @@ namespace QR_Code
         /// <summary>
         /// Triggered when RW report creation from combo box is selected.
         /// </summary>
-        private void RWReport()
+        /// <param name="start">Start date if provided.</param>
+        /// <param name="end">End date if provided.</param>
+        private void RWReport(DateTime? start, DateTime? end)
         {
             string outPath = string.Empty;
             outPath += Application.StartupPath + @"\tabelaZaRW " + tbOrderNumber.Text + ".xls";
@@ -1118,11 +1136,11 @@ namespace QR_Code
             }
             if (checkBox2.Checked)
             {
-                DetailedReport();
+                DetailedReport(start, end);
             }
             if (checkBox3.Checked)
             {
-                RWReport();
+                RWReport(null,null);
             }
         }
     }
