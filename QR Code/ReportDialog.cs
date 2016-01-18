@@ -23,43 +23,27 @@ namespace QR_Code
 
         private void BReport_Click(object sender, EventArgs e)
         {
-            if (tbOrderNumber.Text.Equals(string.Empty))
+            // Is order number provided.
+            if (tbOrderNumber.Text.Equals(string.Empty) && cbChoose.SelectedIndex == 0)
             {
                 MessageBox.Show("Unesite broj naloga.");
                 
             }
             else
             {
-                /*switch (cbReport.SelectedIndex)
+                // Check what is selected.
+                switch(cbChoose.SelectedIndex)
                 {
-                    case -1:
-                        MessageBox.Show("Izaberite vrstu izveštaja.");
-                        break;
                     case 0:
-                        GeneralReport();
+                        GenerateReports(null, null);
                         break;
                     case 1:
-                        DetailedReport();
+                        GenerateReports(dateTimeFrom.Value, dateTimeUntil.Value);
                         break;
-                    case 2:
-                        RWReport();
+                    default:
                         break;
-                }*/
+                }
                 
-
-                
-                if (checkBox1.Checked)
-                {
-                    GeneralReport();
-                }
-                if (checkBox2.Checked)
-                {
-                    DetailedReport();
-                }
-                if (checkBox3.Checked)
-                {
-                    RWReport();
-                }
             }
             
         }
@@ -262,7 +246,9 @@ namespace QR_Code
         /// <summary>
         /// Triggered when report creation from combo box is selected.
         /// </summary>
-        private void GeneralReport()
+        /// <param name="start">Start date if provided.</param>
+        /// <param name="end">End date if provided.</param>
+        private void GeneralReport(DateTime? start, DateTime? end)
         {
             string outPath = null;
             outPath += Application.StartupPath + @"\tabelaZaBanku " + tbOrderNumber.Text + ".xls";
@@ -284,8 +270,21 @@ namespace QR_Code
 
             SqlConnection conn = new SqlConnection(Helper.ConnectionString);
             conn.Open();
-            SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[BankTable] WHERE [OrderNum] = @orderNum", conn);
-            command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
+            SqlCommand command;
+            string commandText = "SELECT * FROM [QRCode].[dbo].[BankTable] WHERE ";
+            if (start == null && end == null)
+            {
+                commandText += "[OrderNum] = @orderNum";
+                command = new SqlCommand(commandText, conn);
+                command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
+            }
+            else
+            {
+                commandText += "[Date] BETWEEN @startDate AND @stopDate";
+                command = new SqlCommand(commandText, conn);
+                command.Parameters.AddWithValue("@startDate", dateTimeFrom.Value);
+                command.Parameters.AddWithValue("@stopDate", dateTimeUntil.Value);
+            }
             SqlDataReader reader = command.ExecuteReader();
 
 
@@ -1071,6 +1070,59 @@ namespace QR_Code
                     fileNum = (int)reader["NumberOfFiles"];
                 }
                 return fileNum;
+            }
+        }
+
+        /// <summary>
+        /// Triggered when selected index is changed, changes GUI according to selection.
+        /// </summary>
+        /// <param name="sender">Sending object.</param>
+        /// <param name="e">Following args.</param>
+        private void cbChoose_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (cbChoose.SelectedIndex)
+            {
+                // Order number is selected.
+                case 0:
+                    lValue.Visible = true;
+                    lValue.Text = "Unesite broj naloga:";
+                    tbOrderNumber.Visible = true;
+                    tbOrderNumber.Text = string.Empty;
+                    break;
+                // Date is selected.
+                case 1:
+                    lValue.Visible = true;
+                    lValue.Text = "Izaberite pocetni i kranji datum:";
+                    dateTimeFrom.Visible = true;
+                    dateTimeUntil.Visible = true;
+                    break;
+                default:
+                    lValue.Visible = false;
+                    dateTimeFrom.Visible = false;
+                    dateTimeUntil.Visible = false;
+                    tbOrderNumber.Visible = false;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Generates reports for selected types of reports.
+        /// </summary>
+        /// <param name="start">Start date if provided.</param>
+        /// <param name="end">Stop date if provided.</param>
+        private void GenerateReports(DateTime? start = null, DateTime? end = null)
+        {
+            if (checkBox1.Checked)
+            {
+                GeneralReport(start, end);
+            }
+            if (checkBox2.Checked)
+            {
+                DetailedReport();
+            }
+            if (checkBox3.Checked)
+            {
+                RWReport();
             }
         }
     }
