@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ExcelLibrary.SpreadSheet;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -6,6 +7,7 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,6 +15,19 @@ namespace QR_Code
 {
     public partial class DeleteForm : Form
     {
+        /// <summary>
+        /// Path of input file.
+        /// </summary>
+        private string filePath = string.Empty;
+        /// <summary>
+        /// Workbook for input .xls file.
+        /// </summary>
+        private Workbook book;
+        /// <summary>
+        /// Worksheet for input .xls file.
+        /// </summary>
+        private Worksheet sheet;
+
         /// <summary>
         /// 1 - QRCODE.
         /// 2 - BOX.
@@ -30,91 +45,89 @@ namespace QR_Code
             {
                 case 1:
                     label1.Text += "QR kod ID";
+                    bFile.Visible = true;
+                    textBox1.Visible = false;
                     break;
                 case 2:
                     label1.Text += "kutiju";
+                    bFile.Visible = false;
+                    textBox1.Visible = true;
                     break;
             }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (!textBox1.Text.Equals(string.Empty))
+            if ( (!textBox1.Text.Equals(string.Empty) && type == 2) || (type == 1 && filePath != string.Empty))
             {
                 switch(type)
                 { 
                     case 1:
-                        using (SqlConnection connection1 = new SqlConnection(Helper.ConnectionString))
+
+                        // Try to open input table.
+                        book = new Workbook();
+                        try
                         {
-                            connection1.Open();
-
-                            // Start a local transaction.
-                            SqlTransaction sqlTran = connection1.BeginTransaction();
-
-                            // Enlist a command in the current transaction.
-                            SqlCommand command = connection1.CreateCommand();
-                            command.Transaction = sqlTran;
-
-                            try
-                            {
-
-                                command.CommandText = "SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id";
-                                command.Parameters.AddWithValue("@id",textBox1.Text);
-                                string boxCode;
-                                SqlDataReader reader = command.ExecuteReader();
-                                if (reader.HasRows)
-                                {
-                                    reader.Read();
-                                    boxCode = (string)reader[0];
-                                }
-                                else
-                                {
-                                    MessageBox.Show("QR kod ne postoji u bazi.");
-                                    return;
-                                }
-                                reader.Close();
-                                command.Parameters.Clear();
-
-                                // Execute two separate commands.
-                                command.CommandText =
-                                 "DELETE FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id";
-                                command.Parameters.AddWithValue("@id", textBox1.Text);
-                                command.ExecuteNonQuery();
-                                command.Parameters.Clear();
-
-                                command.CommandText =
-                                 "DELETE FROM [QRCode].[dbo].[RWTable] WHERE [QRID] = @qrid";
-                                command.Parameters.AddWithValue("@qrid", textBox1.Text);
-                                command.ExecuteNonQuery();
-                                command.Parameters.Clear();
-
-                     
-
-                                command.CommandText =
-                                 "UPDATE [QRCode].[dbo].[Box] SET [NumberOfFiles] = (SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode) - 1  WHERE [Code] = @boxCode";
-                                command.Parameters.AddWithValue("@boxCode", boxCode);
-                                command.ExecuteNonQuery();
-                                command.Parameters.Clear();
-                                // Commit the transaction.
-                                sqlTran.Commit();
-                               
-                            }                                
-                            catch (Exception ex)
-                            {
-                                try
-                                {
-                                    // Attempt to roll back the transaction.
-                                    sqlTran.Rollback();
-                                }
-                                catch (Exception exRollback)
-                                {
-                                    MessageBox.Show("Nije uspešno probajte ponovo!");
-                                }
-                            }
-                            MessageBox.Show("Uspešno izbrisan QR kod : " + textBox1.Text);
-                            textBox1.Text = string.Empty;
+                            book = Workbook.Load(filePath);
                         }
-                    break;
+                        catch
+                        {
+                            MessageBox.Show("Uneti fajl ne moze da se otvori.\nProverite da li ste uneli ispravno ime.\nProverite da li je vec otvoren i ukoliko jeste zatvorite ga i pokusajte ponovo.");
+                            Environment.Exit(-1);
+                        }
+
+                        // Open first sheet in input xls document.
+                        try
+                        {
+                            sheet = book.Worksheets[0];
+                        }
+                        catch
+                        {
+                            MessageBox.Show("Uneti fajl ne moze da se otvori.\nUlazni fajl mora da sadrzi sve u prvom sheetu!");
+                            Environment.Exit(-1);
+                        }
+
+                        SqlConnection conn;
+                        SqlCommand cmd;
+
+                        try
+                        {
+                            conn = new SqlConnection(Helper.ConnectionString);
+                            conn.Open();
+                            cmd = new SqlCommand();
+                        }
+                        catch
+                        {
+                            MessageBox.Show("Nije moguće otvoriti konekciju prema bazi.");
+                            return;
+                        }
+
+                        try
+                        {
+                            // Iterate through  table and generate sql UPDATE STATEMENTS.
+                            for (int rowIndex = sheet.Cells.FirstRowIndex; rowIndex <= sheet.Cells.LastRowIndex; rowIndex++)
+                            {
+                                Row row = new Row();
+                                // Get current row.
+                                row = sheet.Cells.GetRow(rowIndex);
+                                // Take QRCode from it.
+                                string QRCode = row.GetCell(0).StringValue;
+                                string id = handleCode(QRCode);
+                                string cmdText = "DELETE FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id";
+                                cmd = new SqlCommand(cmdText, conn);
+                                cmd.Parameters.AddWithValue("@id", id);
+                                cmd.ExecuteNonQuery();
+                                
+                            }
+                            MessageBox.Show("Uspešno izvršena brisanja.");
+                        }
+                        catch
+                        {
+                            MessageBox.Show("Nije moguće izvući podatke iz ulazne tabele, ili su pogrešno uneseni.");
+                            return;
+                        }
+
+                        break;
                     case 2:
                     {
                         using (SqlConnection connection1 = new SqlConnection(Helper.ConnectionString))
@@ -188,6 +201,54 @@ namespace QR_Code
                     break;
                 }          
             }
+        }
+
+        private void bFile_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                filePath = openFileDialog1.FileName.ToString();
+            }
+            else
+            {
+                MessageBox.Show("Nije moguće otvoriti ulaznu tabelu, proverite da li je već otvorena!");
+            }
+        }
+
+        /// <summary>
+        /// Splits QRCode returning ID from it.
+        /// </summary>
+        /// <param name="QRCode">Input QRCode</param>
+        /// <returns>Output ID.</returns>
+        private string handleCode(string QRCode)
+        {
+            string id = null;
+            string code = QRCode;
+            code = Regex.Replace(code, @"\\000021", string.Empty);
+            code = Regex.Replace(code, "{", string.Empty);
+            code = Regex.Replace(code, "}", string.Empty);
+            code = Regex.Replace(code, " ", string.Empty);
+            // Separate client infos and remove ".
+            string[] stringSeparators = new string[] { "," };
+            string[] tokens = code.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string clientInfo in tokens)
+            {
+                string tmp = Regex.Replace(clientInfo, "\"", string.Empty);
+                string[] tmpSeparator = new string[] { ":" };
+                string[] tmpTokens = tmp.Split(tmpSeparator, StringSplitOptions.RemoveEmptyEntries);
+                if (tmpTokens.Length > 1)
+                {
+
+                    if (tmpTokens[0].Equals("id"))
+                    {
+                        // Get id.
+                        id = tmpTokens[1];
+                    }
+                    
+                }
+
+            }
+            return id;
         }
     }
 }

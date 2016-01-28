@@ -31,6 +31,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.bFile = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // label1
@@ -59,11 +61,26 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // bFile
+            // 
+            this.bFile.Location = new System.Drawing.Point(147, 4);
+            this.bFile.Name = "bFile";
+            this.bFile.Size = new System.Drawing.Size(209, 23);
+            this.bFile.TabIndex = 3;
+            this.bFile.Text = "Odaberite ulazni fajl";
+            this.bFile.UseVisualStyleBackColor = true;
+            this.bFile.Click += new System.EventHandler(this.bFile_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // DeleteForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(368, 66);
+            this.Controls.Add(this.bFile);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
@@ -80,5 +97,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button bFile;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }

@@ -369,8 +369,18 @@ namespace QR_Code
 
             SqlConnection conn = new SqlConnection(Helper.ConnectionString);
             conn.Open();
-            SqlCommand command = new SqlCommand("SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [OrderNum] = @orderNum", conn);
-            command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
+            SqlCommand command;
+            string commandText = "SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable]";
+            if (start == null && end == null)
+            {
+                commandText += "WHERE [OrderNum] = @orderNum";
+                command = new SqlCommand(commandText, conn);
+                command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
+            }
+            else
+            {
+                command = new SqlCommand(commandText, conn);
+            }
             SqlDataReader reader = command.ExecuteReader();
 
             List<string> boxCodes = new List<string>();
@@ -385,12 +395,23 @@ namespace QR_Code
             }
             reader.Close();
 
-
             foreach (string boxCode in boxCodes)
             {
-                command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[BankTable] INNER JOIN [QRCode].[dbo].[RWTable] ON [QRCode].[dbo].[BankTable].[ID] = [QRCode].[dbo].[RWTable].[QRID] AND [QRCode].[dbo].[BankTable].[BoxCode] = @boxCode AND [QRCode].[dbo].[BankTable].[OrderNum] = @orderNum INNER JOIN [QRCode].[dbo].[Box] ON [QRCode].[dbo].[BankTable].[BoxCode] = [QRCode].[dbo].[Box].Code ORDER BY [QRCode].[dbo].[RWTable].[Code]", conn);
-                command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
-                command.Parameters.AddWithValue("@boxCode", boxCode);
+                if (start == null && end == null)
+                {
+                    commandText = "SELECT * FROM [QRCode].[dbo].[BankTable] INNER JOIN [QRCode].[dbo].[RWTable] ON [QRCode].[dbo].[BankTable].[ID] = [QRCode].[dbo].[RWTable].[QRID] AND [QRCode].[dbo].[BankTable].[BoxCode] = @boxCode AND [QRCode].[dbo].[BankTable].[OrderNum] = @orderNum INNER JOIN [QRCode].[dbo].[Box] ON [QRCode].[dbo].[BankTable].[BoxCode] = [QRCode].[dbo].[Box].Code ORDER BY [QRCode].[dbo].[RWTable].[Code]";
+                    command = new SqlCommand(commandText, conn);
+                    command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
+                    command.Parameters.AddWithValue("@boxCode", boxCode);
+                }
+                else
+                {
+                    commandText = "SELECT * FROM [QRCode].[dbo].[BankTable] INNER JOIN [QRCode].[dbo].[RWTable] ON [QRCode].[dbo].[BankTable].[ID] = [QRCode].[dbo].[RWTable].[QRID] AND [QRCode].[dbo].[BankTable].[BoxCode] = @boxCode AND [QRCode].[dbo].[BankTable].[Date] BETWEEN @startDate AND @stopDate INNER JOIN [QRCode].[dbo].[Box] ON [QRCode].[dbo].[BankTable].[BoxCode] = [QRCode].[dbo].[Box].Code ORDER BY [QRCode].[dbo].[RWTable].[Code]";
+                    command = new SqlCommand(commandText, conn);
+                    command.Parameters.AddWithValue("@boxCode", boxCode);
+                    command.Parameters.AddWithValue("@startDate", dateTimeFrom.Value);
+                    command.Parameters.AddWithValue("@stopDate", dateTimeUntil.Value);
+                }
                 reader = command.ExecuteReader();
                 int i = 0;
                 // hbCode - current boxcode
@@ -1140,7 +1161,7 @@ namespace QR_Code
             }
             if (checkBox3.Checked)
             {
-                RWReport(null,null);
+                RWReport(start, start);
             }
         }
     }
