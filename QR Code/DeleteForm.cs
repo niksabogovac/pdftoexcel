@@ -107,16 +107,61 @@ namespace QR_Code
                             // Iterate through  table and generate sql UPDATE STATEMENTS.
                             for (int rowIndex = sheet.Cells.FirstRowIndex; rowIndex <= sheet.Cells.LastRowIndex; rowIndex++)
                             {
+
                                 Row row = new Row();
                                 // Get current row.
                                 row = sheet.Cells.GetRow(rowIndex);
                                 // Take QRCode from it.
                                 string QRCode = row.GetCell(0).StringValue;
                                 string id = handleCode(QRCode);
-                                string cmdText = "DELETE FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id";
-                                cmd = new SqlCommand(cmdText, conn);
-                                cmd.Parameters.AddWithValue("@id", id);
-                                cmd.ExecuteNonQuery();
+
+                                SqlTransaction sqlTran = conn.BeginTransaction();
+                                try
+                                {
+                                    string cmdText = "SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id";
+                                    cmd = new SqlCommand(cmdText, conn);
+                                    cmd.Transaction = sqlTran;
+                                    cmd.Parameters.AddWithValue("@id", id);
+                                    SqlDataReader reader = cmd.ExecuteReader();
+                                    string boxCode = null; 
+                                       
+                                    if (reader.HasRows)
+                                    {
+                                        reader.Read();
+                                        boxCode = (string)reader["BoxCode"];
+                                        reader.Close();
+                                        SqlCommand command;
+                                        // Execute command delete
+                                        cmdText = "DELETE FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id";
+                                        command = new SqlCommand(cmdText, conn);
+                                        command.Transaction = sqlTran;
+                                        command.Parameters.AddWithValue("@id", id);
+                                        command.ExecuteNonQuery();
+                                        // Execute update for number of files in box
+
+                                        cmdText = "UPDATE [QRCode].[dbo].[Box] SET [NumberOfFiles] = (SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode) - 1  WHERE [Code] = @boxCode";
+                                        command = new SqlCommand(cmdText, conn);
+                                        command.Transaction = sqlTran;
+                                        command.Parameters.AddWithValue("@boxCode", boxCode);
+                                        command.ExecuteNonQuery();
+                                        sqlTran.Commit();
+                                    }
+                                    
+                                    
+                                }
+                                catch (Exception ex)
+                                {
+                                    try
+                                    {
+                                        string nesto = ex.StackTrace;
+                                        // Attempt to roll back the transaction.
+                                        sqlTran.Rollback();
+                                    }
+                                    catch (Exception exRollback)
+                                    {
+                                        MessageBox.Show("Nije uspešno probajte ponovo!");
+                                    }
+                                }
                                 
                             }
                             MessageBox.Show("Uspešno izvršena brisanja.");

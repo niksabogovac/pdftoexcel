@@ -265,7 +265,7 @@ namespace QR_Code
             command.Parameters.AddWithValue("@id", id);
             command.Parameters.AddWithValue("@orderNum", tbOrderNum.Text);
             command.Parameters.AddWithValue("@boxCode", boxCode);
-            command.Parameters.AddWithValue("@date", DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss.fff"));
+            command.Parameters.AddWithValue("@date", DateTime.Now);
             command.Parameters.AddWithValue("@jmbg", jmbg);
             command.Parameters.AddWithValue("@code", code);
             command.ExecuteNonQuery();
@@ -407,9 +407,10 @@ namespace QR_Code
                 lNotification.ForeColor = Color.Green;
 
             }
-            catch (SqlException)
+            catch (SqlException e)
             {
                 error = 1;
+                MessageBox.Show(e.StackTrace);
                 SqlConnection conn = new SqlConnection(Helper.ConnectionString);
                 conn.Open();
                 SqlCommand command = new SqlCommand("SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id", conn);
