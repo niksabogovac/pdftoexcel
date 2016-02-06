@@ -104,7 +104,7 @@ namespace QR_Code
 
                         try
                         {
-                            // Iterate through  table and generate sql UPDATE STATEMENTS.
+                            // Iterate through  table and generate sql  STATEMENTS.
                             for (int rowIndex = sheet.Cells.FirstRowIndex; rowIndex <= sheet.Cells.LastRowIndex; rowIndex++)
                             {
 
