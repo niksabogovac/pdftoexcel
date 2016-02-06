@@ -130,6 +130,8 @@ namespace QR_Code
                                         reader.Read();
                                         boxCode = (string)reader["BoxCode"];
                                         reader.Close();
+                                        reader.Dispose();
+                                        reader = null;
                                         SqlCommand command;
                                         // Execute command delete
                                         cmdText = "DELETE FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id";
@@ -137,16 +139,37 @@ namespace QR_Code
                                         command.Transaction = sqlTran;
                                         command.Parameters.AddWithValue("@id", id);
                                         command.ExecuteNonQuery();
-                                        // Execute update for number of files in box
+                                        command.Parameters.Clear();
+                                        
+                                        // DELETE QRCodes from RW tables.
+                                        command.CommandText = "DELETE FROM [QRCode].[dbo].[RWTable] WHERE [QRID] = @id";
+                                        command.Parameters.AddWithValue("@id", id);
+                                        command.ExecuteNonQuery();
+                                        command.Parameters.Clear();
 
+                                        // Execute update for number of files in box
                                         cmdText = "UPDATE [QRCode].[dbo].[Box] SET [NumberOfFiles] = (SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode) - 1  WHERE [Code] = @boxCode";
                                         command = new SqlCommand(cmdText, conn);
                                         command.Transaction = sqlTran;
                                         command.Parameters.AddWithValue("@boxCode", boxCode);
                                         command.ExecuteNonQuery();
                                         sqlTran.Commit();
+                                        sqlTran.Dispose();
+                                        sqlTran = null;
                                     }
-                                    
+                                    if ((reader != null) && !(reader.IsClosed))
+                                    {
+                                        reader.Close();
+                                        reader.Dispose();
+                                        reader = null;
+                                    }
+
+                                    if (sqlTran != null)
+                                    {
+                                        sqlTran.Commit();
+                                        sqlTran.Dispose();
+                                        sqlTran = null;
+                                    }
                                     
                                 }
                                 catch (Exception ex)
@@ -166,8 +189,9 @@ namespace QR_Code
                             }
                             MessageBox.Show("Uspešno izvršena brisanja.");
                         }
-                        catch
+                        catch (Exception h)
                         {
+                            Console.WriteLine(h.StackTrace);
                             MessageBox.Show("Nije moguće izvući podatke iz ulazne tabele, ili su pogrešno uneseni.");
                             return;
                         }

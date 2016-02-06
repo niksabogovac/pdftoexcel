@@ -410,7 +410,7 @@ namespace QR_Code
             catch (SqlException e)
             {
                 error = 1;
-                MessageBox.Show(e.StackTrace);
+                //MessageBox.Show(e.StackTrace);
                 SqlConnection conn = new SqlConnection(Helper.ConnectionString);
                 conn.Open();
                 SqlCommand command = new SqlCommand("SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id", conn);
