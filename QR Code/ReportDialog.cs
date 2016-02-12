@@ -1127,11 +1127,14 @@ namespace QR_Code
                     lValue.Text = "Unesite broj naloga:";
                     tbOrderNumber.Visible = true;
                     tbOrderNumber.Text = string.Empty;
+                    dateTimeFrom.Visible = false;
+                    dateTimeUntil.Visible = false;
                     break;
                 // Date is selected.
                 case 1:
                     lValue.Visible = true;
                     lValue.Text = "Izaberite pocetni i kranji datum:";
+                    tbOrderNumber.Visible = false;
                     dateTimeFrom.Visible = true;
                     dateTimeUntil.Visible = true;
                     break;

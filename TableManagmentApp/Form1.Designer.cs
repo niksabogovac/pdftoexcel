@@ -127,6 +127,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.tbSeparator);
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Program";
             this.ResumeLayout(false);
             this.PerformLayout();
