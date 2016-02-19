@@ -46,6 +46,8 @@ namespace TableManagmentApp
         /// </summary>
         private Worksheet outputSheet;
 
+        private System.IO.StreamWriter log;
+
         /// <summary>
         /// Initializes a new instance <see cref="Form1"/> class.
         /// </summary>
@@ -85,6 +87,7 @@ namespace TableManagmentApp
                 try
                 {
                     book = Workbook.Load(filePath);
+                    log = new System.IO.StreamWriter(Application.StartupPath + "log.txt");
                 }
                 catch
                 {
@@ -102,6 +105,8 @@ namespace TableManagmentApp
                     MessageBox.Show("Uneti fajl ne moze da se otvori.\nUlazni fajl mora da sadrzi sve u prvom sheetu!");
                     Environment.Exit(-1);
                 }
+
+
 
                 // Get separator and input columns for separation.
                 string colInput = tbRows.Text;
@@ -124,6 +129,8 @@ namespace TableManagmentApp
                     int curCol = 0;
                     for (int rowIndex = sheet.Cells.FirstRowIndex; rowIndex <= sheet.Cells.LastRowIndex; rowIndex++)
                     {
+                        // Indicator if row fails and has to be skipped.
+                        bool breakRow = false;
                         rowValues = new List<string>();
                         // Get current row.
                         Row row = new Row();
@@ -156,7 +163,15 @@ namespace TableManagmentApp
                                 // Should it be splited?
                                 if (columnsForSeparation.Contains((i+1).ToString()))
                                 {
-                                    string[] tokens = rowValues[i].Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                                    string[] tokens = null;
+                                    if (rowValues[i].Contains(separator[0]))
+                                    {
+                                        tokens = rowValues[i].Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                                    }
+                                    else
+                                    {
+                                        tokens = new string[] { rowValues[i] };
+                                    }
                                     List<string> tmp = new List<string>(tokens);
 
                                     // List of indexes if there are data to be deleted.
@@ -180,12 +195,21 @@ namespace TableManagmentApp
                                         splitCnt = tmp.Count;
                                     }
                                     // Differs. Columns don't contain same number of data to split.
-                                    else if (splitCnt != tmp.Count)
+                                    else if (splitCnt != tmp.Count && splitCnt != 1)
                                     {
-                                        MessageBox.Show("Greška! Red " + (rowIndex + 1).ToString() + "ne sadrži isti broj podataka za razdvajanje kao prethodni.");
-                                        return;
+                                       log.WriteLine("Greška! Red " + (rowIndex + 1).ToString() + "ne sadrži isti broj podataka za razdvajanje u navedenim kolonama.");
+                                       breakRow = true;
+                                       break;
                                     }
-                                    cells[i] = tmp;
+                                    if (tmp.Count == 1)
+                                    {
+                                        cells[i] = tmp[0];
+                                    }
+                                    else
+                                    {
+                                        cells[i] = tmp;
+                                    }
+                                    
                                 }
                                 // Shouldn't be splited.
                                 else
@@ -194,6 +218,10 @@ namespace TableManagmentApp
                                 }
                             }
 
+                            if (breakRow)
+                            {
+                                continue;
+                            }
 
 
                             // List of data to be written.
@@ -261,9 +289,7 @@ namespace TableManagmentApp
         {
             foreach (string name in data)
             {
-                // Remove numbers.
-                string tmpData = Regex.Replace(name, @"[0-9]\.", string.Empty);
-                tmpData = tmpData.Trim();
+                string tmpData = name.Trim();
                 outputSheet.Cells[curRow, curCol++] = new Cell(tmpData);
             }
             curRow++;
