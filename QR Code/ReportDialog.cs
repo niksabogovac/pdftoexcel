@@ -56,7 +56,15 @@ namespace QR_Code
         private void DetailedReport(DateTime? start, DateTime? end)
         {
             string outPath = string.Empty;
-            outPath += Application.StartupPath + @"\tabelaZaBankuDetaljna " + tbOrderNumber.Text + ".xls";
+            if (start == null && end == null)
+            {
+                outPath += Application.StartupPath + @"\tabelaZaBankuDetaljna " + tbOrderNumber.Text + ".xls";
+            } 
+            else
+            {
+                outPath += Application.StartupPath + @"\tabelaZaBankuDetaljna " + start.ToString() + "-" + end.ToString() + ".xls";
+            }
+            
             // Create default output sheet and workbook
             Worksheet outputSheet = new Worksheet("Sheet1");
             Workbook outputBook = new Workbook();
@@ -267,7 +275,14 @@ namespace QR_Code
         private void GeneralReport(DateTime? start, DateTime? end)
         {
             string outPath = null;
-            outPath += Application.StartupPath + @"\tabelaZaBanku " + tbOrderNumber.Text + ".xls";
+            if (start == null && end == null)
+            {
+                outPath += Application.StartupPath + @"\tabelaZaBanku " + tbOrderNumber.Text + ".xls";
+            }
+            else
+            {
+                outPath += Application.StartupPath + @"\tabelaZaBanku " + start.ToString() + "-" + end.ToString() + ".xls";
+            }
             // Create default output sheet and workbook
             Worksheet outputSheet = new Worksheet("Sheet1");
             Workbook outputBook = new Workbook();
@@ -343,7 +358,14 @@ namespace QR_Code
         private void RWReport(DateTime? start, DateTime? end)
         {
             string outPath = string.Empty;
-            outPath += Application.StartupPath + @"\tabelaZaRW " + tbOrderNumber.Text + ".xls";
+            if (start == null && end == null)
+            {
+                outPath += Application.StartupPath + @"\RWTabela " + tbOrderNumber.Text + ".xls";
+            }
+            else
+            {
+                outPath += Application.StartupPath + @"\RWTabela " + start.ToString() + "-" + end.ToString() + ".xls";
+            }
             // Create default output sheet and workbook
             Worksheet outputSheet = new Worksheet("Sheet1");
             Workbook outputBook = new Workbook();

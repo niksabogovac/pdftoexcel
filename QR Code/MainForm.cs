@@ -265,7 +265,7 @@ namespace QR_Code
             command.Parameters.AddWithValue("@id", id);
             command.Parameters.AddWithValue("@orderNum", tbOrderNum.Text);
             command.Parameters.AddWithValue("@boxCode", boxCode);
-            command.Parameters.AddWithValue("@date", DateTime.Now);
+            command.Parameters.AddWithValue("@date", DateTime.Now.Date);
             command.Parameters.AddWithValue("@jmbg", jmbg);
             command.Parameters.AddWithValue("@code", code);
             command.ExecuteNonQuery();
@@ -1071,8 +1071,8 @@ namespace QR_Code
 
         private void qRCodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DeleteForm form = new DeleteForm(1);
-            form.ShowDialog();
+            //DeleteForm form = new DeleteForm(1);
+            //form.ShowDialog();
         }
 
         #endregion
@@ -1087,6 +1087,18 @@ namespace QR_Code
         {
             OrderNumDialog diag = new OrderNumDialog();
             diag.ShowDialog();
+        }
+
+        private void pojedinacnoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DeleteForm form = new DeleteForm(3);
+            form.ShowDialog();
+        }
+
+        private void izTabeleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DeleteForm form = new DeleteForm(1);
+            form.ShowDialog();
         }
 
 
