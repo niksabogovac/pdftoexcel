@@ -571,7 +571,7 @@ namespace QR_Code
             int ret = 0;
             SqlConnection conn = new SqlConnection(Helper.ConnectionString);
             conn.Open();
-            SqlCommand command = new SqlCommand("SELECT  [ID] FROM [QRCode].[dbo].[BankTable] WHERE [ID] NOT IN (SELECT [QRID] from [QRCode].[dbo].[RWTable]) AND [BoxCode] = @boxCode", conn);
+            SqlCommand command = new SqlCommand("SELECT  [ID] FROM [QRCode].[dbo].[BankTable] WHERE [ID] NOT IN (SELECT [QRID] from [QRCode].[dbo].[RWTable] WHERE [BoxCode] = @boxCode) AND [BoxCode] = @boxCode", conn);
             command.Parameters.AddWithValue("@boxCode", boxCode);
             SqlDataReader reader = command.ExecuteReader();
             // Fill database with QRIDs.

@@ -1186,7 +1186,7 @@ namespace QR_Code
             }
             if (checkBox3.Checked)
             {
-                RWReport(start, start);
+                RWReport(start, end);
             }
         }
     }
