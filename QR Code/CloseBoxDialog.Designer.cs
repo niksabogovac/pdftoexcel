@@ -60,7 +60,6 @@
             this.bConfirm.Text = "Potvrdi";
             this.bConfirm.UseVisualStyleBackColor = true;
             this.bConfirm.Visible = false;
-            this.bConfirm.Click += new System.EventHandler(this.BConfirmClick);
             // 
             // CloseBoxDialog
             // 

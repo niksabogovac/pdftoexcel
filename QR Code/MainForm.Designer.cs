@@ -45,6 +45,8 @@
             this.korisnikaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.izbrišiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.qRCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pojedinacnoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.izTabeleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.kutijuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.izveštajiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.izmeniToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -83,8 +85,6 @@
             this.lBlue = new System.Windows.Forms.Label();
             this.bCloseBlue = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.pojedinacnoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.izTabeleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pUpper.SuspendLayout();
             this.mMain.SuspendLayout();
             this.tlpLower.SuspendLayout();
@@ -198,9 +198,11 @@
             // 
             // izbrišiBazuToolStripMenuItem
             // 
+            this.izbrišiBazuToolStripMenuItem.Enabled = false;
             this.izbrišiBazuToolStripMenuItem.Name = "izbrišiBazuToolStripMenuItem";
             this.izbrišiBazuToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.izbrišiBazuToolStripMenuItem.Text = "Izbriši bazu";
+            this.izbrišiBazuToolStripMenuItem.Visible = false;
             this.izbrišiBazuToolStripMenuItem.Click += new System.EventHandler(this.IzbrišiBazuToolStripMenuItem_Click);
             // 
             // dodajToolStripMenuItem
@@ -241,14 +243,27 @@
             this.pojedinacnoToolStripMenuItem,
             this.izTabeleToolStripMenuItem});
             this.qRCodeToolStripMenuItem.Name = "qRCodeToolStripMenuItem";
-            this.qRCodeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.qRCodeToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
             this.qRCodeToolStripMenuItem.Text = "QRCode";
-            this.qRCodeToolStripMenuItem.Click += new System.EventHandler(this.qRCodeToolStripMenuItem_Click);
+            // 
+            // pojedinacnoToolStripMenuItem
+            // 
+            this.pojedinacnoToolStripMenuItem.Name = "pojedinacnoToolStripMenuItem";
+            this.pojedinacnoToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.pojedinacnoToolStripMenuItem.Text = "Pojedinacno";
+            this.pojedinacnoToolStripMenuItem.Click += new System.EventHandler(this.pojedinacnoToolStripMenuItem_Click);
+            // 
+            // izTabeleToolStripMenuItem
+            // 
+            this.izTabeleToolStripMenuItem.Name = "izTabeleToolStripMenuItem";
+            this.izTabeleToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.izTabeleToolStripMenuItem.Text = "Iz tabele";
+            this.izTabeleToolStripMenuItem.Click += new System.EventHandler(this.izTabeleToolStripMenuItem_Click);
             // 
             // kutijuToolStripMenuItem
             // 
             this.kutijuToolStripMenuItem.Name = "kutijuToolStripMenuItem";
-            this.kutijuToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.kutijuToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
             this.kutijuToolStripMenuItem.Text = "Kutiju";
             this.kutijuToolStripMenuItem.Click += new System.EventHandler(this.kutijuToolStripMenuItem_Click);
             // 
@@ -618,20 +633,6 @@
             // 
             this.errorProvider.ContainerControl = this;
             // 
-            // pojedinacnoToolStripMenuItem
-            // 
-            this.pojedinacnoToolStripMenuItem.Name = "pojedinacnoToolStripMenuItem";
-            this.pojedinacnoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.pojedinacnoToolStripMenuItem.Text = "Pojedinacno";
-            this.pojedinacnoToolStripMenuItem.Click += new System.EventHandler(this.pojedinacnoToolStripMenuItem_Click);
-            // 
-            // izTabeleToolStripMenuItem
-            // 
-            this.izTabeleToolStripMenuItem.Name = "izTabeleToolStripMenuItem";
-            this.izTabeleToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.izTabeleToolStripMenuItem.Text = "Iz tabele";
-            this.izTabeleToolStripMenuItem.Click += new System.EventHandler(this.izTabeleToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -644,6 +645,7 @@
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Program";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.pUpper.ResumeLayout(false);
             this.pUpper.PerformLayout();
             this.mMain.ResumeLayout(false);

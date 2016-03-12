@@ -39,6 +39,7 @@
             this.cbChoose = new System.Windows.Forms.ComboBox();
             this.dateTimeFrom = new System.Windows.Forms.DateTimePicker();
             this.dateTimeUntil = new System.Windows.Forms.DateTimePicker();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
             // lReportType
@@ -81,7 +82,7 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(319, 93);
+            this.checkBox1.Location = new System.Drawing.Point(313, 92);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(50, 17);
             this.checkBox1.TabIndex = 9;
@@ -91,7 +92,7 @@
             // checkBox2
             // 
             this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(319, 116);
+            this.checkBox2.Location = new System.Drawing.Point(313, 122);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(65, 17);
             this.checkBox2.TabIndex = 10;
@@ -101,7 +102,7 @@
             // checkBox3
             // 
             this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(319, 139);
+            this.checkBox3.Location = new System.Drawing.Point(313, 155);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(71, 17);
             this.checkBox3.TabIndex = 11;
@@ -146,11 +147,19 @@
             this.dateTimeUntil.TabIndex = 15;
             this.dateTimeUntil.Visible = false;
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(18, 116);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(268, 23);
+            this.progressBar1.TabIndex = 16;
+            // 
             // ReportDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(420, 190);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.dateTimeUntil);
             this.Controls.Add(this.dateTimeFrom);
             this.Controls.Add(this.cbChoose);
@@ -183,5 +192,6 @@
         private System.Windows.Forms.ComboBox cbChoose;
         private System.Windows.Forms.DateTimePicker dateTimeFrom;
         private System.Windows.Forms.DateTimePicker dateTimeUntil;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }

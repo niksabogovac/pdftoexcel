@@ -39,7 +39,7 @@ namespace QR_Code
             string selectCommand = "SELECT * FROM [QRCode].[dbo].[DocTypes]";
             try
             {
-                SqlConnection conn = new SqlConnection(Helper.ConnectionString);
+                SqlConnection conn = Helper.GetConnection();
                 dataAdapter = new SqlDataAdapter(selectCommand, conn);
                 SqlCommandBuilder commandBuilder = new SqlCommandBuilder(dataAdapter);
                 DataTable table = new DataTable();

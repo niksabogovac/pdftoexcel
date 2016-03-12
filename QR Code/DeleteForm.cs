@@ -42,7 +42,7 @@ namespace QR_Code
         {
             InitializeComponent();
             this.type = type;
-            switch(type)
+            switch (type)
             {
                 case 1:
                     label1.Text += "QR kod fajl";
@@ -65,308 +65,30 @@ namespace QR_Code
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if ( (!textBox1.Text.Equals(string.Empty) && (type == 2 || type == 3)) || (type == 1 && filePath != string.Empty))
+            if ((!textBox1.Text.Equals(string.Empty) && (type == 2 || type == 3)) || (type == 1 && filePath != string.Empty))
             {
-                switch(type)
+                // Use only one connection.
+                SqlConnection conn = Helper.GetConnection();
+                switch (type)
                 {
-                    #region Case 1 QR From table
                     case 1:
-
-                        // Try to open input table.
-                        book = new Workbook();
-                        try
-                        {
-                            book = Workbook.Load(filePath);
-                        }
-                        catch
-                        {
-                            MessageBox.Show("Uneti fajl ne moze da se otvori.\nProverite da li ste uneli ispravno ime.\nProverite da li je vec otvoren i ukoliko jeste zatvorite ga i pokusajte ponovo.");
-                            Environment.Exit(-1);
-                        }
-
-                        // Open first sheet in input xls document.
-                        try
-                        {
-                            sheet = book.Worksheets[0];
-                        }
-                        catch
-                        {
-                            MessageBox.Show("Uneti fajl ne moze da se otvori.\nUlazni fajl mora da sadrzi sve u prvom sheetu!");
-                            Environment.Exit(-1);
-                        }
-
-                        SqlConnection conn;
-                        SqlCommand cmd;
-
-                        try
-                        {
-                            conn = new SqlConnection(Helper.ConnectionString);
-                            conn.Open();
-                            cmd = new SqlCommand();
-                        }
-                        catch
-                        {
-                            MessageBox.Show("Nije moguće otvoriti konekciju prema bazi.");
-                            return;
-                        }
-
-                        try
-                        {
-                            // Iterate through  table and generate sql  STATEMENTS.
-                            for (int rowIndex = sheet.Cells.FirstRowIndex; rowIndex <= sheet.Cells.LastRowIndex; rowIndex++)
-                            {
-
-                                Row row = new Row();
-                                // Get current row.
-                                row = sheet.Cells.GetRow(rowIndex);
-                                // Take QRCode from it.
-                                string QRCode = row.GetCell(0).StringValue;
-                                string id = handleCode(QRCode);
-
-                                SqlTransaction sqlTran = conn.BeginTransaction();
-                                try
-                                {
-                                    string cmdText = "SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id";
-                                    cmd = new SqlCommand(cmdText, conn);
-                                    cmd.Transaction = sqlTran;
-                                    cmd.Parameters.AddWithValue("@id", id);
-                                    SqlDataReader reader = cmd.ExecuteReader();
-                                    string boxCode = null; 
-                                       
-                                    if (reader.HasRows)
-                                    {
-                                        reader.Read();
-                                        boxCode = (string)reader["BoxCode"];
-                                        reader.Close();
-                                        reader.Dispose();
-                                        reader = null;
-                                        SqlCommand command;
-                                        // Execute command delete
-                                        cmdText = "DELETE FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id";
-                                        command = new SqlCommand(cmdText, conn);
-                                        command.Transaction = sqlTran;
-                                        command.Parameters.AddWithValue("@id", id);
-                                        command.ExecuteNonQuery();
-                                        command.Parameters.Clear();
-                                        
-                                        // DELETE QRCodes from RW tables.
-                                        command.CommandText = "DELETE FROM [QRCode].[dbo].[RWTable] WHERE [QRID] = @id";
-                                        command.Parameters.AddWithValue("@id", id);
-                                        command.ExecuteNonQuery();
-                                        command.Parameters.Clear();
-
-                                        // Execute update for number of files in box
-                                        cmdText = "UPDATE [QRCode].[dbo].[Box] SET [NumberOfFiles] = (SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode) - 1  WHERE [Code] = @boxCode";
-                                        command = new SqlCommand(cmdText, conn);
-                                        command.Transaction = sqlTran;
-                                        command.Parameters.AddWithValue("@boxCode", boxCode);
-                                        command.ExecuteNonQuery();
-                                        sqlTran.Commit();
-                                        sqlTran.Dispose();
-                                        sqlTran = null;
-                                    }
-                                    if ((reader != null) && !(reader.IsClosed))
-                                    {
-                                        reader.Close();
-                                        reader.Dispose();
-                                        reader = null;
-                                    }
-
-                                    if (sqlTran != null)
-                                    {
-                                        sqlTran.Commit();
-                                        sqlTran.Dispose();
-                                        sqlTran = null;
-                                    }
-                                    
-                                }
-                                catch (Exception ex)
-                                {
-                                    try
-                                    {
-                                        string nesto = ex.StackTrace;
-                                        // Attempt to roll back the transaction.
-                                        sqlTran.Rollback();
-                                    }
-                                    catch (Exception exRollback)
-                                    {
-                                        MessageBox.Show("Nije uspešno probajte ponovo!");
-                                    }
-                                }
-                                
-                            }
-                            MessageBox.Show("Uspešno izvršena brisanja.");
-                        }
-                        catch (Exception h)
-                        {
-                            Console.WriteLine(h.StackTrace);
-                            MessageBox.Show("Nije moguće izvući podatke iz ulazne tabele, ili su pogrešno uneseni.");
-                            return;
-                        }
-
+                        DeleteQRCodeFromTable(conn);
                         break;
-                    #endregion
-
-                    #region Case 2 Box
                     case 2:
-                    {
-                        using (SqlConnection connection1 = new SqlConnection(Helper.ConnectionString))
-                        {
-                            connection1.Open();
-
-                            // Start a local transaction.
-                            SqlTransaction sqlTran = connection1.BeginTransaction();
-
-                            // Enlist a command in the current transaction.
-                            SqlCommand command = connection1.CreateCommand();
-                            command.Transaction = sqlTran;
-
-                            try
-                            {
-
-                                command.CommandText = "SELECT * FROM [QRCode].[dbo].[Box] WHERE [Code] = @code";
-                                command.Parameters.AddWithValue("@code", textBox1.Text);
-                                SqlDataReader reader = command.ExecuteReader();
-                                if (reader.HasRows)
-                                {
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Kutija ne postoji u bazi.");
-                                    return;
-                                }
-                                reader.Close();
-                                command.Parameters.Clear();
-
-                                // Execute two separate commands.
-                                command.CommandText =
-                                 "DELETE FROM [QRCode].[dbo].[BankTable] WHERE [BoxCode] = @code";
-                                command.Parameters.AddWithValue("@code", textBox1.Text);
-                                command.ExecuteNonQuery();
-                                command.Parameters.Clear();
-
-                                command.CommandText =
-                                 "DELETE FROM [QRCode].[dbo].[RWTable] WHERE [BoxCode] = @code";
-                                command.Parameters.AddWithValue("@code", textBox1.Text);
-                                command.ExecuteNonQuery();
-                                command.Parameters.Clear();
-
-
-
-                                command.CommandText =
-                                 "DELETE FROM [QRCode].[dbo].[Box] WHERE [Code] = @code";
-                                command.Parameters.AddWithValue("@code", textBox1.Text);
-                                command.ExecuteNonQuery();
-                                command.Parameters.Clear();
-                                // Commit the transaction.
-                                sqlTran.Commit();
-
-                            }
-                            catch (Exception ex)
-                            {
-                                try
-                                {
-                                    // Attempt to roll back the transaction.
-                                    sqlTran.Rollback();
-                                }
-                                catch (Exception exRollback)
-                                {
-                                    MessageBox.Show("Nije uspešno probajte ponovo!");
-                                }
-                            }
-                            MessageBox.Show("Uspešno izbrisana kutija : " + textBox1.Text);
-                            textBox1.Text = string.Empty;
-                        }
-                    }
-                    break;
-                    #endregion
-
-                    #region Case 3 QR single
+                        DeleteBox(conn);
+                        break;
                     case 3:
-                    {
-                        using (SqlConnection connection1 = new SqlConnection(Helper.ConnectionString))
-                        {
-                            connection1.Open();
-
-                            // Start a local transaction.
-                            SqlTransaction sqlTran = connection1.BeginTransaction();
-
-                            // Enlist a command in the current transaction.
-                            SqlCommand command1 = connection1.CreateCommand();
-                            command1.Transaction = sqlTran;
-                            try
-                            {
-                                string id = handleCode(textBox1.Text);
-                                string cmdText = "SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id";
-                                command1 = new SqlCommand(cmdText, connection1);
-                                command1.Parameters.AddWithValue("@id", id);
-                                command1.Transaction = sqlTran;
-                                SqlDataReader reader = command1.ExecuteReader();
-                                if (reader.HasRows)
-                                {
-                                    reader.Read();
-                                    string boxCode = (string)reader["BoxCode"];
-                                    reader.Close();
-                                    reader.Dispose();
-                                    reader = null;
-                                    SqlCommand command;
-                                    // Execute command delete
-                                    cmdText = "DELETE FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id";
-                                    command = new SqlCommand(cmdText, connection1);
-                                    command.Transaction = sqlTran;
-                                    command.Parameters.AddWithValue("@id", id);
-                                    command.ExecuteNonQuery();
-                                    command.Parameters.Clear();
-
-                                    // DELETE QRCodes from RW tables.
-                                    command.CommandText = "DELETE FROM [QRCode].[dbo].[RWTable] WHERE [QRID] = @id";
-                                    command.Parameters.AddWithValue("@id", id);
-                                    command.ExecuteNonQuery();
-                                    command.Parameters.Clear();
-
-                                    // Execute update for number of files in box
-                                    cmdText = "UPDATE [QRCode].[dbo].[Box] SET [NumberOfFiles] = (SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode) - 1  WHERE [Code] = @boxCode";
-                                    command = new SqlCommand(cmdText, connection1);
-                                    command.Transaction = sqlTran;
-                                    command.Parameters.AddWithValue("@boxCode", boxCode);
-                                    command.ExecuteNonQuery();
-                                    sqlTran.Commit();
-                                    sqlTran.Dispose();
-                                    sqlTran = null;
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Kod sa ID: " + id+ " ne postoji u bazi.");
-                                    return;
-                                }
-                                command1.Parameters.Clear();
-
-
-                            }
-                            catch (Exception ex)
-                            {
-                                try
-                                {
-                                    // Attempt to roll back the transaction.
-                                    sqlTran.Rollback();
-                                }
-                                catch (Exception exRollback)
-                                {
-                                    MessageBox.Show("Nije uspešno probajte ponovo!");
-                                }
-                            }
-                            MessageBox.Show("Uspešno izbrisan QR kod: " + textBox1.Text);
-                            textBox1.Text = string.Empty;
-
-                        }
-
-                    }
-                    break;
-                    #endregion
-                }          
+                        DeleteQRCode(conn);
+                        break;
+                }
             }
         }
 
+        /// <summary>
+        /// Open file dialog click.
+        /// </summary>
+        /// <param name="sender">Sending object.</param>
+        /// <param name="e">Following args.</param>
         private void bFile_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -408,11 +130,300 @@ namespace QR_Code
                         // Get id.
                         id = tmpTokens[1];
                     }
-                    
+
                 }
 
             }
             return id;
+        }
+
+        /// <summary>
+        /// Deletes QRCodes from database that are given trough an .xls file.
+        /// </summary>
+        /// <param name="conn">SQL database connection.</param>
+        private void DeleteQRCodeFromTable(SqlConnection conn)
+        {
+            SqlCommand cmd;
+
+            // Try to open input table.
+            book = new Workbook();
+            try
+            {
+                book = Workbook.Load(filePath);
+            }
+            catch
+            {
+                MessageBox.Show("Uneti fajl ne moze da se otvori.\nProverite da li ste uneli ispravno ime.\nProverite da li je vec otvoren i ukoliko jeste zatvorite ga i pokusajte ponovo.");
+                return;
+            }
+
+            // Open first sheet in input xls document.
+            try
+            {
+                sheet = book.Worksheets[0];
+            }
+            catch
+            {
+                MessageBox.Show("Uneti fajl ne moze da se otvori.\nUlazni fajl mora da sadrzi sve u prvom sheetu!");
+                Environment.Exit(-1);
+            }
+
+
+
+            try
+            {
+                conn = Helper.GetConnection();
+            }
+            catch
+            {
+                MessageBox.Show("Nije moguće otvoriti konekciju prema bazi.");
+                return;
+            }
+
+            try
+            {
+                // Iterate through  table and generate sql  STATEMENTS.
+                for (int rowIndex = sheet.Cells.FirstRowIndex; rowIndex <= sheet.Cells.LastRowIndex; rowIndex++)
+                {
+
+                    Row row = new Row();
+                    // Get current row.
+                    row = sheet.Cells.GetRow(rowIndex);
+                    // Take QRCode from it.
+                    string QRCode = row.GetCell(0).StringValue;
+                    string id = handleCode(QRCode);
+
+                    using (SqlTransaction sqlTran = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            string cmdText = "SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id";
+                            cmd = new SqlCommand(cmdText, conn);
+                            cmd.Transaction = sqlTran;
+                            cmd.Parameters.AddWithValue("@id", id);
+                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            {
+
+                                string boxCode = null;
+
+                                if (reader.HasRows)
+                                {
+                                    reader.Read();
+                                    boxCode = (string)reader["BoxCode"];
+                                    reader.Close();
+                                    reader.Dispose();
+                                    SqlCommand command;
+                                    // Execute command delete
+                                    cmdText = "DELETE FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id";
+                                    command = new SqlCommand(cmdText, conn);
+                                    command.Transaction = sqlTran;
+                                    command.Parameters.AddWithValue("@id", id);
+                                    command.ExecuteNonQuery();
+                                    command.Parameters.Clear();
+
+                                    // DELETE QRCodes from RW tables.
+                                    command.CommandText = "DELETE FROM [QRCode].[dbo].[RWTable] WHERE [QRID] = @id";
+                                    command.Parameters.AddWithValue("@id", id);
+                                    command.ExecuteNonQuery();
+                                    command.Parameters.Clear();
+
+                                    // Execute update for number of files in box
+                                    cmdText = "UPDATE [QRCode].[dbo].[Box] SET [NumberOfFiles] = (SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode) - 1  WHERE [Code] = @boxCode";
+                                    command = new SqlCommand(cmdText, conn);
+                                    command.Transaction = sqlTran;
+                                    command.Parameters.AddWithValue("@boxCode", boxCode);
+                                    command.ExecuteNonQuery();
+                                    sqlTran.Commit();
+                                    sqlTran.Dispose();
+                                }
+                            }
+
+
+
+
+
+                        }
+                        catch (Exception ex)
+                        {
+                            try
+                            {
+                                // Attempt to roll back the transaction.
+                                sqlTran.Rollback();
+                            }
+                            catch (Exception exRollback)
+                            {
+                                MessageBox.Show("Nije uspešno probajte ponovo!");
+                            }
+                        }
+                    }
+                }
+
+                MessageBox.Show("Uspešno izvršena brisanja.");
+            }
+            catch (Exception h)
+            {
+                Console.WriteLine(h.StackTrace);
+                MessageBox.Show("Nije moguće izvući podatke iz ulazne tabele, ili su pogrešno uneseni.");
+                return;
+            }
+        }
+
+        /// <summary>
+        /// Deletes Box of QRCodes from database from a given name.
+        /// </summary>
+        /// <param name="conn">SQL database connection.</param>
+        private void DeleteBox(SqlConnection conn)
+        {
+            // Start a local transaction.
+            using (SqlTransaction sqlTran = conn.BeginTransaction())
+            {
+                // Enlist a command in the current transaction.
+                SqlCommand command = conn.CreateCommand();
+                command.Transaction = sqlTran;
+
+                try
+                {
+
+                    command.CommandText = "SELECT * FROM [QRCode].[dbo].[Box] WHERE [Code] = @code";
+                    command.Parameters.AddWithValue("@code", textBox1.Text);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (!reader.HasRows)
+                        {
+                            MessageBox.Show("Kutija ne postoji u bazi.");
+                            return;
+                        }
+                    }
+
+                    command.Parameters.Clear();
+
+                    // Execute three separate commands.
+
+                    // Delete from Bank table.
+                    command.CommandText =
+                        "DELETE FROM [QRCode].[dbo].[BankTable] WHERE [BoxCode] = @code";
+                    command.Parameters.AddWithValue("@code", textBox1.Text);
+                    command.ExecuteNonQuery();
+                    command.Parameters.Clear();
+
+                    // Delete from RW table.
+                    command.CommandText =
+                        "DELETE FROM [QRCode].[dbo].[RWTable] WHERE [BoxCode] = @code";
+                    command.Parameters.AddWithValue("@code", textBox1.Text);
+                    command.ExecuteNonQuery();
+                    command.Parameters.Clear();
+
+
+                    // Delete from Box table.
+                    command.CommandText =
+                        "DELETE FROM [QRCode].[dbo].[Box] WHERE [Code] = @code";
+                    command.Parameters.AddWithValue("@code", textBox1.Text);
+                    command.ExecuteNonQuery();
+                    command.Parameters.Clear();
+                    // Commit the transaction.
+                    sqlTran.Commit();
+
+                }
+                catch (Exception ex)
+                {
+                    try
+                    {
+                        // Attempt to roll back the transaction.
+                        sqlTran.Rollback();
+                    }
+                    catch (Exception exRollback)
+                    {
+                        MessageBox.Show("Nije uspešno probajte ponovo!");
+                    }
+                }
+
+                MessageBox.Show("Uspešno izbrisana kutija : " + textBox1.Text);
+                textBox1.Text = string.Empty;
+            }
+
+
+        }
+
+        /// <summary>
+        /// Deletes QRCode from given code in text box.
+        /// </summary>
+        /// <param name="conn">SQL database connection.</param>
+        private void DeleteQRCode(SqlConnection conn)
+        {
+
+            string boxCode = null;
+            string id = handleCode(textBox1.Text);
+            if (id == null)
+            {
+                MessageBox.Show("Nije moguće pronaći id u QR kodu.");
+                return;
+            }
+
+            string cmdText = "SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id";
+
+            using (SqlCommand cmd = new SqlCommand(cmdText, conn))
+            {
+                cmd.Parameters.AddWithValue("@id", id);
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        reader.Read();
+                        boxCode = (string)reader["BoxCode"];
+                    }
+                    else
+                    {
+                        MessageBox.Show("Kod sa ID: " + id + " ne postoji u bazi.");
+                        return;
+                    }
+                }
+            }
+
+
+            cmdText = "DELETE FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id";
+            // Start a local transaction.
+            using (SqlTransaction sqlTran = conn.BeginTransaction())
+            using (SqlCommand command = new SqlCommand(cmdText, conn))
+            {
+                try
+                {
+                    // Enlist a command in the current transaction.
+                    command.Transaction = sqlTran;
+                    command.Parameters.AddWithValue("@id", id);
+                    command.ExecuteNonQuery();
+                    command.Parameters.Clear();
+
+                    // DELETE QRCodes from RW tables.
+                    command.CommandText = "DELETE FROM [QRCode].[dbo].[RWTable] WHERE [QRID] = @id";
+                    command.Parameters.AddWithValue("@id", id);
+                    command.ExecuteNonQuery();
+                    command.Parameters.Clear();
+
+                    // Execute update for number of files in box
+                    cmdText = "UPDATE [QRCode].[dbo].[Box] SET [NumberOfFiles] = (SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode) - 1  WHERE [Code] = @boxCode";
+                    command.CommandText = cmdText;
+                    command.Transaction = sqlTran;
+                    command.Parameters.AddWithValue("@boxCode", boxCode);
+                    command.ExecuteNonQuery();
+                    sqlTran.Commit();
+                }
+                catch (Exception e)
+                {
+                    try
+                    {
+                        // Attempt to roll back the transaction.
+                        sqlTran.Rollback();
+                    }
+                    catch (Exception exRollback)
+                    {
+                        MessageBox.Show("Nije uspešno probajte ponovo!");
+                    }
+                }
+
+                MessageBox.Show("Uspešno izbrisan QR kod: " + textBox1.Text);
+                textBox1.Text = string.Empty;
+
+            }
         }
     }
 }

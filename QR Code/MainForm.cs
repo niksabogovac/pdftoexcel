@@ -146,73 +146,34 @@ namespace QR_Code
         }
 
         /// <summary>
-        /// Adds database doctypes to dictionary.
-        /// NOT USED.
-        /// </summary>
-        private void AddDatabaseDoctypes()
-        {
-            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
-            conn.Open();
-            SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[DocTypes]", conn);
-            SqlDataReader reader = command.ExecuteReader();
-            if (reader.HasRows)
-            {
-                 while (reader.Read())
-                 {
-                     if (Helper.DoctypeBoxCode.ContainsKey((string)reader[0]))
-                     {
-
-                     }
-                     else
-                     {
-                         string value = (string)reader[1];
-                         value.ToUpper();
-                         if (value.Equals("RACUNI"))
-                         {
-                             Helper.DoctypeBoxCode.Add((string)reader[0], BoxTypeEnum.RACUNI);
-                         }
-                         else if (value.Equals("POZAJMICE"))
-                         {
-                             Helper.DoctypeBoxCode.Add((string)reader[0], BoxTypeEnum.POZAJMICE);
-                         }
-                         else if (value.Equals("KREDITI"))
-                         {
-                             Helper.DoctypeBoxCode.Add((string)reader[0], BoxTypeEnum.KREDITI);
-                         }
-                         else if (value.Equals("OROCENJA"))
-                         {
-                             Helper.DoctypeBoxCode.Add((string)reader[0], BoxTypeEnum.OROCENJA);
-                         }
-                     }
-                 }
-            }
-        }
-        /// <summary>
         /// Reades input box code type from database.
         /// </summary>
         /// <param name="boxCode">Input box code.</param>
         /// <returns>Output box type.</returns>
         private int GetTypeFromBoxCode(string boxCode)
         {
-            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
-            conn.Open();
-            SqlCommand command = new SqlCommand("SELECT [Type] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn);
-            command.Parameters.AddWithValue("@boxCode", boxCode);
-            SqlDataReader reader = command.ExecuteReader();
-            if (reader.HasRows)
+            SqlConnection conn = Helper.GetConnection();
+            //conn.Open();
+            using (SqlCommand command = new SqlCommand("SELECT [Type] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn))
             {
-                reader.Read();
-                int ret = (int)reader[0];
-                reader.Close();
-                conn.Close();
-                return ret;
+                command.Parameters.AddWithValue("@boxCode", boxCode);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        reader.Read();
+                        int ret = (int)reader[0];
+                        return ret;
+                    }
+                    else
+                    {
+                        reader.Close();
+                        return -1;
+                    }
+                }
+                
             }
-            else
-            {
-                reader.Close();
-                conn.Close();
-                return -1;
-            }
+            
         }
 
         /// <summary>
@@ -259,17 +220,17 @@ namespace QR_Code
         /// <param name="code">Read QR code.</param>
         private void InsertToBankTable(string id, string boxCode, string code)
         {
-            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
-            conn.Open();
-            SqlCommand command = new SqlCommand("INSERT INTO [QRCode].[dbo].[BankTable] VALUES (@id, @orderNum, @boxCode, @date, @jmbg, @code)", conn);
-            command.Parameters.AddWithValue("@id", id);
-            command.Parameters.AddWithValue("@orderNum", tbOrderNum.Text);
-            command.Parameters.AddWithValue("@boxCode", boxCode);
-            command.Parameters.AddWithValue("@date", DateTime.Now.Date);
-            command.Parameters.AddWithValue("@jmbg", jmbg);
-            command.Parameters.AddWithValue("@code", code);
-            command.ExecuteNonQuery();
-            conn.Close();
+            SqlConnection conn = Helper.GetConnection();
+            using (SqlCommand command = new SqlCommand("INSERT INTO [QRCode].[dbo].[BankTable] VALUES (@id, @orderNum, @boxCode, @date, @jmbg, @code)", conn))
+            {
+                command.Parameters.AddWithValue("@id", id);
+                command.Parameters.AddWithValue("@orderNum", tbOrderNum.Text);
+                command.Parameters.AddWithValue("@boxCode", boxCode);
+                command.Parameters.AddWithValue("@date", DateTime.Now.Date);
+                command.Parameters.AddWithValue("@jmbg", jmbg);
+                command.Parameters.AddWithValue("@code", code);
+                command.ExecuteNonQuery();
+            }
         }
 
         /// <summary>
@@ -279,13 +240,13 @@ namespace QR_Code
         /// <param name="numberOfFiles"></param>
         private void UpdateBoxTable(string boxCode)
         {
-            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
-            conn.Open();
-            SqlCommand command = new SqlCommand("UPDATE [QRCode].[dbo].[Box] SET [NumberOfFiles] = (SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode) + 1  WHERE [Code] = @boxCode", conn);
-            command.Parameters.AddWithValue("@boxCode", boxCode);
-
-            command.ExecuteNonQuery();
-            conn.Close();
+            SqlConnection conn = Helper.GetConnection();
+            using (SqlCommand command = new SqlCommand("UPDATE [QRCode].[dbo].[Box] SET [NumberOfFiles] = (SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode) + 1  WHERE [Code] = @boxCode", conn))
+            {
+                command.Parameters.AddWithValue("@boxCode", boxCode);
+                command.ExecuteNonQuery();
+            }
+            
         }
 
         /// <summary>
@@ -297,18 +258,20 @@ namespace QR_Code
         {
             int fileNum = -1;
 
-            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
-            conn.Open();
-            SqlCommand command = new SqlCommand("SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn);
-            command.Parameters.AddWithValue("@boxCode", boxCode);
-            SqlDataReader reader = command.ExecuteReader();
-            if (reader.HasRows)
+            SqlConnection conn = Helper.GetConnection();
+            using (SqlCommand command = new SqlCommand("SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn))
             {
-                reader.Read();
-                fileNum = (int)reader["NumberOfFiles"];
+                command.Parameters.AddWithValue("@boxCode", boxCode);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        reader.Read();
+                        fileNum = (int)reader["NumberOfFiles"];
+                    }
+                }
+
             }
-            reader.Close();
-            conn.Close();
             return fileNum;
         }
 
@@ -410,36 +373,26 @@ namespace QR_Code
             catch (SqlException e)
             {
                 error = 1;
-                //MessageBox.Show(e.StackTrace);
-                SqlConnection conn = new SqlConnection(Helper.ConnectionString);
-                conn.Open();
-                SqlCommand command = new SqlCommand("SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id", conn);
-                command.Parameters.AddWithValue("@id", id);
-                SqlDataReader reader = command.ExecuteReader();
-                reader.Read();
-                string c = (string)reader[0];
-                reader.Close();
-                conn.Close();
+                SqlConnection conn = Helper.GetConnection();
+                string c = "NEKI KOD";
+                using (SqlCommand command = new SqlCommand("SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id", conn))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            c = (string)reader[0];
+                        }
+                        
+                    }
+                    
+                }
                 lNotification.Text = "QR kod je već upisan, u kutiji: " + c;
                 lNotification.ForeColor = Color.Red;
                 
             }
-            /*
-            if (error == 1)
-            {
-                SqlConnection conn = new SqlConnection(Helper.ConnectionString);
-                conn.Open();
-                SqlCommand command = new SqlCommand("SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id", conn);
-                command.Parameters.AddWithValue("@id", id);
-                SqlDataReader reader = command.ExecuteReader();
-                reader.Read();
-                string c = (string)reader[0];
-                reader.Close();
-                conn.Close();
-                //lNotification.Text = string.Empty;
-                MessageBox.Show("QR kod koji ste uneli ne može biti raspoređen jer je kod već upisan u kutiju " + c + ".");
-                
-            }*/
         }
 
         /// <summary>
@@ -453,50 +406,51 @@ namespace QR_Code
         /// >= 1 found existing table, current number of files.</returns>
         private int OpenOrCreateBox(string boxCode, BoxTypeEnum boxType)
         {
-            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
-            conn.Open();
-            SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn);
-            command.Parameters.AddWithValue("@boxCode", boxCode);
-            SqlDataReader reader = command.ExecuteReader();
-            // Try to find table.
-            if (reader.HasRows)
+            SqlConnection conn = Helper.GetConnection();
+            //conn.Open();
+            using (SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode", conn))
             {
-                reader.Read();
-                var code = (string)reader["Code"];
-                var type = (int)reader["Type"];
-                var fileNum = (int)reader["NumberOfFIles"];
-                reader.Close();
-                // Box must be opened sa same type as previously.
-                if (type == (int)boxType)
+                command.Parameters.AddWithValue("@boxCode", boxCode);
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    conn.Close();
-                    return fileNum;
-                }
-                else
-                {
-                    // Box types are not same.
-                    conn.Close();
-                    return -1;
-                }
+                    // Try to find table.
+                    if (reader.HasRows)
+                    {
+                        reader.Read();
+                        var code = (string)reader["Code"];
+                        var type = (int)reader["Type"];
+                        var fileNum = (int)reader["NumberOfFIles"];
+                        // Box must be opened sa same type as previously.
+                        if (type == (int)boxType)
+                        {
+                            return fileNum;
+                        }
+                        else
+                        {
+                            // Box types are not same.
+                            return -1;
+                        }
 
+                    }
+                    else if (!reader.HasRows)
+                    {
+                        // Create new box entry.
+                        using (SqlCommand insertCommand = new SqlCommand("INSERT INTO [QRCode].[dbo].[Box] VALUES(@boxCode, @boxType, @numberOfFiles)", conn))
+                        {
+                            insertCommand.Parameters.AddWithValue("@boxCode", boxCode);
+                            insertCommand.Parameters.AddWithValue("@boxType", (int)boxType);
+                            insertCommand.Parameters.AddWithValue("@numberOfFiles", (int)0);
+                            insertCommand.ExecuteNonQuery();
+                        }
+                        return 0;
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
             }
-            else if (!reader.HasRows)
-            {
-                // Create new box entry.
-                reader.Close();
-                SqlCommand insertCommand = new SqlCommand("INSERT INTO [QRCode].[dbo].[Box] VALUES(@boxCode, @boxType, @numberOfFiles)", conn);
-                insertCommand.Parameters.AddWithValue("@boxCode", boxCode);
-                insertCommand.Parameters.AddWithValue("@boxType", (int)boxType);
-                insertCommand.Parameters.AddWithValue("@numberOfFiles", (int)0);
-                insertCommand.ExecuteNonQuery();
-                conn.Close();
-                return 0;
-            }
-            else
-            {
-                conn.Close();
-                return -1;
-            }
+            
 
         }
 
@@ -569,23 +523,28 @@ namespace QR_Code
         private int CheckNumberOfCodes(string boxCode,int fileNum,ref List<string>QRIDs)
         {
             int ret = 0;
-            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
-            conn.Open();
-            SqlCommand command = new SqlCommand("SELECT  [ID] FROM [QRCode].[dbo].[BankTable] WHERE [ID] NOT IN (SELECT [QRID] from [QRCode].[dbo].[RWTable] WHERE [BoxCode] = @boxCode) AND [BoxCode] = @boxCode", conn);
-            command.Parameters.AddWithValue("@boxCode", boxCode);
-            SqlDataReader reader = command.ExecuteReader();
-            // Fill database with QRIDs.
-            while (reader.Read())
+            SqlConnection conn = Helper.GetConnection();
+            //conn.Open();
+            using (SqlCommand command = new SqlCommand("SELECT  [ID] FROM [QRCode].[dbo].[BankTable] WHERE [ID] NOT IN (SELECT [QRID] from [QRCode].[dbo].[RWTable] WHERE [BoxCode] = @boxCode) AND [BoxCode] = @boxCode", conn))
             {
-                QRIDs.Add((string)reader[0]);
+                command.Parameters.AddWithValue("@boxCode", boxCode);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        // Fill database with QRIDs.
+                        while (reader.Read())
+                        {
+                            QRIDs.Add((string)reader[0]);
+                        }
+                    }
+                }
+                command.CommandText = "select @@ROWCOUNT";
+                int totalCodes = (int)command.ExecuteScalar();
+                // Difference between current number of files and inserted number of codes in database.
+                ret = CalculateNumberOfCodes(totalCodes);
             }
-
-            reader.Close();
-            command.CommandText = "select @@ROWCOUNT";
-            int totalCodes = (int)command.ExecuteScalar();
-            // Difference between current number of files and inserted number of codes in database.
-            ret = CalculateNumberOfCodes(totalCodes);
-            conn.Close();
+            
             return ret;
         }
 
@@ -594,15 +553,15 @@ namespace QR_Code
         /// </summary>
         private void DeleteDatabaseData()
         {
-            SqlConnection conn = new SqlConnection( Helper.ConnectionString);
-            conn.Open();
-            SqlCommand command = new SqlCommand("DELETE FROM [QRCode].[dbo].[BankTable]", conn);
-            command.ExecuteNonQuery();
-            command.CommandText = "DELETE FROM [QRCode].[dbo].[Box]";
-            command.ExecuteNonQuery();
-            command.CommandText = "DELETE FROM [QRCode].[dbo].[RWTable]";
-            command.ExecuteNonQuery();
-            conn.Close();
+            SqlConnection conn = Helper.GetConnection();
+            using (SqlCommand command = new SqlCommand("DELETE FROM [QRCode].[dbo].[BankTable]", conn))
+            {
+                command.ExecuteNonQuery();
+                command.CommandText = "DELETE FROM [QRCode].[dbo].[Box]";
+                command.ExecuteNonQuery();
+                command.CommandText = "DELETE FROM [QRCode].[dbo].[RWTable]";
+                command.ExecuteNonQuery();
+            }
         }
         #region Event handlers
 
@@ -1066,40 +1025,79 @@ namespace QR_Code
             form.ShowDialog();
         }
 
-
-        #endregion
-
-        private void qRCodeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //DeleteForm form = new DeleteForm(1);
-            //form.ShowDialog();
-        }
-
-        #endregion
-
+        /// <summary>
+        /// Menu strip item delete box.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void kutijuToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DeleteForm form = new DeleteForm(2);
             form.ShowDialog();
         }
 
+        /// <summary>
+        /// Menu strip item manage order nums.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void brojNalogaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OrderNumDialog diag = new OrderNumDialog();
             diag.ShowDialog();
         }
 
+        /// <summary>
+        /// Menu strip item delete single qr code.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pojedinacnoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DeleteForm form = new DeleteForm(3);
             form.ShowDialog();
         }
 
+        /// <summary>
+        /// Menu strip item delete qr code from input table.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void izTabeleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DeleteForm form = new DeleteForm(1);
             form.ShowDialog();
         }
+
+        /// <summary>
+        /// Main form closing event - clear connection.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SqlConnection connection = Helper.GetConnection();
+            if (connection != null)
+            {
+                try
+                {
+                    connection.Close();
+                    connection.Dispose();
+                    connection = null;
+                }
+                catch (Exception exp)
+                {
+
+                }
+            }
+        }
+
+        #endregion
+
+
+        #endregion
+
+        
 
 
     }

@@ -44,24 +44,25 @@ namespace QR_Code
         {
             try
             {
-                SqlConnection conn = new SqlConnection(Helper.ConnectionString);
-                conn.Open();
-                SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[Users] WHERE [Name]= @name", conn);
-                command.Parameters.AddWithValue("@name", tbPass.Text);
-                SqlDataReader reader = command.ExecuteReader();
-                if (reader.HasRows)
+                SqlConnection conn = Helper.GetConnection();
+                using (SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[Users] WHERE [Name]= @name", conn))
                 {
-                    MessageBox.Show("Uspesno ste se prijavili.");
-                    DialogResult = DialogResult.OK;
-                }
-                else
-                {
-                    MessageBox.Show("Neuspesno ste se prijavili pokusajte ponovo.");
-                    DialogResult = DialogResult.Cancel;
+                    command.Parameters.AddWithValue("@name", tbPass.Text);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            DialogResult = DialogResult.OK;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Neuspesno ste se prijavili pokusajte ponovo.");
+                            DialogResult = DialogResult.Cancel;
 
+                        }
+                    }
+                    
                 }
-                reader.Close();
-                conn.Close();
             }
             catch (Exception)
             {

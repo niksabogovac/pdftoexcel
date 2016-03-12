@@ -80,8 +80,8 @@ namespace QR_Code
 
             try
             {
-                conn = new SqlConnection(Helper.ConnectionString);
-                conn.Open();
+                conn = Helper.GetConnection();
+                //conn.Open();
                 command = new SqlCommand();
             }
             catch
@@ -103,10 +103,12 @@ namespace QR_Code
                     string orderNum = row.GetCell(1).StringValue;
 
                     string commandText = "UPDATE [QRCode].[dbo].[BankTable] SET [OrderNum] = @orderNum WHERE [ID] = @id";
-                    command = new SqlCommand(commandText, conn);
-                    command.Parameters.AddWithValue("@orderNum", orderNum);
-                    command.Parameters.AddWithValue("@id", id);
-                    command.ExecuteNonQuery();
+                    using (command = new SqlCommand(commandText, conn))
+                    {
+                        command.Parameters.AddWithValue("@orderNum", orderNum);
+                        command.Parameters.AddWithValue("@id", id);
+                        command.ExecuteNonQuery();
+                    }
                 }
                 MessageBox.Show("Uspješno izvršene izmjene.");
 
@@ -116,8 +118,6 @@ namespace QR_Code
                 MessageBox.Show("Nije moguće izvući podatke iz ulazne tabele, ili su pogrešno uneseni.");
                 return;
             }
-
-            conn.Close();
         }
     }
 }

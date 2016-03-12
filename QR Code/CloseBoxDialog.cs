@@ -49,7 +49,6 @@ namespace QR_Code
             InitializeComponent();
             QRCodes = new List<string>();
             Filenums = new List<string>();
-            //PreviousFilenums = LoadPreviousFilenums();
         }
 
         /// <summary>
@@ -61,63 +60,12 @@ namespace QR_Code
             this.QRCodes = QRCodes;
             Filenums = new List<string>();
             boxCode = originalBoxCode;
-            //PreviousFilenums = LoadPreviousFilenums();
             this.codeNums = codeNums;
             InitializeComponent();
             lText.Text = "Preostali broj kodova za unos: " + codeNums;
         }
 
-        /// <summary>
-        /// Triggered when confirm button is clicked.
-        /// </summary>
-        /// <param name="sender">Button being pressed.</param>
-        /// <param name="e">Following arguments.</param>
-        private void BConfirmClick(object sender, EventArgs e)
-        {
-            if (!reg.IsMatch(tbCode.Text))
-            {
-                MessageBox.Show("Nije ispravan format kod.");
-            }
-            else if (!CheckPreviousCodes(tbCode.Text) && !Filenums.Contains(tbCode.Text))
-            {
-                Filenums.Add(tbCode.Text);
-                lText.Text = "Preostali broj kodova za unos: " + --codeNums;
-                tbCode.Clear();
-                if (codeNums > 0)
-                {
-                    tbCode.Focus();
-                }
-                else
-                {
-                    InsertIntoRWTable();
-                    this.Dispose();
-                }
-            }
-            else
-            {
-                MessageBox.Show("Nije unešen ispravan kod ili je već prethodno unešen.");
-            }
 
-            /*try
-            {
-                InsertIntoRWTable(tbCode.Text);
-                lText.Text = "Preostali broj kodova za unos: " + --codeNums;
-                tbCode.Clear();
-                if (codeNums > 0)
-                {
-                    tbCode.Focus();
-                }
-                else
-                {
-                    this.Dispose();
-                }
-            }
-            catch(Exception)
-            {
-                MessageBox.Show("Nije unešen ispravan kod ili je već prethodno unešen.");
-            }*/
-            
-        }
 
         /// <summary>
         /// Writes appropriate box codes with inserted codes.
@@ -125,61 +73,29 @@ namespace QR_Code
         private void InsertIntoRWTable()
         {
 
-            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
-            conn.Open();
-            SqlCommand command = new SqlCommand("INSERT INTO [QRCode].[dbo].[RWTable] VALUES (@boxCode, @code,@qrid)", conn);
-            //command.Parameters.AddWithValue("@boxCode", boxCode);
-            // Counter for QRCodes.
-            int k = 0;
-            for(int i = 0; i < QRCodes.Count;i++)
-            {
-                command.Parameters.AddWithValue("@boxCode", boxCode);
-                command.Parameters.AddWithValue("@qrid", QRCodes[i]);
-                if (i != 0 && i % 20 == 0)
-                {
-                    k++;
-                }
-                command.Parameters.AddWithValue("@code", Filenums[k]);
-                command.ExecuteNonQuery();
-                command.Parameters.Clear();
-            }
-            conn.Close();
+            SqlConnection conn = Helper.GetConnection();
 
-            /*
-            SqlConnection conn = new SqlConnection(Helper.ConnectionString);
-            conn.Open();
-            SqlCommand command = new SqlCommand("INSERT INTO [QRCode].[dbo].[RWTable] VALUES (@boxCode, @code)", conn);
-            command.Parameters.AddWithValue("@boxCode", boxCode);
-            command.Parameters.AddWithValue("@code", code);
-            command.ExecuteNonQuery();
-            conn.Close();*/
-        }
-
-        /// <summary>
-        /// Loads previous codes(filenums) from database to prevent inserting equal codes.
-        /// </summary>
-        /// <returns>Previous filenums.</returns>
-        private HashSet<string> LoadPreviousFilenums()
-        {
-            if (PreviousFilenums.Count ==0)
+            using (SqlCommand command = new SqlCommand("INSERT INTO [QRCode].[dbo].[RWTable] VALUES (@boxCode, @code,@qrid)",conn))
             {
-                HashSet<string> ret = new HashSet<string>();
-                SqlConnection conn = new SqlConnection(Helper.ConnectionString);
-                conn.Open();
-                SqlCommand command = new SqlCommand("SELECT [Code] FROM [QRCode].[dbo].[RWTable]", conn);
-                SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                // Counter for QRCodes.
+                int k = 0;
+                for (int i = 0; i < QRCodes.Count; i++)
                 {
-                    ret.Add((string)reader[0]);
+                    command.Parameters.AddWithValue("@boxCode", boxCode);
+                    command.Parameters.AddWithValue("@qrid", QRCodes[i]);
+                    if (i != 0 && i % 20 == 0)
+                    {
+                        k++;
+                    }
+                    command.Parameters.AddWithValue("@code", Filenums[k]);
+                    command.ExecuteNonQuery();
+                    command.Parameters.Clear();
                 }
-                return ret;
-            }
-            else
-            {
-                return PreviousFilenums;
             }
 
         }
+
+       
 
         private void tbCode_TextChanged(object sender, EventArgs e)
         {
@@ -216,19 +132,20 @@ namespace QR_Code
         {
             try
             {
-                SqlConnection conn = new SqlConnection(Helper.ConnectionString);
-                conn.Open();
+                SqlConnection conn = Helper.GetConnection();
                 SqlCommand command = new SqlCommand("SELECT [Code] FROM [QRCode].[dbo].[RWTable] WHERE [Code] = @rwCode", conn);
                 command.Parameters.AddWithValue("rwCode", rwCode);
-                SqlDataReader reader = command.ExecuteReader();
-                // Code already used
-                if (reader.HasRows)
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    return true;
-                }
-                else
-                {
-                    return false;
+                    // Code already used
+                    if (reader.HasRows)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
                 
             } 
