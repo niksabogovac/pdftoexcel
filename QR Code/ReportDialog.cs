@@ -90,12 +90,16 @@ namespace QR_Code
             curCol = 0;
 
             SqlConnection conn = Helper.GetConnection();
-            //conn.Open();
             SqlCommand command;
             string commandText = "SELECT * FROM [QRCode].[dbo].[BankTable] INNER JOIN [QRCode].[dbo].[RWTable] on [QRCode].[dbo].[BankTable].[ID] = [QRCode].[dbo].[RWTable].[QRID] WHERE ";
+            
+            // Used for counting number of files for progress bar.
+            string countCommandText = "SELECT count([QRCode].[dbo].[BankTable].[ID]) FROM [QRCode].[dbo].[BankTable] INNER JOIN [QRCode].[dbo].[RWTable] on [QRCode].[dbo].[BankTable].[ID] = [QRCode].[dbo].[RWTable].[QRID] WHERE ";
+
             if (start == null && end == null)
             {
                 commandText += "[OrderNum] = @orderNum";
+                countCommandText += "[OrderNum] = @orderNum";
                 command = new SqlCommand(commandText, conn);
                 command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
             }
@@ -104,23 +108,32 @@ namespace QR_Code
                 if (start.Value.Date.Equals(end.Value.Date))
                 {
                     commandText += "CAST([Date] as Date) LIKE CAST(@date as Date)";
+                    countCommandText += "CAST([Date] as Date) LIKE CAST(@date as Date)";
                     command = new SqlCommand(commandText, conn);
                     command.Parameters.AddWithValue("date", start.Value);
                 }
                 else
                 {
                     commandText += "[Date] BETWEEN @startDate AND @stopDate";
+                    countCommandText += "[Date] BETWEEN @startDate AND @stopDate";
                     command = new SqlCommand(commandText, conn);
                     command.Parameters.AddWithValue("@startDate", start.Value);
                     command.Parameters.AddWithValue("@stopDate", end.Value);
                 }
                 
             }
-            
+
+            command.CommandText = countCommandText;
+            int totalRows = (int)command.ExecuteScalar();
+
+            progressBar1.Value = 0;
+            progressBar1.Maximum = totalRows;
+            command.CommandText = commandText;
             using (SqlDataReader reader = command.ExecuteReader())
             {
                 while (reader.Read())
                 {
+                    progressBar1.Value++;
                     outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["OrderNum"]);
                     string boxCode = (string)reader["BoxCode"];
                     int boxType = GetTypeFromBoxCode(boxCode);
@@ -201,9 +214,12 @@ namespace QR_Code
 
 
             string commandText = "SELECT * FROM [QRCode].[dbo].[BankTable] WHERE ";
+            // Used for counting for progress bar.
+            string countCommandText = "SELECT count([Id]) FROM [QRCode].[dbo].[BankTable] WHERE ";
             if (start == null && end == null)
             {
                 commandText += "[OrderNum] = @orderNum";
+                countCommandText += "[OrderNum] = @orderNum";
                 command = new SqlCommand(commandText, conn);
                 command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
             }
@@ -212,12 +228,14 @@ namespace QR_Code
                 if (start.Value.Date.Equals(end.Value.Date))
                 {
                     commandText += "CAST([Date] AS Date) LIKE CAST (@date as Date)";
+                    countCommandText +=  "CAST([Date] AS Date) LIKE CAST (@date as Date)";
                     command = new SqlCommand(commandText, conn);
                     command.Parameters.AddWithValue("@date", start.Value);
                 }
                 else
                 {
                     commandText += "[Date] BETWEEN @startDate AND @stopDate";
+                    countCommandText += "[Date] BETWEEN @startDate AND @stopDate";
                     command = new SqlCommand(commandText, conn);
                     command.Parameters.AddWithValue("@startDate", start.Value);
                     command.Parameters.AddWithValue("@stopDate", end.Value);
@@ -225,25 +243,19 @@ namespace QR_Code
                 
                 
             }
-            command.CommandText = "SELECT count([ID]) FROM [QRCode].[dbo].[BankTable]";
+            command.CommandText = countCommandText;
             int totalRows = (int)command.ExecuteScalar();
-            int rowCnt = 0;
+           
             progressBar1.Value = 0;
-
+            progressBar1.Maximum = totalRows;
             command.CommandText = commandText;
             using (SqlDataReader reader = command.ExecuteReader())
             {
                 while (reader.Read())
                 {
+
+                    progressBar1.Value++;
                     
-                    if (++rowCnt % totalRows/100 == 0)
-                    {
-                        if (progressBar1.Value < 100)
-                        {
-                            progressBar1.Value++;
-                            Thread.Sleep(10);
-                        }
-                    }
                     outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["ID"]);
                     outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["OrderNum"]);
                     outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["BoxCode"]);
@@ -261,7 +273,6 @@ namespace QR_Code
             {
                 outputBook.Worksheets.Add(outputSheet);
                 outputBook.Save(outPath);
-                progressBar1.Value = 100;
                 MessageBox.Show("Uspešno kreiran opšti izveštaj.");
             }
             catch (Exception)
@@ -314,6 +325,7 @@ namespace QR_Code
             //conn.Open();
             SqlCommand command;
             string commandText = "SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable]";
+
             if (start == null && end == null)
             {
                 commandText += "WHERE [OrderNum] = @orderNum";
@@ -338,10 +350,13 @@ namespace QR_Code
                 }
             }
 
-            ;
+           
+            progressBar1.Value = 0;
+            progressBar1.Maximum = boxCodes.Count;
 
             foreach (string boxCode in boxCodes)
             {
+                progressBar1.Value++;
                 if (start == null && end == null)
                 {
                     commandText = "SELECT * FROM [QRCode].[dbo].[BankTable] INNER JOIN [QRCode].[dbo].[RWTable] ON [QRCode].[dbo].[BankTable].[ID] = [QRCode].[dbo].[RWTable].[QRID] AND [QRCode].[dbo].[BankTable].[BoxCode] = @boxCode AND [QRCode].[dbo].[BankTable].[OrderNum] = @orderNum INNER JOIN [QRCode].[dbo].[Box] ON [QRCode].[dbo].[BankTable].[BoxCode] = [QRCode].[dbo].[Box].Code ORDER BY [QRCode].[dbo].[RWTable].[Code]";

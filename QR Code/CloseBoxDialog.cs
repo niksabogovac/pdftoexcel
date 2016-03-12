@@ -35,10 +35,7 @@ namespace QR_Code
         /// </summary>
         private List<string> Filenums;
 
-        /// <summary>
-        /// Filenumbers that are already in database.
-        /// </summary>
-        private HashSet<string> PreviousFilenums;
+
 
         private Regex reg = new Regex(@"(RSRFBA)[0-9]{2}\-[0-9]{6}");
         /// <summary>
