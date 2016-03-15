@@ -434,6 +434,8 @@ namespace QR_Code
                     }
                     else if (!reader.HasRows)
                     {
+                        reader.Close();
+                        reader.Dispose();
                         // Create new box entry.
                         using (SqlCommand insertCommand = new SqlCommand("INSERT INTO [QRCode].[dbo].[Box] VALUES(@boxCode, @boxType, @numberOfFiles)", conn))
                         {

@@ -94,11 +94,26 @@ namespace QR_Code
             }
         }
 
-        //public static string ConnectionString = @"Data Source=DMTBJFE;Initial Catalog=QRCode;Integrated Security=True";
+        public static string ConnectionString = @"Data Source=DMTBJFE;Initial Catalog=QRCode;Integrated Security=True";
         //public static string ConnectionString = @"Data Source=KNJG\SQLEXPRESS;Initial Catalog=QRCode;Integrated Security=True";
-        public static string ConnectionString = @"Data Source=SERVER\SQLEXPRESS;Initial Catalog=QRCode;User ID=niksa;Password=Niksa2015;Integrated Security=false";
+        //public static string ConnectionString = @"Data Source=SERVER\SQLEXPRESS;Initial Catalog=QRCode;User ID=niksa;Password=Niksa2015;Integrated Security=false";
+
+        //private static string ConnectionString = @"Data Source=89.216.58.242\SQLEXPRESS;Initial Catalog=QRCode;Integrated Security=true";
         #endregion
 
+
+        public static SqlConnection connection;
+
+        public static SqlConnection GetConnection()
+        {
+            if (connection == null)
+            {
+                connection = new SqlConnection(ConnectionString);
+                connection.Open();
+            }
+            return connection;
+
+        }
         #region Constructors
         /// <summary>
         /// Initializes a new instance of the <see cref="Helper"/> class.
@@ -116,44 +131,45 @@ namespace QR_Code
         /// </summary>
         public static void UpdateDocTypesFromDatabase()
         {
-            SqlConnection conn = new SqlConnection( Helper.ConnectionString );
-            conn.Open();
+            SqlConnection conn = Helper.GetConnection();
+            //conn.Open();
             SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[DocTypes]", conn);
-            SqlDataReader reader = command.ExecuteReader();
-            if (reader.HasRows)
+            using (SqlDataReader reader = command.ExecuteReader())
             {
-                while (reader.Read())
+                if (reader.HasRows)
                 {
-                    if (doctypeBoxCode.ContainsKey((string)reader[0]))
+                    while (reader.Read())
                     {
-
-                    }
-                    else
-                    {
-                        string value = (string)reader[1];
-                        value.ToUpper();
-                        if (value.Equals("RACUNI"))
-                        {
-                            doctypeBoxCode.Add((string)reader[0], BoxTypeEnum.RACUNI);
-                        }
-                        else if (value.Equals("POZAJMICE"))
-                        {
-                            doctypeBoxCode.Add((string)reader[0], BoxTypeEnum.POZAJMICE);
-                        }
-                        else if (value.Equals("KREDITI"))
+                        if (doctypeBoxCode.ContainsKey((string)reader[0]))
                         {
 
-                            doctypeBoxCode.Add((string)reader[0], BoxTypeEnum.KREDITI);
                         }
-                        else if (value.Equals("OROCENJA"))
+                        else
                         {
-                            doctypeBoxCode.Add((string)reader[0], BoxTypeEnum.OROCENJA);
+                            string value = (string)reader[1];
+                            value.ToUpper();
+                            if (value.Equals("RACUNI"))
+                            {
+                                doctypeBoxCode.Add((string)reader[0], BoxTypeEnum.RACUNI);
+                            }
+                            else if (value.Equals("POZAJMICE"))
+                            {
+                                doctypeBoxCode.Add((string)reader[0], BoxTypeEnum.POZAJMICE);
+                            }
+                            else if (value.Equals("KREDITI"))
+                            {
+
+                                doctypeBoxCode.Add((string)reader[0], BoxTypeEnum.KREDITI);
+                            }
+                            else if (value.Equals("OROCENJA"))
+                            {
+                                doctypeBoxCode.Add((string)reader[0], BoxTypeEnum.OROCENJA);
+                            }
                         }
                     }
                 }
             }
-            reader.Close();
-            conn.Close();
+            
         }
         #endregion
     }
