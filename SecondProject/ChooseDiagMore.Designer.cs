@@ -50,7 +50,7 @@
             this.tbFileNumber.Location = new System.Drawing.Point(280, 207);
             this.tbFileNumber.Name = "tbFileNumber";
             this.tbFileNumber.Size = new System.Drawing.Size(100, 20);
-            this.tbFileNumber.TabIndex = 30;
+            this.tbFileNumber.TabIndex = 7;
             // 
             // label7
             // 
@@ -66,7 +66,7 @@
             this.tbCategoryName.Location = new System.Drawing.Point(280, 176);
             this.tbCategoryName.Name = "tbCategoryName";
             this.tbCategoryName.Size = new System.Drawing.Size(100, 20);
-            this.tbCategoryName.TabIndex = 28;
+            this.tbCategoryName.TabIndex = 6;
             // 
             // label6
             // 
@@ -82,7 +82,7 @@
             this.tbDeadline.Location = new System.Drawing.Point(280, 140);
             this.tbDeadline.Name = "tbDeadline";
             this.tbDeadline.Size = new System.Drawing.Size(100, 20);
-            this.tbDeadline.TabIndex = 26;
+            this.tbDeadline.TabIndex = 5;
             // 
             // label5
             // 
@@ -98,7 +98,7 @@
             this.tbLocation.Location = new System.Drawing.Point(280, 107);
             this.tbLocation.Name = "tbLocation";
             this.tbLocation.Size = new System.Drawing.Size(100, 20);
-            this.tbLocation.TabIndex = 24;
+            this.tbLocation.TabIndex = 4;
             // 
             // label4
             // 
@@ -114,7 +114,7 @@
             this.button1.Location = new System.Drawing.Point(162, 245);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 22;
+            this.button1.TabIndex = 8;
             this.button1.Text = "Potvrdi";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -124,21 +124,21 @@
             this.tbFileType.Location = new System.Drawing.Point(280, 73);
             this.tbFileType.Name = "tbFileType";
             this.tbFileType.Size = new System.Drawing.Size(100, 20);
-            this.tbFileType.TabIndex = 21;
+            this.tbFileType.TabIndex = 3;
             // 
             // tbCategoryNum
             // 
             this.tbCategoryNum.Location = new System.Drawing.Point(280, 38);
             this.tbCategoryNum.Name = "tbCategoryNum";
             this.tbCategoryNum.Size = new System.Drawing.Size(100, 20);
-            this.tbCategoryNum.TabIndex = 20;
+            this.tbCategoryNum.TabIndex = 2;
             // 
             // tbYear
             // 
             this.tbYear.Location = new System.Drawing.Point(280, 9);
             this.tbYear.Name = "tbYear";
             this.tbYear.Size = new System.Drawing.Size(100, 20);
-            this.tbYear.TabIndex = 19;
+            this.tbYear.TabIndex = 1;
             // 
             // label3
             // 

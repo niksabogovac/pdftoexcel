@@ -19,6 +19,7 @@ namespace SecondProject
         public int deadline;
         public int categoryName;
         public int fileNum;
+        public DialogResult result = DialogResult.None;
         public ChooseDiagMore()
         {
             InitializeComponent();
@@ -28,14 +29,26 @@ namespace SecondProject
         private void button1_Click(object sender, EventArgs e)
         {
 
-            year = Int32.Parse(tbYear.Text) - 1;
-            categoryNum = Int32.Parse(tbCategoryNum.Text) - 1;
-            fileType = Int32.Parse(tbFileType.Text) - 1;
-            location = Int32.Parse(tbLocation.Text) - 1;
-            deadline = Int32.Parse(tbDeadline.Text) - 1;
-            categoryName = Int32.Parse(tbCategoryName.Text) - 1;
-            fileNum = Int32.Parse(tbFileNumber.Text) - 1;
-            this.Dispose();
+            try
+            {
+                year = Int32.Parse(tbYear.Text) - 1;
+                categoryNum = Int32.Parse(tbCategoryNum.Text) - 1;
+                fileType = Int32.Parse(tbFileType.Text) - 1;
+                location = Int32.Parse(tbLocation.Text) - 1;
+                deadline = Int32.Parse(tbDeadline.Text) - 1;
+                categoryName = Int32.Parse(tbCategoryName.Text) - 1;
+                fileNum = Int32.Parse(tbFileNumber.Text) - 1;
+                result = DialogResult.OK;
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show("Uneti podaci po kolonama nisu brojevi, proverite!");
+            }
+            finally
+            {
+                this.Dispose();
+            }
+            
         }
     }
 }

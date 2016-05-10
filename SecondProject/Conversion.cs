@@ -190,97 +190,92 @@ namespace SecondProject
             logFile.Close();
         }
 
-        public void MainSort()
+        public bool MainSort()
         {
             ChooseDiagMore diag = new ChooseDiagMore();
             diag.ShowDialog();
-            
+            if (diag.result != DialogResult.OK)
+            {
+                return false;
+            }
             for (int rowIndex = sheet.Cells.FirstRowIndex + 1; rowIndex <= sheet.Cells.LastRowIndex; rowIndex++)
             {
-                Row row = new Row();
-                row = sheet.Cells.GetRow(rowIndex);
-                /*Int32 _year = 0;
-                string tmpYearString = "";
-                tmpYearString = row.GetCell(0).StringValue;
-                _year = Int32.Parse(tmpYearString);
 
-                string _categoryNumber = "";
-                string _categoryName = "";
-                string tmpCategory = row.GetCell(4).StringValue;
-                char[] stringSeparator = new char[] {' ' };
-                string[] tokens = tmpCategory.Split(stringSeparator, 2);
-                _categoryNumber = tokens[0];
-                _categoryName = tokens[1];
-
-                string _fileType = row.GetCell(2).StringValue;
-                string _location = row.GetCell(9).StringValue;
-                string _fileNumber = row.GetCell(11).StringValue;
-                string _deadline = row.GetCell(7).StringValue;
-                 * */
-
-                
-                int _yearForSort = 0;
-                string _year = row.GetCell(diag.year).StringValue;
-                if (yearRangeReg.IsMatch(_year))
+                try
                 {
-                    _year = yearRangeReg.Match(_year).ToString();
-                    char[] stringSeparator = new char[] { '-' };
-                    Regex.Replace(_year, " ", "");
-                    Regex.Replace(_year, ".", "");
-                    string[] tokens = _year.Split(stringSeparator);
-                    try
+                    Row row = new Row();
+                    row = sheet.Cells.GetRow(rowIndex);
+                    int _yearForSort = 0;
+                    string _year = row.GetCell(diag.year).StringValue;
+                    if (yearRangeReg.IsMatch(_year))
                     {
-                        _yearForSort = Int32.Parse(tokens[tokens.Length - 1]);
-                    }
-                    catch (Exception e)
-                    {
-                        logFile.WriteLine("Red " + rowIndex.ToString() + " nije mogao da bude obradjen.");
-                    }
-                }
-                else if (yearManyReg.IsMatch(_year))
-                {
-                    _year = yearManyReg.Match(_year).ToString();
-                    char[] stringSeparator = new char[] { '.' };
-                    Regex.Replace(_year, " ", "");
-                    string[] tokens = _year.Split(stringSeparator);
-                    if (!tokens[tokens.Length - 2].Equals(""))
+                        _year = yearRangeReg.Match(_year).ToString();
+                        char[] stringSeparator = new char[] { '-' };
+                        Regex.Replace(_year, " ", "");
+                        Regex.Replace(_year, ".", "");
+                        string[] tokens = _year.Split(stringSeparator);
                         try
                         {
-                            _yearForSort = Int32.Parse(tokens[tokens.Length - 2]);
+                            _yearForSort = Int32.Parse(tokens[tokens.Length - 1]);
                         }
-                        catch(Exception e)
+                        catch (Exception e)
                         {
                             logFile.WriteLine("Red " + rowIndex.ToString() + " nije mogao da bude obradjen.");
                         }
+                    }
+                    else if (yearManyReg.IsMatch(_year))
+                    {
+                        _year = yearManyReg.Match(_year).ToString();
+                        char[] stringSeparator = new char[] { '.' };
+                        Regex.Replace(_year, " ", "");
+                        string[] tokens = _year.Split(stringSeparator);
+                        if (!tokens[tokens.Length - 2].Equals(""))
+                            try
+                            {
+                                _yearForSort = Int32.Parse(tokens[tokens.Length - 2]);
+                            }
+                            catch (Exception e)
+                            {
+                                logFile.WriteLine("Red " + rowIndex.ToString() + " nije mogao da bude obradjen.");
+                            }
+                        else
+                            _yearForSort = Int32.Parse(tokens[0]);
+                    }
+                    else if (yearReg.IsMatch(_year))
+                    {
+                        _yearForSort = Int32.Parse(_year);
+                        _year += ".";
+                    }
                     else
-                        _yearForSort = Int32.Parse(tokens[0]);
-                } else if (yearReg.IsMatch(_year))
-                {
-                    _yearForSort = Int32.Parse(_year);
-                    _year += ".";
-                } else
-                {
-                    logFile.WriteLine("Red " + rowIndex.ToString() + " nije mogao da bude obradjen.\nProgram nije mogao da prepozna godinu u tom redu.");
-                }
-                string _categoryNumber = row.GetCell(diag.categoryNum).StringValue;
-                string _fileType = row.GetCell(diag.fileType).StringValue;
-                string _location = row.GetCell(diag.location).StringValue;
-                int _deadline = 0;
-                string _deadlineTmp = row.GetCell(diag.deadline).StringValue;
-                _deadlineTmp.TrimEnd();
-                _deadlineTmp.TrimStart();
-                _deadlineTmp.Trim();
-                if (trajnoReg.IsMatch(_deadlineTmp))
-                {
-                    _deadline = 999999;
-                }
-                else _deadline = Int32.Parse(_deadlineTmp);
+                    {
+                        logFile.WriteLine("Red " + rowIndex.ToString() + " nije mogao da bude obradjen.\nProgram nije mogao da prepozna godinu u tom redu.");
+                    }
+                    string _categoryNumber = row.GetCell(diag.categoryNum).StringValue;
+                    string _fileType = row.GetCell(diag.fileType).StringValue;
+                    string _location = row.GetCell(diag.location).StringValue;
+                    int _deadline = 0;
+                    string _deadlineTmp = row.GetCell(diag.deadline).StringValue;
+                    _deadlineTmp.TrimEnd();
+                    _deadlineTmp.TrimStart();
+                    _deadlineTmp.Trim();
+                    if (trajnoReg.IsMatch(_deadlineTmp))
+                    {
+                        _deadline = 999999;
+                    }
+                    else _deadline = Int32.Parse(_deadlineTmp);
 
-                string _categoryName = row.GetCell(diag.categoryName).StringValue;
-                string _fileNumber = row.GetCell(diag.fileNum).StringValue;
+                    string _categoryName = row.GetCell(diag.categoryName).StringValue;
+                    string _fileNumber = row.GetCell(diag.fileNum).StringValue;
 
-                MyRow tmpRow = new MyRow(_yearForSort, _year, _categoryNumber, _fileType, _location, _categoryName, _deadline, _fileNumber);
-                rows.Add(tmpRow);
+                    MyRow tmpRow = new MyRow(_yearForSort, _year, _categoryNumber, _fileType, _location, _categoryName, _deadline, _fileNumber);
+                    rows.Add(tmpRow);
+                } 
+                catch (Exception e)
+                {
+                    MessageBox.Show("Postoji greska u redu: " + rowIndex + 1);
+                    continue;
+                }
+                
             }
 
             rows.Sort();
@@ -300,7 +295,6 @@ namespace SecondProject
                }
                catch (Exception e)
                {
-
                }
                int fileAmount = 1;
                for (int j = 0; j < rows.Count; j++)
@@ -341,7 +335,8 @@ namespace SecondProject
                deletedRows.Add(rows[i]);
                //rows.RemoveAt(i);
                Form1.getInstance().progressBar.Maximum--;
-            }         
+            }
+            return true;      
         }
 
         private class MyRow : Row, IComparable

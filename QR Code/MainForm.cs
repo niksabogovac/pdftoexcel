@@ -295,6 +295,7 @@ namespace QR_Code
             code = Regex.Replace(code, "{", string.Empty);
             code = Regex.Replace(code, "}", string.Empty);
             code = Regex.Replace(code, " ", string.Empty);
+            code = Regex.Replace(code, "\r\n", string.Empty);
             // Separate client infos and remove ".
             string[] stringSeparators = new string[] { "," };
             string[] tokens = code.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);

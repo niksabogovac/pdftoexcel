@@ -132,6 +132,7 @@
             // tbQr
             // 
             this.tbQr.Location = new System.Drawing.Point(541, 14);
+            this.tbQr.Multiline = true;
             this.tbQr.Name = "tbQr";
             this.tbQr.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
             this.tbQr.Size = new System.Drawing.Size(458, 20);
@@ -200,7 +201,7 @@
             // 
             this.izbrišiBazuToolStripMenuItem.Enabled = false;
             this.izbrišiBazuToolStripMenuItem.Name = "izbrišiBazuToolStripMenuItem";
-            this.izbrišiBazuToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.izbrišiBazuToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.izbrišiBazuToolStripMenuItem.Text = "Izbriši bazu";
             this.izbrišiBazuToolStripMenuItem.Visible = false;
             this.izbrišiBazuToolStripMenuItem.Click += new System.EventHandler(this.IzbrišiBazuToolStripMenuItem_Click);
@@ -211,7 +212,7 @@
             this.doctypeToolStripMenuItem,
             this.korisnikaToolStripMenuItem});
             this.dodajToolStripMenuItem.Name = "dodajToolStripMenuItem";
-            this.dodajToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.dodajToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.dodajToolStripMenuItem.Text = "Dodaj";
             // 
             // doctypeToolStripMenuItem
@@ -234,7 +235,7 @@
             this.qRCodeToolStripMenuItem,
             this.kutijuToolStripMenuItem});
             this.izbrišiToolStripMenuItem.Name = "izbrišiToolStripMenuItem";
-            this.izbrišiToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.izbrišiToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.izbrišiToolStripMenuItem.Text = "Izbriši";
             // 
             // qRCodeToolStripMenuItem

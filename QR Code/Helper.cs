@@ -94,9 +94,10 @@ namespace QR_Code
             }
         }
 
-        public static string ConnectionString = @"Data Source=DMTBJFE;Initial Catalog=QRCode;Integrated Security=True";
+        //public static string ConnectionString = @"Data Source=DMTBJFE;Initial Catalog=QRCode;Integrated Security=True";
         //public static string ConnectionString = @"Data Source=KNJG\SQLEXPRESS;Initial Catalog=QRCode;Integrated Security=True";
-        //public static string ConnectionString = @"Data Source=SERVER\SQLEXPRESS;Initial Catalog=QRCode;User ID=niksa;Password=Niksa2015;Integrated Security=false";
+
+        public static string ConnectionString = @"Data Source=SERVER\SQLEXPRESS;Initial Catalog=QRCode;User ID=niksa;Password=Niksa2015;Integrated Security=false";
 
         //private static string ConnectionString = @"Data Source=89.216.58.242\SQLEXPRESS;Initial Catalog=QRCode;Integrated Security=true";
         #endregion

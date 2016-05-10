@@ -41,8 +41,12 @@ namespace SecondProject
             int archNum = Int32.Parse(archNumStr);
             conversion = new Conversion(filePath,archNum);
             conversion.OpenInputAndOutputFiles();
-            conversion.MainSort();
-            conversion.Write();
+            // If sort went ok.
+            if (conversion.MainSort())
+            {
+                conversion.Write();
+            }
+            
         }
 
         public static Form1 getInstance()
