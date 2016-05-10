@@ -303,12 +303,12 @@ namespace QR_Code
                 string tmp = Regex.Replace(clientInfo, "\"", string.Empty);
                 string[] tmpSeparator = new string[] { ":" };
                 string[] tmpTokens = tmp.Split(tmpSeparator, StringSplitOptions.RemoveEmptyEntries);
-                if (tmpTokens[0].Equals("id"))
+                if (Helper.CheckId(tmpTokens[0]))
                 {
                     // Get id.
                     id = tmpTokens[1];
                 }
-                else if (tmpTokens[0].Equals("doctype"))
+                else if (Helper.CheckDocType(tmpTokens[0]))
                 {
                     // Get type of document.
                     doctype = tmpTokens[1];

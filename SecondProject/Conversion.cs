@@ -74,7 +74,7 @@ namespace SecondProject
         /// </summary>
         private static Regex yearReg = new Regex(@"[0-9]{4}");
         private static Regex yearRangeReg = new Regex(@"[0-9]{4}.? *- *[0-9]{4}");
-        private static Regex yearManyReg = new Regex(@"([0-9]{4}. ?)+");
+        private static Regex yearManyReg = new Regex(@"([0-9]{4} ?. ?)+");
         private static Regex trajnoReg = new Regex(@" *trajno *");
         #endregion
 

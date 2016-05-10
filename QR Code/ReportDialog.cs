@@ -86,7 +86,7 @@ namespace QR_Code
             outputSheet.Cells[curRow, curCol++] = new Cell("Partija");
             outputSheet.Cells[curRow, curCol++] = new Cell("Zahtev");
             outputSheet.Cells[curRow, curCol++] = new Cell("ID kartice");
-            outputSheet.Cells[curRow++, curCol++] = new Cell("Paket");
+            outputSheet.Cells[curRow++, curCol++] = new Cell("Mbrid");
             curCol = 0;
 
             SqlConnection conn = Helper.GetConnection();
@@ -325,7 +325,7 @@ namespace QR_Code
             outputSheet.Cells[curRow, curCol++] = new Cell("Partija");
             outputSheet.Cells[curRow, curCol++] = new Cell("Zahtev");
             outputSheet.Cells[curRow, curCol++] = new Cell("ID kartice");
-            outputSheet.Cells[curRow++, curCol++] = new Cell("Paket");
+            outputSheet.Cells[curRow++, curCol++] = new Cell("Mbrid");
             curCol = 0;
 
             SqlConnection conn = Helper.GetConnection();
@@ -400,7 +400,7 @@ namespace QR_Code
                         int i = 0;
                         // hbCode - current boxcode
                         string orderNum = null, hbCode = null;
-                        string doctype = null, id = "", mbr = null, partija = null, zahtev = null, idKartice = null, paket = null;
+                        string doctype = null, id = "", mbr = null, partija = null, zahtev = null, idKartice = null, mbrid = null;
                         // current filenumber
                         string tmpCode = null;
                         // old filenumber
@@ -500,9 +500,9 @@ namespace QR_Code
                                 {
                                     outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
                                 }
-                                if (paket != null)
+                                if (mbrid != null)
                                 {
-                                    outputSheet.Cells[curRow++, curCol++] = new Cell(paket);
+                                    outputSheet.Cells[curRow++, curCol++] = new Cell(mbrid);
                                 }
                                 else
                                 {
@@ -515,7 +515,7 @@ namespace QR_Code
                                 partija = null;
                                 zahtev = null;
                                 idKartice = null;
-                                paket = null;
+                                mbrid = null;
                                 i = 1;
                                 curCol = 0;
                                 oldcode = tmpCode;
@@ -536,7 +536,7 @@ namespace QR_Code
                             string tmppartija = i.ToString() + ". " + @"\\" + ((char)13).ToString();
                             string tmpzahtev = i.ToString() + ". " + @"\\" + ((char)13).ToString();
                             string tmpidKartice = i.ToString() + ". " + @"\\" + ((char)13).ToString();
-                            string tmppaket = i.ToString() + ". " + @"\\" + ((char)13).ToString();
+                            string tmpmbrid = i.ToString() + ". " + @"\\" + ((char)13).ToString();
                             foreach (string clientInfo in tokens)
                             {
                                 string tmp = Regex.Replace(clientInfo, "\"", string.Empty);
@@ -544,35 +544,35 @@ namespace QR_Code
                                 string[] tmpTokens = tmp.Split(tmpSeparator, StringSplitOptions.RemoveEmptyEntries);
                                 if (tmpTokens.Length > 1)
                                 {
-                                    if (tmpTokens[0].Equals("id"))
+                                    if (Helper.CheckId(tmpTokens[0]))
                                     {
                                         // Get id.
                                         tmpid = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
                                     }
-                                    else if (tmpTokens[0].Equals("doctype"))
+                                    else if (Helper.CheckDocType(tmpTokens[0]))
                                     {
                                         // Get type of document.
                                         tmpdoctype = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
                                     }
-                                    else if (tmpTokens[0].Equals("mbr"))
+                                    else if (Helper.CheckMbr(tmpTokens[0]))
                                     {
                                         tmpmbr = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
                                     }
-                                    else if (tmpTokens[0].Equals("partija"))
+                                    else if (Helper.CheckPartija(tmpTokens[0]))
                                     {
                                         tmppartija = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
                                     }
-                                    else if (tmpTokens[0].Equals("zahtev"))
+                                    else if (Helper.CheckZahtev(tmpTokens[0]))
                                     {
                                         tmpzahtev = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
                                     }
-                                    else if (tmpTokens[0].Equals("id_kartice"))
+                                    else if (Helper.CheckIdKartice(tmpTokens[0]))
                                     {
                                         tmpidKartice = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
                                     }
-                                    else if (tmpTokens[0].Equals("paket"))
+                                    else if (Helper.CheckMbrId(tmpTokens[0]))
                                     {
-                                        tmppaket = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
+                                        tmpmbrid = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
                                     }
                                 }
 
@@ -583,7 +583,7 @@ namespace QR_Code
                             partija += tmppartija;
                             zahtev += tmpzahtev;
                             idKartice += tmpidKartice;
-                            paket += tmppaket;
+                            mbrid += tmpmbrid;
                             #endregion
 
 
@@ -672,9 +672,9 @@ namespace QR_Code
                             {
                                 outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
                             }
-                            if (paket != null)
+                            if (mbrid != null)
                             {
-                                outputSheet.Cells[curRow++, curCol++] = new Cell(paket);
+                                outputSheet.Cells[curRow++, curCol++] = new Cell(mbrid);
                             }
                             else
                             {
@@ -824,7 +824,7 @@ namespace QR_Code
         private void HandleCodeAndWrite(string code, Worksheet outputSheet, ref int curRow, ref int curCol)
         {
 
-            string doctype = null, id = null, mbr = null, partija = null, zahtev = null, idKartice = null, paket = null;
+            string doctype = null, id = null, mbr = null, partija = null, zahtev = null, idKartice = null, mbrid = null;
 
             code = Regex.Replace(code, @"\\000021", string.Empty);
             code = Regex.Replace(code, "{", string.Empty);
@@ -841,35 +841,35 @@ namespace QR_Code
                 if (tmpTokens.Length > 1)
                 {
 
-                    if (tmpTokens[0].Equals("id"))
+                    if (Helper.CheckId(tmpTokens[0]))
                     {
                         // Get id.
                         id = tmpTokens[1];
                     }
-                    else if (tmpTokens[0].Equals("doctype"))
+                    else if (Helper.CheckDocType(tmpTokens[0]))
                     {
                         // Get type of document.
                         doctype = tmpTokens[1];
                     }
-                    else if (tmpTokens[0].Equals("mbr"))
+                    else if (Helper.CheckMbr(tmpTokens[0]))
                     {
                         mbr = tmpTokens[1];
                     }
-                    else if (tmpTokens[0].Equals("partija"))
+                    else if (Helper.CheckPartija(tmpTokens[0]))
                     {
                         partija = tmpTokens[1];
                     }
-                    else if (tmpTokens[0].Equals("zahtev"))
+                    else if (Helper.CheckZahtev(tmpTokens[0]))
                     {
                         zahtev = tmpTokens[1];
                     }
-                    else if (tmpTokens[0].Equals("id_kartice"))
+                    else if (Helper.CheckIdKartice(tmpTokens[0]))
                     {
                         idKartice = tmpTokens[1];
                     }
-                    else if (tmpTokens[0].Equals("paket"))
+                    else if (Helper.CheckMbrId(tmpTokens[0]))
                     {
-                        paket = tmpTokens[1];
+                        mbrid = tmpTokens[1];
                     }
                 }
 
@@ -927,9 +927,9 @@ namespace QR_Code
             {
                 outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
             }
-            if (paket != null)
+            if (mbrid != null)
             {
-                outputSheet.Cells[curRow++, curCol++] = new Cell(paket);
+                outputSheet.Cells[curRow++, curCol++] = new Cell(mbrid);
             }
             else
             {
@@ -938,7 +938,5 @@ namespace QR_Code
 
             curCol = 0;
         }
-
-        
     }
 }

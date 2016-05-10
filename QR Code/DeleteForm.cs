@@ -125,7 +125,7 @@ namespace QR_Code
                 if (tmpTokens.Length > 1)
                 {
 
-                    if (tmpTokens[0].Equals("id"))
+                    if (Helper.CheckId(tmpTokens[0]))
                     {
                         // Get id.
                         id = tmpTokens[1];

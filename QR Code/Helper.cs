@@ -101,9 +101,17 @@ namespace QR_Code
         //private static string ConnectionString = @"Data Source=89.216.58.242\SQLEXPRESS;Initial Catalog=QRCode;Integrated Security=true";
         #endregion
 
-
+        /// <summary>
+        /// Singleton instance of db connection.
+        /// </summary>
         public static SqlConnection connection;
 
+        #region Public static methods
+
+        /// <summary>
+        /// Gets db connection.
+        /// </summary>
+        /// <returns>Singleton instance of db connection.</returns>
         public static SqlConnection GetConnection()
         {
             if (connection == null)
@@ -114,6 +122,129 @@ namespace QR_Code
             return connection;
 
         }
+
+        /// <summary>
+        /// Checks if current token is ID or it's numeric pair.
+        /// </summary>
+        /// <param name="token">Tokens to be checked.</param>
+        /// <returns>Indicator if it's id.</returns>
+        public static bool CheckId(string token)
+        {
+            if (token.Equals("id") || token.Equals("2"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if current token is doctype or it's numeric pair.
+        /// </summary>
+        /// <param name="token">Tokens to be checked.</param>
+        /// <returns>Indicator if it's doctype.</returns>
+        public static bool CheckDocType(string token)
+        {
+            if (token.Equals("doctype") || token.Equals("3"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if current token is mbr or it's numeric pair.
+        /// </summary>
+        /// <param name="token">Tokens to be checked.</param>
+        /// <returns>Indicator if it's mbr.</returns>
+        public static bool CheckMbr(string token)
+        {
+            if (token.Equals("mbr") || token.Equals("4"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if current token is partija or it's numeric pair.
+        /// </summary>
+        /// <param name="token">Tokens to be checked.</param>
+        /// <returns>Indicator if it's partija.</returns>
+        public static bool CheckPartija(string token)
+        {
+            if (token.Equals("partija") || token.Equals("5"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if current token is zahtev or it's numeric pair.
+        /// </summary>
+        /// <param name="token">Tokens to be checked.</param>
+        /// <returns>Indicator if it's zahtev.</returns>
+        public static bool CheckZahtev(string token)
+        {
+            if (token.Equals("zahtev") || token.Equals("6"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if current token is id_kartice or it's numeric pair.
+        /// </summary>
+        /// <param name="token">Tokens to be checked.</param>
+        /// <returns>Indicator if it's id_kartice.</returns>
+        public static bool CheckIdKartice(string token)
+        {
+            if (token.Equals("id_kartice") || token.Equals("7"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if current token is mbrid or it's numeric pair.
+        /// </summary>
+        /// <param name="token">Tokens to be checked.</param>
+        /// <returns>Indicator if it's mbrid.</returns>
+        public static bool CheckMbrId(string token)
+        {
+            if (token.Equals("mbrid") || token.Equals("9"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        #endregion
+
+
         #region Constructors
         /// <summary>
         /// Initializes a new instance of the <see cref="Helper"/> class.
