@@ -207,6 +207,7 @@ namespace SecondProject
                     row = sheet.Cells.GetRow(rowIndex);
                     int _yearForSort = 0;
                     string _year = row.GetCell(diag.year).StringValue;
+                    _year = _year.Trim();
                     if (yearRangeReg.IsMatch(_year))
                     {
                         _year = yearRangeReg.Match(_year).ToString();
@@ -220,7 +221,7 @@ namespace SecondProject
                         }
                         catch (Exception e)
                         {
-                            logFile.WriteLine("Red " + rowIndex.ToString() + " nije mogao da bude obradjen.");
+                            logFile.WriteLine("Red " + (rowIndex + 1).ToString() + " nije mogao da bude obradjen.");
                         }
                     }
                     else if (yearManyReg.IsMatch(_year))
@@ -236,7 +237,7 @@ namespace SecondProject
                             }
                             catch (Exception e)
                             {
-                                logFile.WriteLine("Red " + rowIndex.ToString() + " nije mogao da bude obradjen.");
+                                logFile.WriteLine("Red " + (rowIndex + 1).ToString() + " nije mogao da bude obradjen.");
                             }
                         else
                             _yearForSort = Int32.Parse(tokens[0]);
@@ -248,7 +249,7 @@ namespace SecondProject
                     }
                     else
                     {
-                        logFile.WriteLine("Red " + rowIndex.ToString() + " nije mogao da bude obradjen.\nProgram nije mogao da prepozna godinu u tom redu.");
+                        logFile.WriteLine("Red " + (rowIndex + 1).ToString() + " nije mogao da bude obradjen.\nProgram nije mogao da prepozna godinu u tom redu.");
                     }
                     string _categoryNumber = row.GetCell(diag.categoryNum).StringValue;
                     string _fileType = row.GetCell(diag.fileType).StringValue;
@@ -272,7 +273,7 @@ namespace SecondProject
                 } 
                 catch (Exception e)
                 {
-                    MessageBox.Show("Postoji greska u redu: " + rowIndex + 1);
+                    logFile.WriteLine("Postoji greska u redu: " + (rowIndex + 1).ToString());
                     continue;
                 }
                 
