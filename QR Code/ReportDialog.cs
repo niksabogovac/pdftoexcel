@@ -196,6 +196,7 @@ namespace QR_Code
             {
                 outPath += Application.StartupPath + @"\tabelaZaBanku " + start.Value.Date.ToString("dd.MM.yyyy.") + " - " + end.Value.Date.ToString("dd.MM.yyyy.") + ".xls";
             }
+            
             // Create default output sheet and workbook
             Worksheet outputSheet = new Worksheet("Sheet1");
             Workbook outputBook = new Workbook();
@@ -527,6 +528,7 @@ namespace QR_Code
                             code = Regex.Replace(code, "{", string.Empty);
                             code = Regex.Replace(code, "}", string.Empty);
                             code = Regex.Replace(code, " ", string.Empty);
+                            code = Regex.Replace(code, "\r\n", string.Empty);
                             // Separate client infos and remove ".
                             string[] stringSeparators = new string[] { "," };
                             string[] tokens = code.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
@@ -830,6 +832,7 @@ namespace QR_Code
             code = Regex.Replace(code, "{", string.Empty);
             code = Regex.Replace(code, "}", string.Empty);
             code = Regex.Replace(code, " ", string.Empty);
+            code = Regex.Replace(code, "\r\n", string.Empty);
             // Separate client infos and remove ".
             string[] stringSeparators = new string[] { "," };
             string[] tokens = code.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
