@@ -194,6 +194,8 @@ namespace SecondProject
         {
             ChooseDiagMore diag = new ChooseDiagMore();
             diag.ShowDialog();
+            // Indicator if there were any error while parsing input xls file.
+            int errors = 0;
             if (diag.result != DialogResult.OK)
             {
                 return false;
@@ -221,6 +223,7 @@ namespace SecondProject
                         }
                         catch (Exception e)
                         {
+                            errors++;
                             logFile.WriteLine("Red " + (rowIndex + 1).ToString() + " nije mogao da bude obradjen.");
                         }
                     }
@@ -237,6 +240,7 @@ namespace SecondProject
                             }
                             catch (Exception e)
                             {
+                                errors++;
                                 logFile.WriteLine("Red " + (rowIndex + 1).ToString() + " nije mogao da bude obradjen.");
                             }
                         else
@@ -249,6 +253,7 @@ namespace SecondProject
                     }
                     else
                     {
+                        errors++;
                         logFile.WriteLine("Red " + (rowIndex + 1).ToString() + " nije mogao da bude obradjen.\nProgram nije mogao da prepozna godinu u tom redu.");
                     }
                     string _categoryNumber = row.GetCell(diag.categoryNum).StringValue;
@@ -273,6 +278,7 @@ namespace SecondProject
                 } 
                 catch (Exception e)
                 {
+                    errors++;
                     logFile.WriteLine("Postoji greska u redu: " + (rowIndex + 1).ToString());
                     continue;
                 }
@@ -336,6 +342,10 @@ namespace SecondProject
                deletedRows.Add(rows[i]);
                //rows.RemoveAt(i);
                Form1.getInstance().progressBar.Maximum--;
+            }
+            if (errors > 0)
+            {
+                MessageBox.Show("Postojale su greske tokom obrade ulaznog fajla, proverite log!");
             }
             return true;      
         }
