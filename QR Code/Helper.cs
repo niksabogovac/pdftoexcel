@@ -94,10 +94,10 @@ namespace QR_Code
             }
         }
 
-        //public static string ConnectionString = @"Data Source=DMTBJFE;Initial Catalog=QRCode;Integrated Security=True";
+        public static string ConnectionString = @"Data Source=DMTBJFE;Initial Catalog=QRCode;Integrated Security=True";
         //public static string ConnectionString = @"Data Source=KNJG\SQLEXPRESS;Initial Catalog=QRCode;Integrated Security=True";
 
-        public static string ConnectionString = @"Data Source=SERVER\SQLEXPRESS;Initial Catalog=QRCode;User ID=niksa;Password=Niksa2015;Integrated Security=false";
+        //public static string ConnectionString = @"Data Source=SERVER\SQLEXPRESS;Initial Catalog=QRCode;User ID=niksa;Password=Niksa2015;Integrated Security=false";
 
         //private static string ConnectionString = @"Data Source=89.216.58.242\SQLEXPRESS;Initial Catalog=QRCode;Integrated Security=true";
         #endregion
@@ -237,6 +237,23 @@ namespace QR_Code
             {
                 return true;
             }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if current token is paket or it's numeric pair (when they add one).
+        /// </summary>
+        /// <param name="token">Tokens to be checked.</param>
+        /// <returns>Indicator if it's paket.</returns>
+        public static bool CheckPaket(string token)
+        {
+            if (token.Equals("paket"))
+            {
+                return true;
+            } 
             else
             {
                 return false;

@@ -86,7 +86,8 @@ namespace QR_Code
             outputSheet.Cells[curRow, curCol++] = new Cell("Partija");
             outputSheet.Cells[curRow, curCol++] = new Cell("Zahtev");
             outputSheet.Cells[curRow, curCol++] = new Cell("ID kartice");
-            outputSheet.Cells[curRow++, curCol++] = new Cell("Mbrid");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Mbrid");
+            outputSheet.Cells[curRow++, curCol++] = new Cell("Paket");
             curCol = 0;
 
             SqlConnection conn = Helper.GetConnection();
@@ -326,7 +327,7 @@ namespace QR_Code
             outputSheet.Cells[curRow, curCol++] = new Cell("Partija");
             outputSheet.Cells[curRow, curCol++] = new Cell("Zahtev");
             outputSheet.Cells[curRow, curCol++] = new Cell("ID kartice");
-            outputSheet.Cells[curRow++, curCol++] = new Cell("Mbrid");
+            outputSheet.Cells[curRow++, curCol++] = new Cell("Paket");
             curCol = 0;
 
             SqlConnection conn = Helper.GetConnection();
@@ -401,7 +402,7 @@ namespace QR_Code
                         int i = 0;
                         // hbCode - current boxcode
                         string orderNum = null, hbCode = null;
-                        string doctype = null, id = "", mbr = null, partija = null, zahtev = null, idKartice = null, mbrid = null;
+                        string doctype = null, id = "", mbr = null, partija = null, zahtev = null, idKartice = null,paket = null;
                         // current filenumber
                         string tmpCode = null;
                         // old filenumber
@@ -501,9 +502,9 @@ namespace QR_Code
                                 {
                                     outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
                                 }
-                                if (mbrid != null)
+                                if (paket != null)
                                 {
-                                    outputSheet.Cells[curRow++, curCol++] = new Cell(mbrid);
+                                    outputSheet.Cells[curRow++, curCol++] = new Cell(paket);
                                 }
                                 else
                                 {
@@ -516,7 +517,7 @@ namespace QR_Code
                                 partija = null;
                                 zahtev = null;
                                 idKartice = null;
-                                mbrid = null;
+                                paket = null;
                                 i = 1;
                                 curCol = 0;
                                 oldcode = tmpCode;
@@ -538,7 +539,7 @@ namespace QR_Code
                             string tmppartija = i.ToString() + ". " + @"\\" + ((char)13).ToString();
                             string tmpzahtev = i.ToString() + ". " + @"\\" + ((char)13).ToString();
                             string tmpidKartice = i.ToString() + ". " + @"\\" + ((char)13).ToString();
-                            string tmpmbrid = i.ToString() + ". " + @"\\" + ((char)13).ToString();
+                            string tmppaket = i.ToString() + ". " + @"\\" + ((char)13).ToString();
                             foreach (string clientInfo in tokens)
                             {
                                 string tmp = Regex.Replace(clientInfo, "\"", string.Empty);
@@ -572,9 +573,9 @@ namespace QR_Code
                                     {
                                         tmpidKartice = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
                                     }
-                                    else if (Helper.CheckMbrId(tmpTokens[0]))
+                                    else if (Helper.CheckPaket(tmpTokens[0]))
                                     {
-                                        tmpmbrid = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
+                                        tmppaket = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
                                     }
                                 }
 
@@ -585,7 +586,7 @@ namespace QR_Code
                             partija += tmppartija;
                             zahtev += tmpzahtev;
                             idKartice += tmpidKartice;
-                            mbrid += tmpmbrid;
+                            paket += tmppaket;
                             #endregion
 
 
@@ -674,9 +675,9 @@ namespace QR_Code
                             {
                                 outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
                             }
-                            if (mbrid != null)
+                            if (paket != null)
                             {
-                                outputSheet.Cells[curRow++, curCol++] = new Cell(mbrid);
+                                outputSheet.Cells[curRow++, curCol++] = new Cell(paket);
                             }
                             else
                             {
@@ -826,7 +827,7 @@ namespace QR_Code
         private void HandleCodeAndWrite(string code, Worksheet outputSheet, ref int curRow, ref int curCol)
         {
 
-            string doctype = null, id = null, mbr = null, partija = null, zahtev = null, idKartice = null, mbrid = null;
+            string doctype = null, id = null, mbr = null, partija = null, zahtev = null, idKartice = null, mbrid = null, paket = null;
 
             code = Regex.Replace(code, @"\\000021", string.Empty);
             code = Regex.Replace(code, "{", string.Empty);
@@ -873,6 +874,9 @@ namespace QR_Code
                     else if (Helper.CheckMbrId(tmpTokens[0]))
                     {
                         mbrid = tmpTokens[1];
+                    } else if (Helper.CheckPaket(tmpTokens[0]))
+                    {
+                        paket = tmpTokens[1];
                     }
                 }
 
@@ -932,8 +936,17 @@ namespace QR_Code
             }
             if (mbrid != null)
             {
-                outputSheet.Cells[curRow++, curCol++] = new Cell(mbrid);
+                outputSheet.Cells[curRow, curCol++] = new Cell(mbrid);
             }
+            else
+            {
+                outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+            }
+
+            if (paket != null)
+            {
+                outputSheet.Cells[curRow++, curCol++] = new Cell(paket);
+            } 
             else
             {
                 outputSheet.Cells[curRow++, curCol++] = new Cell(string.Empty);
