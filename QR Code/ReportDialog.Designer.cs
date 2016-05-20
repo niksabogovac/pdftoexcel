@@ -124,7 +124,8 @@
             this.cbChoose.FormattingEnabled = true;
             this.cbChoose.Items.AddRange(new object[] {
             "Broj naloga",
-            "Datum"});
+            "Datum",
+            "Kutija"});
             this.cbChoose.Location = new System.Drawing.Point(263, 12);
             this.cbChoose.Name = "cbChoose";
             this.cbChoose.Size = new System.Drawing.Size(121, 21);

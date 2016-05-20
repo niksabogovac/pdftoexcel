@@ -25,10 +25,9 @@ namespace QR_Code
         private void BReport_Click(object sender, EventArgs e)
         {
             // Is order number provided.
-            if (tbOrderNumber.Text.Equals(string.Empty) && cbChoose.SelectedIndex == 0)
+            if (tbOrderNumber.Text.Equals(string.Empty) && (cbChoose.SelectedIndex == 0 || cbChoose.SelectedIndex == 2))
             {
                 MessageBox.Show("Unesite broj naloga.");
-                
             }
             else
             {
@@ -40,6 +39,9 @@ namespace QR_Code
                         break;
                     case 1:
                         GenerateReports(dateTimeFrom.Value, dateTimeUntil.Value);
+                        break;
+                    case 2:
+                        GenerateReports(null, null);
                         break;
                     default:
                         break;
@@ -99,10 +101,27 @@ namespace QR_Code
 
             if (start == null && end == null)
             {
-                commandText += "[OrderNum] = @orderNum";
-                countCommandText += "[OrderNum] = @orderNum";
-                command = new SqlCommand(commandText, conn);
-                command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
+                // Do by order num.
+                if (cbChoose.SelectedIndex == 0)
+                {
+                    commandText += "[OrderNum] = @orderNum";
+                    countCommandText += "[OrderNum] = @orderNum";
+                    command = new SqlCommand(commandText, conn);
+                    command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
+                } 
+                // Do by box Code.
+                else if (cbChoose.SelectedIndex == 2)
+                {
+                    commandText += "[QRCode].[dbo].[BankTable].[BoxCode] = @boxCode";
+                    countCommandText += "[QRCode].[dbo].[BankTable].[BoxCode] = @boxCode";
+                    command = new SqlCommand(commandText, conn);
+                    command.Parameters.AddWithValue("@boxCode", tbOrderNumber.Text);
+                }
+                // Error.
+                else
+                {
+                    return;
+                }
             }
             else
             {
@@ -223,10 +242,27 @@ namespace QR_Code
             string countCommandText = "SELECT count([Id]) FROM [QRCode].[dbo].[BankTable] WHERE ";
             if (start == null && end == null)
             {
-                commandText += "[OrderNum] = @orderNum";
-                countCommandText += "[OrderNum] = @orderNum";
-                command = new SqlCommand(commandText, conn);
-                command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
+                // Do by order num.
+                if (cbChoose.SelectedIndex == 0)
+                {
+                    commandText += "[OrderNum] = @orderNum";
+                    countCommandText += "[OrderNum] = @orderNum";
+                    command = new SqlCommand(commandText, conn);
+                    command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
+                }
+                // Do by box Code.
+                else if (cbChoose.SelectedIndex == 2)
+                {
+                    commandText += "[BoxCode] = @boxCode";
+                    countCommandText += "[BoxCode] = @boxCode";
+                    command = new SqlCommand(commandText, conn);
+                    command.Parameters.AddWithValue("@boxCode", tbOrderNumber.Text);
+                }
+                // Error.
+                else
+                {
+                    return;
+                }
             }
             else
             {
@@ -337,9 +373,25 @@ namespace QR_Code
 
             if (start == null && end == null)
             {
-                commandText += "WHERE [OrderNum] = @orderNum";
-                command = new SqlCommand(commandText, conn);
-                command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
+                // Do by order num.
+                if (cbChoose.SelectedIndex == 0)
+                {
+                    commandText += " WHERE [OrderNum] = @orderNum";
+                    command = new SqlCommand(commandText, conn);
+                    command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
+                } 
+                // Do by box Code.
+                else if (cbChoose.SelectedIndex == 2)
+                {
+                    commandText += " WHERE [BoxCode] = @boxCode";
+                    command = new SqlCommand(commandText, conn);
+                    command.Parameters.AddWithValue("@boxCode", tbOrderNumber.Text);
+                }
+                // Error.
+                else
+                {
+                    return;
+                }
             }
             else
             {
@@ -371,10 +423,20 @@ namespace QR_Code
                 progressBar1.Value++;
                 if (start == null && end == null)
                 {
-                    commandText = "SELECT * FROM [QRCode].[dbo].[BankTable] INNER JOIN [QRCode].[dbo].[RWTable] ON [QRCode].[dbo].[BankTable].[ID] = [QRCode].[dbo].[RWTable].[QRID] AND [QRCode].[dbo].[BankTable].[BoxCode] = @boxCode AND [QRCode].[dbo].[BankTable].[OrderNum] = @orderNum INNER JOIN [QRCode].[dbo].[Box] ON [QRCode].[dbo].[BankTable].[BoxCode] = [QRCode].[dbo].[Box].Code ORDER BY [QRCode].[dbo].[RWTable].[Code]";
-                    command = new SqlCommand(commandText, conn);
-                    command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
-                    command.Parameters.AddWithValue("@boxCode", boxCode);
+                    if (cbChoose.SelectedIndex == 0)
+                    {
+                        commandText = "SELECT * FROM [QRCode].[dbo].[BankTable] INNER JOIN [QRCode].[dbo].[RWTable] ON [QRCode].[dbo].[BankTable].[ID] = [QRCode].[dbo].[RWTable].[QRID] AND [QRCode].[dbo].[BankTable].[BoxCode] = @boxCode AND [QRCode].[dbo].[BankTable].[OrderNum] = @orderNum INNER JOIN [QRCode].[dbo].[Box] ON [QRCode].[dbo].[BankTable].[BoxCode] = [QRCode].[dbo].[Box].Code ORDER BY [QRCode].[dbo].[RWTable].[Code]";
+                        command = new SqlCommand(commandText, conn);
+                        command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
+                        command.Parameters.AddWithValue("@boxCode", boxCode);
+                    } 
+                    else if (cbChoose.SelectedIndex == 2)
+                    {
+                        commandText = "SELECT * FROM [QRCode].[dbo].[BankTable] INNER JOIN [QRCode].[dbo].[RWTable] ON [QRCode].[dbo].[BankTable].[ID] = [QRCode].[dbo].[RWTable].[QRID] AND [QRCode].[dbo].[BankTable].[BoxCode] = @boxCode INNER JOIN [QRCode].[dbo].[Box] ON [QRCode].[dbo].[BankTable].[BoxCode] = [QRCode].[dbo].[Box].Code ORDER BY [QRCode].[dbo].[RWTable].[Code]";
+                        command = new SqlCommand(commandText, conn);
+                        command.Parameters.AddWithValue("@boxCode", boxCode);
+                    }
+                    
                 }
                 else
                 {
@@ -786,6 +848,14 @@ namespace QR_Code
                     tbOrderNumber.Visible = false;
                     dateTimeFrom.Visible = true;
                     dateTimeUntil.Visible = true;
+                    break;
+                case 2:
+                    lValue.Visible = true;
+                    lValue.Text = "Unesite kod kutije:";
+                    tbOrderNumber.Visible = true;
+                    tbOrderNumber.Text = string.Empty;
+                    dateTimeFrom.Visible = false;
+                    dateTimeUntil.Visible = false;
                     break;
                 default:
                     lValue.Visible = false;

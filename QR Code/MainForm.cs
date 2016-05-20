@@ -226,7 +226,7 @@ namespace QR_Code
                 command.Parameters.AddWithValue("@id", id);
                 command.Parameters.AddWithValue("@orderNum", tbOrderNum.Text);
                 command.Parameters.AddWithValue("@boxCode", boxCode);
-                command.Parameters.AddWithValue("@date", DateTime.Now.Date);
+                command.Parameters.AddWithValue("@date", DateTime.Now);
                 command.Parameters.AddWithValue("@jmbg", jmbg);
                 command.Parameters.AddWithValue("@code", code);
                 command.ExecuteNonQuery();
