@@ -80,7 +80,7 @@ namespace TableManagmentApp
         /// <param name="e">Following args.</param>>
         private void button2_Click(object sender, EventArgs e)
         {
-            if (filePath != string.Empty && tbSeparator.Text != string.Empty && tbRows.Text != string.Empty)
+            if (filePath != string.Empty && tbSeparator.Text != string.Empty)
             {
                 // Try to open input table.
                 book = new Workbook();
@@ -108,13 +108,12 @@ namespace TableManagmentApp
 
 
 
-                // Get separator and input columns for separation.
-                string colInput = tbRows.Text;
                 string[] separator = new string[] {tbSeparator.Text};
-                // Separator for column nums.
-                string[] tmpSeparator = new string[] { "," };
-                List<string> columnsForSeparation = new List<string>(colInput.Split(tmpSeparator, StringSplitOptions.RemoveEmptyEntries));
-                
+                List<string> columnsForSeparation = new List<string>();// = new List<string>(colInput.Split(tmpSeparator, StringSplitOptions.RemoveEmptyEntries));
+                for (int i = 1; i <= 21; i++)
+                {
+                    columnsForSeparation.Add(i.ToString());
+                }
 
                 try
                 {
@@ -143,7 +142,7 @@ namespace TableManagmentApp
                                 columnNames.Add(row.GetCell(colIndex).StringValue);
                             }
                             OpenOutputFiles();
-                            WriteData(ref curRow, ref curCol, columnNames);
+                            WriteData(ref curRow, ref curCol, columnNames,new List<int>());
                         }
                         else
                         {
@@ -190,17 +189,19 @@ namespace TableManagmentApp
                                     }
 
                                     // First set number of rows.
-                                    if (splitCnt < 0)
+                                    if (splitCnt < tmp.Count)
                                     {
                                         splitCnt = tmp.Count;
                                     }
+                                    /*
                                     // Differs. Columns don't contain same number of data to split.
-                                    else if (splitCnt != tmp.Count && splitCnt != 1)
+                                    else if (splitCnt != tmp.Count && splitCnt != 1 && tmp.Count != 1)
                                     {
                                        log.WriteLine("Greška! Red " + (rowIndex + 1).ToString() + "ne sadrži isti broj podataka za razdvajanje u navedenim kolonama.");
                                        breakRow = true;
                                        break;
                                     }
+                                    */
                                     if (tmp.Count == 1)
                                     {
                                         cells[i] = tmp[0];
@@ -232,22 +233,27 @@ namespace TableManagmentApp
                             while (tmpCnt < splitCnt)
                             {
                                 // Get all values.
+                                int i = 0;
+                                List<int> indexes = new List<int>();
                                 foreach (KeyValuePair<int, object> cell in cells)
                                 {
                                     if (cell.Value is List<string>)
                                     {
                                         List<string> tmpList = (List<string>)cell.Value;
                                         rowData.Add(tmpList[tmpCnt]);
+                                        indexes.Add(i);
                                     }
                                     else if (cell.Value is string)
                                     {
                                         rowData.Add(cell.Value.ToString());
                                     }
+                                    i++;
                                 }
                                 // Write them.
-                                WriteData(ref curRow, ref curCol, rowData);
+                                WriteData(ref curRow, ref curCol, rowData, indexes);
                                 // Clear data.
                                 rowData.Clear();
+                                indexes.Clear();
                                 // Increment counter;
                                 tmpCnt++;
                             }
@@ -285,11 +291,30 @@ namespace TableManagmentApp
         /// <param name="curRow">Current row.</param>
         /// <param name="curCol">Current column.</param>
         /// <param name="names">Data from one row (splited).</param>
-        private void WriteData(ref int curRow, ref int curCol, List<string> data)
+        private void WriteData(ref int curRow, ref int curCol, List<string> data, List<int> indexes)
         {
-            foreach (string name in data)
+            var rgx = new Regex("[0-9]+\\.(?<actualstr>.*)");
+            List<int> a;
+            for (int i = 0; i < data.Count; ++i)
             {
-                string tmpData = name.Trim();
+                string tmpData = data[i].Trim();
+
+                if (indexes.Contains(i))
+                {
+                    var match = rgx.Match(tmpData);
+                    if (match.Success)
+                    {
+                        tmpData = match.Groups["actualstr"].Value;
+                    }
+                }
+                if (tmpData.StartsWith("\""))
+                {
+                    tmpData = tmpData.Substring(1);
+                }
+                if (tmpData.EndsWith("\""))
+                {
+                    tmpData = tmpData.Substring(0, tmpData.Length - 1);
+                }
                 outputSheet.Cells[curRow, curCol++] = new Cell(tmpData);
             }
             curRow++;

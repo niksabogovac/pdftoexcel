@@ -91,6 +91,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
+            this.label3.Enabled = false;
             this.label3.Location = new System.Drawing.Point(42, 89);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(205, 13);
@@ -100,6 +101,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
+            this.label4.Enabled = false;
             this.label4.Location = new System.Drawing.Point(42, 111);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(72, 13);
@@ -108,6 +110,7 @@
             // 
             // tbRows
             // 
+            this.tbRows.Enabled = false;
             this.tbRows.Location = new System.Drawing.Point(15, 144);
             this.tbRows.Name = "tbRows";
             this.tbRows.Size = new System.Drawing.Size(257, 20);
