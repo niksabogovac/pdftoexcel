@@ -85,6 +85,10 @@
             this.lBlue = new System.Windows.Forms.Label();
             this.bCloseBlue = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.cbCloseGreen = new System.Windows.Forms.CheckBox();
+            this.cbCloseRed = new System.Windows.Forms.CheckBox();
+            this.cbCloseYellow = new System.Windows.Forms.CheckBox();
+            this.cbCloseBlue = new System.Windows.Forms.CheckBox();
             this.pUpper.SuspendLayout();
             this.mMain.SuspendLayout();
             this.tlpLower.SuspendLayout();
@@ -313,6 +317,7 @@
             // pGreen
             // 
             this.pGreen.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.pGreen.Controls.Add(this.cbCloseGreen);
             this.pGreen.Controls.Add(this.label1);
             this.pGreen.Controls.Add(this.lGreenTableName);
             this.pGreen.Controls.Add(this.lNumFilesGreen);
@@ -393,6 +398,7 @@
             // pRed
             // 
             this.pRed.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.pRed.Controls.Add(this.cbCloseRed);
             this.pRed.Controls.Add(this.label2);
             this.pRed.Controls.Add(this.lRedTableName);
             this.pRed.Controls.Add(this.lNumFilesRed);
@@ -473,6 +479,7 @@
             // pYellow
             // 
             this.pYellow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.pYellow.Controls.Add(this.cbCloseYellow);
             this.pYellow.Controls.Add(this.label3);
             this.pYellow.Controls.Add(this.lYellowTableName);
             this.pYellow.Controls.Add(this.lNumFilesYellow);
@@ -553,6 +560,7 @@
             // pBlue
             // 
             this.pBlue.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.pBlue.Controls.Add(this.cbCloseBlue);
             this.pBlue.Controls.Add(this.label4);
             this.pBlue.Controls.Add(this.lBlueTableName);
             this.pBlue.Controls.Add(this.lNumFilesBlue);
@@ -633,6 +641,50 @@
             // errorProvider
             // 
             this.errorProvider.ContainerControl = this;
+            // 
+            // cbCloseGreen
+            // 
+            this.cbCloseGreen.AutoSize = true;
+            this.cbCloseGreen.Enabled = false;
+            this.cbCloseGreen.Location = new System.Drawing.Point(13, 332);
+            this.cbCloseGreen.Name = "cbCloseGreen";
+            this.cbCloseGreen.Size = new System.Drawing.Size(59, 17);
+            this.cbCloseGreen.TabIndex = 7;
+            this.cbCloseGreen.Text = "Zatvori";
+            this.cbCloseGreen.UseVisualStyleBackColor = true;
+            // 
+            // cbCloseRed
+            // 
+            this.cbCloseRed.AutoSize = true;
+            this.cbCloseRed.Enabled = false;
+            this.cbCloseRed.Location = new System.Drawing.Point(19, 332);
+            this.cbCloseRed.Name = "cbCloseRed";
+            this.cbCloseRed.Size = new System.Drawing.Size(59, 17);
+            this.cbCloseRed.TabIndex = 9;
+            this.cbCloseRed.Text = "Zatvori";
+            this.cbCloseRed.UseVisualStyleBackColor = true;
+            // 
+            // cbCloseYellow
+            // 
+            this.cbCloseYellow.AutoSize = true;
+            this.cbCloseYellow.Enabled = false;
+            this.cbCloseYellow.Location = new System.Drawing.Point(15, 332);
+            this.cbCloseYellow.Name = "cbCloseYellow";
+            this.cbCloseYellow.Size = new System.Drawing.Size(59, 17);
+            this.cbCloseYellow.TabIndex = 11;
+            this.cbCloseYellow.Text = "Zatvori";
+            this.cbCloseYellow.UseVisualStyleBackColor = true;
+            // 
+            // cbCloseBlue
+            // 
+            this.cbCloseBlue.AutoSize = true;
+            this.cbCloseBlue.Enabled = false;
+            this.cbCloseBlue.Location = new System.Drawing.Point(18, 332);
+            this.cbCloseBlue.Name = "cbCloseBlue";
+            this.cbCloseBlue.Size = new System.Drawing.Size(59, 17);
+            this.cbCloseBlue.TabIndex = 12;
+            this.cbCloseBlue.Text = "Zatvori";
+            this.cbCloseBlue.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -724,6 +776,10 @@
         private System.Windows.Forms.ToolStripMenuItem brojNalogaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pojedinacnoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem izTabeleToolStripMenuItem;
+        private System.Windows.Forms.CheckBox cbCloseGreen;
+        private System.Windows.Forms.CheckBox cbCloseRed;
+        private System.Windows.Forms.CheckBox cbCloseYellow;
+        private System.Windows.Forms.CheckBox cbCloseBlue;
     }
 }
 

@@ -130,25 +130,30 @@ namespace QR_Code
             try
             {
                 SqlConnection conn = Helper.GetConnection();
-                SqlCommand command = new SqlCommand("SELECT [Code] FROM [QRCode].[dbo].[RWTable] WHERE [Code] = @rwCode", conn);
-                command.Parameters.AddWithValue("rwCode", rwCode);
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (SqlCommand command = new SqlCommand("SELECT [Code] FROM [QRCode].[dbo].[RWTable] WHERE [Code] = @rwCode", conn))
                 {
-                    // Code already used
-                    if (reader.HasRows)
+                    command.CommandTimeout = 3600;
+                    command.Parameters.AddWithValue("rwCode", rwCode);
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
+                        // Code already used
+                        if (reader.HasRows)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                 }
+                    
                 
             } 
             catch(Exception e)
             {
-                return true;
+                MessageBox.Show("Desila se greska!");
+                return false;
             }
             
         }

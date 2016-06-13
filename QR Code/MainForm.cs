@@ -280,118 +280,131 @@ namespace QR_Code
         /// </summary>
         /// <param name="code">Unparsed json objects.</param>
         private void GetQrCodeAndWrite(string code)
-        {   
+        {
             string startCode = code;
             // ID of scanned code.
             string id = null;
             // Type of docyment of scanned code.
             string doctype = null;
 
-            // Remove all non-ASCII characters.
-            code = Regex.Replace(code, @"[^\u0000-\u007F]", string.Empty);
-            // Remove \000021 from code.
-            code = Regex.Replace(code, @"\\000021", string.Empty);
-            // Remove { and }.
-            code = Regex.Replace(code, "{", string.Empty);
-            code = Regex.Replace(code, "}", string.Empty);
-            code = Regex.Replace(code, " ", string.Empty);
-            code = Regex.Replace(code, "\r\n", string.Empty);
-            // Separate client infos and remove ".
-            string[] stringSeparators = new string[] { "," };
-            string[] tokens = code.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string clientInfo in tokens)
-            {
-                string tmp = Regex.Replace(clientInfo, "\"", string.Empty);
-                string[] tmpSeparator = new string[] { ":" };
-                string[] tmpTokens = tmp.Split(tmpSeparator, StringSplitOptions.RemoveEmptyEntries);
-                if (Helper.CheckId(tmpTokens[0]))
-                {
-                    // Get id.
-                    id = tmpTokens[1];
-                }
-                else if (Helper.CheckDocType(tmpTokens[0]))
-                {
-                    // Get type of document.
-                    doctype = tmpTokens[1];
-                }
-
-                // Both found - break.
-                if (id != null && doctype != null)
-                {
-                    break;
-                }
-            }
-
-            string boxCode = GetBoxCodeFromDocType(doctype);     
-            if (boxCode == null)
-            {
-                //MessageBox.Show("QR kod koji ste uneli ne može biti raspoređen jer ne postoji doctype - " + doctype + ".");
-                //lNotification.Text = string.Empty;
-                lNotification.Text = "Ne postoji doctype - " + doctype + ".";
-                lNotification.ForeColor = Color.Red;
-                return;
-            }
-            int error = 0;
-            string errorMessage = string.Empty;
             try
             {
-                InsertToBankTable(id, boxCode, startCode);
-                int boxType = GetTypeFromBoxCode(boxCode);
-                switch(boxType)
+                // Remove all non-ASCII characters.
+                code = Regex.Replace(code, @"[^\u0000-\u007F]", string.Empty);
+                // Remove \000021 from code.
+                code = Regex.Replace(code, @"\\000021", string.Empty);
+                // Remove { and }.
+                code = Regex.Replace(code, "{", string.Empty);
+                code = Regex.Replace(code, "}", string.Empty);
+                code = Regex.Replace(code, " ", string.Empty);
+                code = Regex.Replace(code, "\r\n", string.Empty);
+                // Separate client infos and remove ".
+                string[] stringSeparators = new string[] { "," };
+                string[] tokens = code.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string clientInfo in tokens)
                 {
-                    case 86:
-                        UpdateBoxTable(boxCode);
-                        greenBoxNumOfFiles = GetNumberOfFilesFromBox(boxCode);
-                        lNumFilesGreen.Text = "Broj fajlova u kutiji: " + greenBoxNumOfFiles;
-                        ColorPanels(true, false, false, false);
+                    string tmp = Regex.Replace(clientInfo, "\"", string.Empty);
+                    string[] tmpSeparator = new string[] { ":" };
+                    string[] tmpTokens = tmp.Split(tmpSeparator, StringSplitOptions.RemoveEmptyEntries);
+                    if (Helper.CheckId(tmpTokens[0]))
+                    {
+                        // Get id.
+                        id = tmpTokens[1];
+                    }
+                    else if (Helper.CheckDocType(tmpTokens[0]))
+                    {
+                        // Get type of document.
+                        doctype = tmpTokens[1];
+                    }
+
+                    // Both found - break.
+                    if (id != null && doctype != null)
+                    {
                         break;
-                    case 148:
-                        UpdateBoxTable(boxCode);
-                        redBoxNumOfFiles = GetNumberOfFilesFromBox(boxCode);
-                        lNumFilesRed.Text = "Broj fajlova u kutiji: " + redBoxNumOfFiles;
-                        ColorPanels(false, true, false, false);
-                        break;
-                    case 82:
-                        UpdateBoxTable(boxCode);
-                        yellowBoxNumOfFiles = GetNumberOfFilesFromBox(boxCode);
-                        lNumFilesYellow.Text = "Broj fajlova u kutiji: " + yellowBoxNumOfFiles;
-                        ColorPanels(false, false, true, false);
-                        break;
-                    case 83:
-                        UpdateBoxTable(boxCode);
-                        blueBoxNumOfFiles = GetNumberOfFilesFromBox(boxCode);
-                        lNumFilesBlue.Text = "Broj fajlova u kutiji: " + blueBoxNumOfFiles;
-                        ColorPanels(false, false, false, true);
-                        break;
-                    default:
-                        lNotification.Text = "Nije moguće.";
-                        return;
+                    }
                 }
-                lNotification.Text = "Uspešno ste upisali.";
-                lNotification.ForeColor = Color.Green;
+
+                string boxCode = GetBoxCodeFromDocType(doctype);     
+                if (boxCode == null)
+                {
+                    //MessageBox.Show("QR kod koji ste uneli ne može biti raspoređen jer ne postoji doctype - " + doctype + ".");
+                    //lNotification.Text = string.Empty;
+                    lNotification.Text = "Ne postoji doctype - " + doctype + ".";
+                    lNotification.ForeColor = Color.Red;
+                    return;
+                }
+                string errorMessage = string.Empty;
+            
+                    InsertToBankTable(id, boxCode, startCode);
+                    int boxType = GetTypeFromBoxCode(boxCode);
+                    switch(boxType)
+                    {
+                        case 86:
+                            UpdateBoxTable(boxCode);
+                            greenBoxNumOfFiles = GetNumberOfFilesFromBox(boxCode);
+                            lNumFilesGreen.Text = "Broj fajlova u kutiji: " + greenBoxNumOfFiles;
+                            ColorPanels(true, false, false, false);
+                            break;
+                        case 148:
+                            UpdateBoxTable(boxCode);
+                            redBoxNumOfFiles = GetNumberOfFilesFromBox(boxCode);
+                            lNumFilesRed.Text = "Broj fajlova u kutiji: " + redBoxNumOfFiles;
+                            ColorPanels(false, true, false, false);
+                            break;
+                        case 82:
+                            UpdateBoxTable(boxCode);
+                            yellowBoxNumOfFiles = GetNumberOfFilesFromBox(boxCode);
+                            lNumFilesYellow.Text = "Broj fajlova u kutiji: " + yellowBoxNumOfFiles;
+                            ColorPanels(false, false, true, false);
+                            break;
+                        case 83:
+                            UpdateBoxTable(boxCode);
+                            blueBoxNumOfFiles = GetNumberOfFilesFromBox(boxCode);
+                            lNumFilesBlue.Text = "Broj fajlova u kutiji: " + blueBoxNumOfFiles;
+                            ColorPanels(false, false, false, true);
+                            break;
+                        default:
+                            lNotification.Text = "Nije moguće.";
+                            return;
+                    }
+                    lNotification.Text = "Uspešno ste upisali.";
+                    lNotification.ForeColor = Color.Green;
 
             }
             catch (SqlException e)
             {
-                error = 1;
-                SqlConnection conn = Helper.GetConnection();
-                string c = "NEKI KOD";
-                using (SqlCommand command = new SqlCommand("SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id", conn))
+                string c = string.Empty;
+                try
                 {
-                    command.Parameters.AddWithValue("@id", id);
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            reader.Read();
-                            c = (string)reader[0];
-                        }
-                        
-                    }
+                    SqlConnection conn = Helper.GetConnection();
                     
+                    using (SqlCommand command = new SqlCommand("SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id", conn))
+                    {
+                        command.CommandTimeout = 360;
+                        command.Parameters.AddWithValue("@id", id);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                c = " u kutiju: " + (string)reader[0];
+                            }
+
+                        }
+
+                    }
+
                 }
-                lNotification.Text = "QR kod je već upisan, u kutiji: " + c;
-                lNotification.ForeColor = Color.Red;
+                catch (Exception exp)
+                {
+                    MessageBox.Show(exp.Message);
+                }
+                finally
+                {
+                    lNotification.Text = "QR kod je već upisan" + c;
+                    lNotification.ForeColor = Color.Red;
+                }
+                
                 
             }
         }
@@ -528,8 +541,10 @@ namespace QR_Code
             int ret = 0;
             SqlConnection conn = Helper.GetConnection();
             //conn.Open();
-            using (SqlCommand command = new SqlCommand("SELECT  [ID] FROM [QRCode].[dbo].[BankTable] WHERE [ID] NOT IN (SELECT [QRID] from [QRCode].[dbo].[RWTable] WHERE [BoxCode] = @boxCode) AND [BoxCode] = @boxCode", conn))
+            using (SqlCommand command = new SqlCommand("SELECT  [ID] FROM [QRCode].[dbo].[BankTable] WHERE [MBR] = @mbr AND [ID] NOT IN (SELECT [QRID] from [QRCode].[dbo].[RWTable] WHERE [BoxCode] = @boxCode) AND [BoxCode] = @boxCode", conn))
             {
+                command.CommandTimeout = 3600;
+                command.Parameters.AddWithValue("@mbr", jmbg);
                 command.Parameters.AddWithValue("@boxCode", boxCode);
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
@@ -637,21 +652,48 @@ namespace QR_Code
                 // Box was opened, remove box code and close it.
                 // Check if codes for RW report are inserted into database.
                 // List for QR Codes that dont have Filenumber added.
+                // If check box for closing was selected all codes from this box must have filenumbers assigned!
+
+
                 List<string> QRIDs = new List<string>();
                 int newCodes = CheckNumberOfCodes(tbGreen.Text,greenBoxNumOfFiles, ref QRIDs);
+
+
+                if (cbCloseGreen.Checked)
+                {
+                    if (newCodes > 0)
+                    {
+                        MessageBox.Show("Potrebno je uneti {0} filenumber za kodove koje ste skenirali!", newCodes.ToString());
+                        return;
+                    } 
+                    else
+                    {
+                        greenBoxOpened = false;
+                        lNumFilesGreen.Text = string.Empty;
+                        lStatusGreen.Text = "Status: Zatvorena";
+                        ((Button)sender).Text = "Otvori";
+                        tbGreen.Clear();
+                        greenBoxNumOfFiles = 0;
+                        tbGreen.Enabled = true;
+                        tbGreen.Focus();
+                        cbCloseGreen.Checked = false;
+                        cbCloseGreen.Enabled = false;
+                        return;
+                    }
+                    
+                }
+
                 if (newCodes > 0)
                 {
                     CloseBoxDialog diag = new CloseBoxDialog(newCodes, tbGreen.Text,QRIDs);
                     diag.ShowDialog();
+                } 
+                else
+                {
+                    MessageBox.Show("Uneli ste filenumbere za sve kodove iz ove kutije!");
                 }
-                greenBoxOpened = false;
-                lNumFilesGreen.Text = string.Empty;
-                lStatusGreen.Text = "Status: Zatvorena";
-                ((Button)sender).Text = "Otvori";
-                tbGreen.Clear();
-                greenBoxNumOfFiles = 0;
-                tbGreen.Enabled = true;
-                tbGreen.Focus();
+                
+                
             }
             else if (greenBoxOpened == false)
             {
@@ -678,9 +720,10 @@ namespace QR_Code
                         errorProvider.SetError(tbGreen, string.Empty);
                         greenBoxOpened = true;
                         lStatusGreen.Text = "Status: Otvorena";
-                        ((Button)sender).Text = "Zatvori";
+                        ((Button)sender).Text = "Unesi filenumber";
                         lNumFilesGreen.Text = "Broj fajlova u kutiji: " + greenBoxNumOfFiles;
                         tbGreen.Enabled = false;
+                        cbCloseGreen.Enabled = true;
                         //Focus next open text box.
                         if (tbRed.Enabled)
                         {
@@ -717,18 +760,38 @@ namespace QR_Code
                 // List for QR Codes that dont have Filenumber added.
                 List<string> QRIDs = new List<string>();
                 int newCodes = CheckNumberOfCodes(tbRed.Text, redBoxNumOfFiles,ref QRIDs);
+
+                if (cbCloseRed.Checked)
+                {
+                    if (newCodes > 0)
+                    {
+                        MessageBox.Show("Potrebno je uneti {0} filenumber za kodove koje ste skenirali!", newCodes.ToString());
+                        return;
+                    }
+                    else
+                    {
+                        redBoxOpened = false;
+                        lStatusRed.Text = "Status: Zatvorena";
+                        ((Button)sender).Text = "Otvori";
+                        lNumFilesRed.Text = string.Empty;
+                        redBoxNumOfFiles = 0;
+                        tbRed.Clear();
+                        tbRed.Enabled = true;
+                        cbCloseRed.Checked = false;
+                        cbCloseRed.Enabled = false;
+                        return;
+                    }
+                }
                 if (newCodes > 0)
                 {
                     CloseBoxDialog diag = new CloseBoxDialog(newCodes, tbRed.Text, QRIDs);
                     diag.ShowDialog();
                 }
-                redBoxOpened = false;
-                lStatusRed.Text = "Status: Zatvorena";
-                ((Button)sender).Text = "Otvori";
-                lNumFilesRed.Text = string.Empty;
-                redBoxNumOfFiles = 0;
-                tbRed.Clear();
-                tbRed.Enabled = true;
+                else
+                {
+                    MessageBox.Show("Uneli ste filenumbere za sve kodove iz ove kutije!");
+                }
+                
             }
             else if (redBoxOpened == false)
             {
@@ -755,9 +818,10 @@ namespace QR_Code
                         errorProvider.SetError(tbRed, string.Empty);
                         redBoxOpened = true;
                         lStatusRed.Text = "Status: Otvorena";
-                        ((Button)sender).Text = "Zatvori";
+                        ((Button)sender).Text = "Unesi filenumber";
                         lNumFilesRed.Text = "Broj fajlova u kutiji: " + redBoxNumOfFiles;
                         tbRed.Enabled = false;
+                        cbCloseRed.Enabled = true;
                         //Focus next open text box.
                         if (tbGreen.Enabled)
                         {
@@ -794,18 +858,40 @@ namespace QR_Code
                 // List for QR Codes that dont have Filenumber added.
                 List<string> QRIDs = new List<string>();
                 int newCodes = CheckNumberOfCodes(tbYellow.Text, yellowBoxNumOfFiles,ref QRIDs);
+
+                if (cbCloseYellow.Checked)
+                {
+
+                    if (newCodes > 0)
+                    {
+                        MessageBox.Show("Potrebno je uneti {0} filenumber za kodove koje ste skenirali!", newCodes.ToString());
+                        return;
+                    }
+                    else
+                    {
+                        yellowBoxOpened = false;
+                        lStatusYellow.Text = "Status: Zatvorena";
+                        ((Button)sender).Text = "Otvori";
+                        tbYellow.Clear();
+                        yellowBoxNumOfFiles = 0;
+                        lNumFilesYellow.Text = string.Empty;
+                        tbYellow.Enabled = true;
+                        cbCloseYellow.Checked = false;
+                        cbCloseYellow.Enabled = false;
+                        return;
+                    }
+                    
+                }
                 if (newCodes > 0)
                 {
                     CloseBoxDialog diag = new CloseBoxDialog(newCodes, tbYellow.Text, QRIDs);
                     diag.ShowDialog();
                 }
-                yellowBoxOpened = false;
-                lStatusYellow.Text = "Status: Zatvorena";
-                ((Button)sender).Text = "Otvori";
-                tbYellow.Clear();
-                yellowBoxNumOfFiles = 0;
-                lNumFilesYellow.Text = string.Empty;
-                tbYellow.Enabled = true;
+                else
+                {
+                    MessageBox.Show("Uneli ste filenumbere za sve kodove iz ove kutije!");
+                }
+
             }
             else if (yellowBoxOpened == false)
             {
@@ -831,9 +917,10 @@ namespace QR_Code
                         errorProvider.SetError(tbYellow, string.Empty);
                         yellowBoxOpened = true;
                         lStatusYellow.Text = "Status: Otvorena";
-                        ((Button)sender).Text = "Zatvori";
+                        ((Button)sender).Text = "Unesi filenumber";
                         lNumFilesYellow.Text = "Broj fajlova u kutiji: " + yellowBoxNumOfFiles;
                         tbYellow.Enabled = false;
+                        cbCloseYellow.Enabled = true;
                         //Focus next open text box.
                         if (tbGreen.Enabled)
                         {
@@ -871,18 +958,38 @@ namespace QR_Code
                 // List for QR Codes that dont have Filenumber added.
                 List<string> QRIDs = new List<string>();
                 int newCodes = CheckNumberOfCodes(tbBlue.Text, blueBoxNumOfFiles,ref QRIDs);
+
+                if (cbCloseBlue.Checked)
+                {
+                    if (newCodes > 0)
+                    {
+                        MessageBox.Show("Potrebno je uneti {0} filenumber za kodove koje ste skenirali!", newCodes.ToString());
+                        return;
+                    }
+                    else
+                    {
+                        blueBoxOpened = false;
+                        lStatusBlue.Text = "Status: Zatvorena";
+                        ((Button)sender).Text = "Otvori";
+                        tbBlue.Clear();
+                        blueBoxNumOfFiles = 0;
+                        lNumFilesBlue.Text = string.Empty;
+                        tbBlue.Enabled = true;
+                        cbCloseBlue.Checked = false;
+                        cbCloseBlue.Enabled = false;
+                        return;
+                    }
+                }
                 if (newCodes > 0)
                 {
                     CloseBoxDialog diag = new CloseBoxDialog(newCodes, tbBlue.Text, QRIDs);
                     diag.ShowDialog();
                 }
-                blueBoxOpened = false;
-                lStatusBlue.Text = "Status: Zatvorena";
-                ((Button)sender).Text = "Otvori";
-                tbBlue.Clear();
-                blueBoxNumOfFiles = 0;
-                lNumFilesBlue.Text = string.Empty;
-                tbBlue.Enabled = true;
+                else
+                {
+                    MessageBox.Show("Uneli ste filenumbere za sve kodove iz ove kutije!");
+                }
+                
             }
             else if (blueBoxOpened == false)
             {
@@ -911,6 +1018,7 @@ namespace QR_Code
                         ((Button)sender).Text = "Zatvori";
                         lNumFilesBlue.Text = "Broj fajlova u kutiji: " + blueBoxNumOfFiles;
                         tbBlue.Enabled = false;
+                        cbCloseBlue.Enabled = true;
                         //Focus next open text box.
                         if (tbGreen.Enabled)
                         {

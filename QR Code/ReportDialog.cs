@@ -144,6 +144,7 @@ namespace QR_Code
             }
 
             command.CommandText = countCommandText;
+            command.CommandTimeout = 3600;
             int totalRows = (int)command.ExecuteScalar();
 
             progressBar1.Value = 0;
@@ -286,7 +287,7 @@ namespace QR_Code
             }
             command.CommandText = countCommandText;
             int totalRows = (int)command.ExecuteScalar();
-           
+            command.CommandTimeout = 3600;
             progressBar1.Value = 0;
             progressBar1.Maximum = totalRows;
             command.CommandText = commandText;
@@ -398,6 +399,7 @@ namespace QR_Code
                 command = new SqlCommand(commandText, conn);
             }
 
+            command.CommandTimeout = 3600;
             List<string> boxCodes = new List<string>();
             using (SqlDataReader reader = command.ExecuteReader())
             {
@@ -457,6 +459,7 @@ namespace QR_Code
                     }
                     
                 }
+                command.CommandTimeout = 3600;
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     if (reader.HasRows)
@@ -475,7 +478,10 @@ namespace QR_Code
                         {
                             i++;
                             counter++;
-                            orderNum = (string)reader["OrderNum"];
+                            if (orderNum == null)
+                            {
+                                orderNum = (string)reader["OrderNum"];
+                            }
                             hbCode = (string)reader["BoxCode"];
                             oldcode = tmpCode;
                             tmpCode = (string)reader[7];
@@ -486,7 +492,8 @@ namespace QR_Code
                                 #region Write header data
                                 // Always read from the beggining of list and remove codes added to cells.
                                 outputSheet.Cells[curRow, curCol++] = new Cell(oldcode);
-                                outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["OrderNum"]);
+                                outputSheet.Cells[curRow, curCol++] = new Cell(orderNum);
+                                orderNum = null;
                                 string bCode = (string)reader["BoxCode"];
                                 int boxType = GetTypeFromBoxCode(bCode);
                                 switch (boxType)
@@ -661,6 +668,7 @@ namespace QR_Code
                             // Always read from the beggining of list and remove codes added to cells.
                             outputSheet.Cells[curRow, curCol++] = new Cell(tmpCode);
                             outputSheet.Cells[curRow, curCol++] = new Cell(orderNum);
+                            orderNum = null;
                             int boxType = GetTypeFromBoxCode(hbCode);
                             switch (boxType)
                             {

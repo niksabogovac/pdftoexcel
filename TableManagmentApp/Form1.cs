@@ -268,8 +268,12 @@ namespace TableManagmentApp
                 }
                 catch(Exception gf)
                 {
-                    string error = gf.StackTrace;
+                    MessageBox.Show(gf.Message);
                 }
+            }
+            else
+            {
+                MessageBox.Show("GRESKA!");
             }
         }
 
@@ -278,7 +282,7 @@ namespace TableManagmentApp
         /// </summary>
         private void OpenOutputFiles()
         {
-            outputPath = Application.StartupPath + DateTime.Now.ToString() + ".xls";
+            outputPath = Application.StartupPath + @"\izlaz.xls";
             outputSheet = new Worksheet("Sheet1");
             outputBook = new Workbook();
 

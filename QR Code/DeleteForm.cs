@@ -144,7 +144,7 @@ namespace QR_Code
         private void DeleteQRCodeFromTable(SqlConnection conn)
         {
             SqlCommand cmd;
-
+            
             // Try to open input table.
             book = new Workbook();
             try
@@ -364,6 +364,7 @@ namespace QR_Code
             using (SqlCommand cmd = new SqlCommand(cmdText, conn))
             {
                 cmd.Parameters.AddWithValue("@id", id);
+                cmd.CommandTimeout = 3600;
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     if (reader.HasRows)
