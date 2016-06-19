@@ -39,7 +39,6 @@
             this.lWorker = new System.Windows.Forms.Label();
             this.mMain = new System.Windows.Forms.MenuStrip();
             this.miOption = new System.Windows.Forms.ToolStripMenuItem();
-            this.izbrišiBazuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dodajToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.doctypeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.korisnikaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,6 +52,7 @@
             this.brojNalogaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tlpLower = new System.Windows.Forms.TableLayoutPanel();
             this.pGreen = new System.Windows.Forms.Panel();
+            this.cbCloseGreen = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.lGreenTableName = new System.Windows.Forms.Label();
             this.lNumFilesGreen = new System.Windows.Forms.Label();
@@ -61,6 +61,7 @@
             this.tbGreen = new System.Windows.Forms.TextBox();
             this.bCloseGreen = new System.Windows.Forms.Button();
             this.pRed = new System.Windows.Forms.Panel();
+            this.cbCloseRed = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.lRedTableName = new System.Windows.Forms.Label();
             this.lNumFilesRed = new System.Windows.Forms.Label();
@@ -69,6 +70,7 @@
             this.lRed = new System.Windows.Forms.Label();
             this.bCloseRed = new System.Windows.Forms.Button();
             this.pYellow = new System.Windows.Forms.Panel();
+            this.cbCloseYellow = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.lYellowTableName = new System.Windows.Forms.Label();
             this.lNumFilesYellow = new System.Windows.Forms.Label();
@@ -77,6 +79,7 @@
             this.tbYellow = new System.Windows.Forms.TextBox();
             this.bCloseYellow = new System.Windows.Forms.Button();
             this.pBlue = new System.Windows.Forms.Panel();
+            this.cbCloseBlue = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
             this.lBlueTableName = new System.Windows.Forms.Label();
             this.lNumFilesBlue = new System.Windows.Forms.Label();
@@ -85,10 +88,6 @@
             this.lBlue = new System.Windows.Forms.Label();
             this.bCloseBlue = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.cbCloseGreen = new System.Windows.Forms.CheckBox();
-            this.cbCloseRed = new System.Windows.Forms.CheckBox();
-            this.cbCloseYellow = new System.Windows.Forms.CheckBox();
-            this.cbCloseBlue = new System.Windows.Forms.CheckBox();
             this.pUpper.SuspendLayout();
             this.mMain.SuspendLayout();
             this.tlpLower.SuspendLayout();
@@ -111,14 +110,14 @@
             this.pUpper.Dock = System.Windows.Forms.DockStyle.Top;
             this.pUpper.Location = new System.Drawing.Point(0, 24);
             this.pUpper.Name = "pUpper";
-            this.pUpper.Size = new System.Drawing.Size(1017, 74);
+            this.pUpper.Size = new System.Drawing.Size(1017, 124);
             this.pUpper.TabIndex = 0;
             // 
             // lNotification
             // 
             this.lNotification.AutoSize = true;
             this.lNotification.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lNotification.Location = new System.Drawing.Point(538, 43);
+            this.lNotification.Location = new System.Drawing.Point(535, 71);
             this.lNotification.Name = "lNotification";
             this.lNotification.Size = new System.Drawing.Size(0, 31);
             this.lNotification.TabIndex = 12;
@@ -139,7 +138,7 @@
             this.tbQr.Multiline = true;
             this.tbQr.Name = "tbQr";
             this.tbQr.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
-            this.tbQr.Size = new System.Drawing.Size(458, 20);
+            this.tbQr.Size = new System.Drawing.Size(464, 50);
             this.tbQr.TabIndex = 10;
             this.tbQr.TextChanged += new System.EventHandler(this.QrCodeValueChanged);
             this.tbQr.Enter += new System.EventHandler(this.QrCodeEntered);
@@ -194,21 +193,11 @@
             // miOption
             // 
             this.miOption.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.izbrišiBazuToolStripMenuItem,
             this.dodajToolStripMenuItem,
             this.izbrišiToolStripMenuItem});
             this.miOption.Name = "miOption";
             this.miOption.Size = new System.Drawing.Size(53, 20);
             this.miOption.Text = "Opcije";
-            // 
-            // izbrišiBazuToolStripMenuItem
-            // 
-            this.izbrišiBazuToolStripMenuItem.Enabled = false;
-            this.izbrišiBazuToolStripMenuItem.Name = "izbrišiBazuToolStripMenuItem";
-            this.izbrišiBazuToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
-            this.izbrišiBazuToolStripMenuItem.Text = "Izbriši bazu";
-            this.izbrišiBazuToolStripMenuItem.Visible = false;
-            this.izbrišiBazuToolStripMenuItem.Click += new System.EventHandler(this.IzbrišiBazuToolStripMenuItem_Click);
             // 
             // dodajToolStripMenuItem
             // 
@@ -216,7 +205,7 @@
             this.doctypeToolStripMenuItem,
             this.korisnikaToolStripMenuItem});
             this.dodajToolStripMenuItem.Name = "dodajToolStripMenuItem";
-            this.dodajToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.dodajToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
             this.dodajToolStripMenuItem.Text = "Dodaj";
             // 
             // doctypeToolStripMenuItem
@@ -239,7 +228,7 @@
             this.qRCodeToolStripMenuItem,
             this.kutijuToolStripMenuItem});
             this.izbrišiToolStripMenuItem.Name = "izbrišiToolStripMenuItem";
-            this.izbrišiToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.izbrišiToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
             this.izbrišiToolStripMenuItem.Text = "Izbriši";
             // 
             // qRCodeToolStripMenuItem
@@ -306,12 +295,12 @@
             this.tlpLower.Controls.Add(this.pYellow, 2, 0);
             this.tlpLower.Controls.Add(this.pBlue, 3, 0);
             this.tlpLower.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpLower.Location = new System.Drawing.Point(0, 98);
+            this.tlpLower.Location = new System.Drawing.Point(0, 148);
             this.tlpLower.Name = "tlpLower";
             this.tlpLower.RowCount = 1;
             this.tlpLower.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpLower.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 396F));
-            this.tlpLower.Size = new System.Drawing.Size(1017, 396);
+            this.tlpLower.Size = new System.Drawing.Size(1017, 385);
             this.tlpLower.TabIndex = 2;
             // 
             // pGreen
@@ -328,8 +317,20 @@
             this.pGreen.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pGreen.Location = new System.Drawing.Point(3, 3);
             this.pGreen.Name = "pGreen";
-            this.pGreen.Size = new System.Drawing.Size(248, 390);
+            this.pGreen.Size = new System.Drawing.Size(248, 379);
             this.pGreen.TabIndex = 0;
+            // 
+            // cbCloseGreen
+            // 
+            this.cbCloseGreen.AutoSize = true;
+            this.cbCloseGreen.Enabled = false;
+            this.cbCloseGreen.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbCloseGreen.Location = new System.Drawing.Point(13, 311);
+            this.cbCloseGreen.Name = "cbCloseGreen";
+            this.cbCloseGreen.Size = new System.Drawing.Size(85, 28);
+            this.cbCloseGreen.TabIndex = 7;
+            this.cbCloseGreen.Text = "Zatvori";
+            this.cbCloseGreen.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -361,9 +362,10 @@
             // lStatusGreen
             // 
             this.lStatusGreen.AutoSize = true;
-            this.lStatusGreen.Location = new System.Drawing.Point(15, 300);
+            this.lStatusGreen.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lStatusGreen.Location = new System.Drawing.Point(9, 284);
             this.lStatusGreen.Name = "lStatusGreen";
-            this.lStatusGreen.Size = new System.Drawing.Size(92, 13);
+            this.lStatusGreen.Size = new System.Drawing.Size(154, 24);
             this.lStatusGreen.TabIndex = 3;
             this.lStatusGreen.Text = "Status: Zatvorena";
             // 
@@ -378,15 +380,16 @@
             // 
             // tbGreen
             // 
+            this.tbGreen.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbGreen.Location = new System.Drawing.Point(13, 62);
             this.tbGreen.Name = "tbGreen";
-            this.tbGreen.Size = new System.Drawing.Size(178, 20);
+            this.tbGreen.Size = new System.Drawing.Size(178, 29);
             this.tbGreen.TabIndex = 2;
             // 
             // bCloseGreen
             // 
             this.bCloseGreen.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.bCloseGreen.Location = new System.Drawing.Point(0, 355);
+            this.bCloseGreen.Location = new System.Drawing.Point(0, 344);
             this.bCloseGreen.Name = "bCloseGreen";
             this.bCloseGreen.Size = new System.Drawing.Size(248, 35);
             this.bCloseGreen.TabIndex = 3;
@@ -409,8 +412,20 @@
             this.pRed.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pRed.Location = new System.Drawing.Point(257, 3);
             this.pRed.Name = "pRed";
-            this.pRed.Size = new System.Drawing.Size(248, 390);
+            this.pRed.Size = new System.Drawing.Size(248, 379);
             this.pRed.TabIndex = 1;
+            // 
+            // cbCloseRed
+            // 
+            this.cbCloseRed.AutoSize = true;
+            this.cbCloseRed.Enabled = false;
+            this.cbCloseRed.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbCloseRed.Location = new System.Drawing.Point(19, 311);
+            this.cbCloseRed.Name = "cbCloseRed";
+            this.cbCloseRed.Size = new System.Drawing.Size(85, 28);
+            this.cbCloseRed.TabIndex = 9;
+            this.cbCloseRed.Text = "Zatvori";
+            this.cbCloseRed.UseVisualStyleBackColor = true;
             // 
             // label2
             // 
@@ -442,17 +457,19 @@
             // lStatusRed
             // 
             this.lStatusRed.AutoSize = true;
-            this.lStatusRed.Location = new System.Drawing.Point(21, 300);
+            this.lStatusRed.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lStatusRed.Location = new System.Drawing.Point(15, 284);
             this.lStatusRed.Name = "lStatusRed";
-            this.lStatusRed.Size = new System.Drawing.Size(92, 13);
+            this.lStatusRed.Size = new System.Drawing.Size(154, 24);
             this.lStatusRed.TabIndex = 5;
             this.lStatusRed.Text = "Status: Zatvorena";
             // 
             // tbRed
             // 
+            this.tbRed.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbRed.Location = new System.Drawing.Point(19, 62);
             this.tbRed.Name = "tbRed";
-            this.tbRed.Size = new System.Drawing.Size(178, 20);
+            this.tbRed.Size = new System.Drawing.Size(178, 29);
             this.tbRed.TabIndex = 4;
             // 
             // lRed
@@ -467,7 +484,7 @@
             // bCloseRed
             // 
             this.bCloseRed.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.bCloseRed.Location = new System.Drawing.Point(0, 355);
+            this.bCloseRed.Location = new System.Drawing.Point(0, 344);
             this.bCloseRed.Name = "bCloseRed";
             this.bCloseRed.Size = new System.Drawing.Size(248, 35);
             this.bCloseRed.TabIndex = 5;
@@ -490,8 +507,20 @@
             this.pYellow.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pYellow.Location = new System.Drawing.Point(511, 3);
             this.pYellow.Name = "pYellow";
-            this.pYellow.Size = new System.Drawing.Size(248, 390);
+            this.pYellow.Size = new System.Drawing.Size(248, 379);
             this.pYellow.TabIndex = 2;
+            // 
+            // cbCloseYellow
+            // 
+            this.cbCloseYellow.AutoSize = true;
+            this.cbCloseYellow.Enabled = false;
+            this.cbCloseYellow.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbCloseYellow.Location = new System.Drawing.Point(15, 311);
+            this.cbCloseYellow.Name = "cbCloseYellow";
+            this.cbCloseYellow.Size = new System.Drawing.Size(85, 28);
+            this.cbCloseYellow.TabIndex = 11;
+            this.cbCloseYellow.Text = "Zatvori";
+            this.cbCloseYellow.UseVisualStyleBackColor = true;
             // 
             // label3
             // 
@@ -523,9 +552,10 @@
             // lStatusYellow
             // 
             this.lStatusYellow.AutoSize = true;
-            this.lStatusYellow.Location = new System.Drawing.Point(17, 300);
+            this.lStatusYellow.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lStatusYellow.Location = new System.Drawing.Point(11, 284);
             this.lStatusYellow.Name = "lStatusYellow";
-            this.lStatusYellow.Size = new System.Drawing.Size(92, 13);
+            this.lStatusYellow.Size = new System.Drawing.Size(154, 24);
             this.lStatusYellow.TabIndex = 7;
             this.lStatusYellow.Text = "Status: Zatvorena";
             // 
@@ -540,15 +570,16 @@
             // 
             // tbYellow
             // 
+            this.tbYellow.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbYellow.Location = new System.Drawing.Point(15, 62);
             this.tbYellow.Name = "tbYellow";
-            this.tbYellow.Size = new System.Drawing.Size(178, 20);
+            this.tbYellow.Size = new System.Drawing.Size(178, 29);
             this.tbYellow.TabIndex = 6;
             // 
             // bCloseYellow
             // 
             this.bCloseYellow.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.bCloseYellow.Location = new System.Drawing.Point(0, 355);
+            this.bCloseYellow.Location = new System.Drawing.Point(0, 344);
             this.bCloseYellow.Name = "bCloseYellow";
             this.bCloseYellow.Size = new System.Drawing.Size(248, 35);
             this.bCloseYellow.TabIndex = 7;
@@ -571,8 +602,20 @@
             this.pBlue.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pBlue.Location = new System.Drawing.Point(765, 3);
             this.pBlue.Name = "pBlue";
-            this.pBlue.Size = new System.Drawing.Size(249, 390);
+            this.pBlue.Size = new System.Drawing.Size(249, 379);
             this.pBlue.TabIndex = 3;
+            // 
+            // cbCloseBlue
+            // 
+            this.cbCloseBlue.AutoSize = true;
+            this.cbCloseBlue.Enabled = false;
+            this.cbCloseBlue.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbCloseBlue.Location = new System.Drawing.Point(18, 311);
+            this.cbCloseBlue.Name = "cbCloseBlue";
+            this.cbCloseBlue.Size = new System.Drawing.Size(85, 28);
+            this.cbCloseBlue.TabIndex = 12;
+            this.cbCloseBlue.Text = "Zatvori";
+            this.cbCloseBlue.UseVisualStyleBackColor = true;
             // 
             // label4
             // 
@@ -604,17 +647,19 @@
             // lStatusBlue
             // 
             this.lStatusBlue.AutoSize = true;
-            this.lStatusBlue.Location = new System.Drawing.Point(20, 300);
+            this.lStatusBlue.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lStatusBlue.Location = new System.Drawing.Point(14, 284);
             this.lStatusBlue.Name = "lStatusBlue";
-            this.lStatusBlue.Size = new System.Drawing.Size(92, 13);
+            this.lStatusBlue.Size = new System.Drawing.Size(154, 24);
             this.lStatusBlue.TabIndex = 7;
             this.lStatusBlue.Text = "Status: Zatvorena";
             // 
             // tbBlue
             // 
+            this.tbBlue.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbBlue.Location = new System.Drawing.Point(18, 62);
             this.tbBlue.Name = "tbBlue";
-            this.tbBlue.Size = new System.Drawing.Size(178, 20);
+            this.tbBlue.Size = new System.Drawing.Size(178, 29);
             this.tbBlue.TabIndex = 8;
             // 
             // lBlue
@@ -629,7 +674,7 @@
             // bCloseBlue
             // 
             this.bCloseBlue.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.bCloseBlue.Location = new System.Drawing.Point(0, 355);
+            this.bCloseBlue.Location = new System.Drawing.Point(0, 344);
             this.bCloseBlue.Name = "bCloseBlue";
             this.bCloseBlue.Size = new System.Drawing.Size(249, 35);
             this.bCloseBlue.TabIndex = 9;
@@ -642,55 +687,11 @@
             // 
             this.errorProvider.ContainerControl = this;
             // 
-            // cbCloseGreen
-            // 
-            this.cbCloseGreen.AutoSize = true;
-            this.cbCloseGreen.Enabled = false;
-            this.cbCloseGreen.Location = new System.Drawing.Point(13, 332);
-            this.cbCloseGreen.Name = "cbCloseGreen";
-            this.cbCloseGreen.Size = new System.Drawing.Size(59, 17);
-            this.cbCloseGreen.TabIndex = 7;
-            this.cbCloseGreen.Text = "Zatvori";
-            this.cbCloseGreen.UseVisualStyleBackColor = true;
-            // 
-            // cbCloseRed
-            // 
-            this.cbCloseRed.AutoSize = true;
-            this.cbCloseRed.Enabled = false;
-            this.cbCloseRed.Location = new System.Drawing.Point(19, 332);
-            this.cbCloseRed.Name = "cbCloseRed";
-            this.cbCloseRed.Size = new System.Drawing.Size(59, 17);
-            this.cbCloseRed.TabIndex = 9;
-            this.cbCloseRed.Text = "Zatvori";
-            this.cbCloseRed.UseVisualStyleBackColor = true;
-            // 
-            // cbCloseYellow
-            // 
-            this.cbCloseYellow.AutoSize = true;
-            this.cbCloseYellow.Enabled = false;
-            this.cbCloseYellow.Location = new System.Drawing.Point(15, 332);
-            this.cbCloseYellow.Name = "cbCloseYellow";
-            this.cbCloseYellow.Size = new System.Drawing.Size(59, 17);
-            this.cbCloseYellow.TabIndex = 11;
-            this.cbCloseYellow.Text = "Zatvori";
-            this.cbCloseYellow.UseVisualStyleBackColor = true;
-            // 
-            // cbCloseBlue
-            // 
-            this.cbCloseBlue.AutoSize = true;
-            this.cbCloseBlue.Enabled = false;
-            this.cbCloseBlue.Location = new System.Drawing.Point(18, 332);
-            this.cbCloseBlue.Name = "cbCloseBlue";
-            this.cbCloseBlue.Size = new System.Drawing.Size(59, 17);
-            this.cbCloseBlue.TabIndex = 12;
-            this.cbCloseBlue.Text = "Zatvori";
-            this.cbCloseBlue.UseVisualStyleBackColor = true;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1017, 494);
+            this.ClientSize = new System.Drawing.Size(1017, 533);
             this.Controls.Add(this.tlpLower);
             this.Controls.Add(this.pUpper);
             this.Controls.Add(this.mMain);
@@ -761,7 +762,6 @@
         private System.Windows.Forms.Label lBlueTableName;
         private System.Windows.Forms.Label lNotification;
         private System.Windows.Forms.ToolStripMenuItem izveštajiToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem izbrišiBazuToolStripMenuItem;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;

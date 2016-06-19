@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -73,6 +74,27 @@ namespace QR_Code
 
         #endregion
 
+        #region Control number of files in boxes
+
+        /// <summary>
+        /// Number of files in green box before scaning.
+        /// </summary>
+        private int greenBoxNumOfFilesCtrl;
+
+        /// <summary>
+        /// Number of files in red box before scaning.
+        /// </summary>
+        private int redBoxNumOfFilesCtrl;
+        /// <summary>
+        /// Number of files in yellow box before scaning.
+        /// </summary>
+        private int yellowBoxNumOfFilesCtrl;
+        /// <summary>
+        /// Number of files in blue box before scaning.
+        /// </summary>
+        private int blueBoxNumOfFilesCtrl;
+
+        #endregion
         #endregion
 
         #region Constructors
@@ -98,15 +120,11 @@ namespace QR_Code
             this.jmbg = jmbg;
             if (jmbg.Equals("h.bogovac") || jmbg.Equals("admin1"))
             {
-                izbrišiBazuToolStripMenuItem.Enabled = true;
-                izbrišiBazuToolStripMenuItem.Visible = true;
                 izbrišiToolStripMenuItem.Enabled = true;
                 izbrišiToolStripMenuItem.Visible = true;
             }
             else
             {
-                izbrišiBazuToolStripMenuItem.Enabled = false;
-                izbrišiBazuToolStripMenuItem.Visible = false;
                 izbrišiToolStripMenuItem.Enabled = false;
                 izbrišiToolStripMenuItem.Visible = false;
             }
@@ -329,6 +347,8 @@ namespace QR_Code
                 {
                     //MessageBox.Show("QR kod koji ste uneli ne može biti raspoređen jer ne postoji doctype - " + doctype + ".");
                     //lNotification.Text = string.Empty;
+                    lNotification.Text = "";
+                    Thread.Sleep(100);
                     lNotification.Text = "Ne postoji doctype - " + doctype + ".";
                     lNotification.ForeColor = Color.Red;
                     return;
@@ -367,6 +387,8 @@ namespace QR_Code
                             lNotification.Text = "Nije moguće.";
                             return;
                     }
+                    lNotification.Text = "";
+                    Thread.Sleep(100);
                     lNotification.Text = "Uspešno ste upisali.";
                     lNotification.ForeColor = Color.Green;
 
@@ -380,7 +402,7 @@ namespace QR_Code
                     
                     using (SqlCommand command = new SqlCommand("SELECT [BoxCode] FROM [QRCode].[dbo].[BankTable] WHERE [ID] = @id", conn))
                     {
-                        command.CommandTimeout = 360;
+                        command.CommandTimeout = 500;
                         command.Parameters.AddWithValue("@id", id);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -401,6 +423,8 @@ namespace QR_Code
                 }
                 finally
                 {
+                    lNotification.Text = "";
+                    Thread.Sleep(100);
                     lNotification.Text = "QR kod je već upisan" + c;
                     lNotification.ForeColor = Color.Red;
                 }
@@ -653,7 +677,7 @@ namespace QR_Code
                 // Check if codes for RW report are inserted into database.
                 // List for QR Codes that dont have Filenumber added.
                 // If check box for closing was selected all codes from this box must have filenumbers assigned!
-
+                ColorButtons(1);
 
                 List<string> QRIDs = new List<string>();
                 int newCodes = CheckNumberOfCodes(tbGreen.Text,greenBoxNumOfFiles, ref QRIDs);
@@ -663,7 +687,7 @@ namespace QR_Code
                 {
                     if (newCodes > 0)
                     {
-                        MessageBox.Show("Potrebno je uneti {0} filenumber za kodove koje ste skenirali!", newCodes.ToString());
+                        MessageBox.Show("Potrebno je uneti " + newCodes.ToString() + " filenumber za kodove koje ste skenirali!");
                         return;
                     } 
                     else
@@ -693,10 +717,11 @@ namespace QR_Code
                     MessageBox.Show("Uneli ste filenumbere za sve kodove iz ove kutije!");
                 }
                 
-                
+
             }
             else if (greenBoxOpened == false)
             {
+                ColorButtons(0);
                 // Box was closed, open is possible only if box code is entered.
                 if (tbGreen.Text.Equals(string.Empty))
                 {
@@ -744,6 +769,7 @@ namespace QR_Code
                     }
                 }
             }
+            tbQr.Focus();
         }
 
         /// <summary>
@@ -755,6 +781,7 @@ namespace QR_Code
         {
             if (redBoxOpened)
             {
+                ColorButtons(2);
                 // Box was opened, remove box code and close it.
                 // Check if codes for RW report are inserted into database.
                 // List for QR Codes that dont have Filenumber added.
@@ -765,7 +792,7 @@ namespace QR_Code
                 {
                     if (newCodes > 0)
                     {
-                        MessageBox.Show("Potrebno je uneti {0} filenumber za kodove koje ste skenirali!", newCodes.ToString());
+                        MessageBox.Show("Potrebno je uneti " + newCodes.ToString() + " filenumber za kodove koje ste skenirali!");
                         return;
                     }
                     else
@@ -795,6 +822,7 @@ namespace QR_Code
             }
             else if (redBoxOpened == false)
             {
+                ColorButtons(0);
                 // Box was closed, open is possible only if box code is entered.
                 if (tbRed.Text.Equals(string.Empty))
                 {
@@ -842,6 +870,7 @@ namespace QR_Code
                     }
                 }
             }
+            tbQr.Focus();
         }
 
         /// <summary>
@@ -853,6 +882,7 @@ namespace QR_Code
         {
             if (yellowBoxOpened)
             {
+                ColorButtons(3);
                 // Box was opened, remove box code and close it.
                 // Check if codes for RW report are inserted into database.
                 // List for QR Codes that dont have Filenumber added.
@@ -864,7 +894,7 @@ namespace QR_Code
 
                     if (newCodes > 0)
                     {
-                        MessageBox.Show("Potrebno je uneti {0} filenumber za kodove koje ste skenirali!", newCodes.ToString());
+                        MessageBox.Show("Potrebno je uneti " + newCodes.ToString() + " filenumber za kodove koje ste skenirali!");
                         return;
                     }
                     else
@@ -891,10 +921,11 @@ namespace QR_Code
                 {
                     MessageBox.Show("Uneli ste filenumbere za sve kodove iz ove kutije!");
                 }
-
+                
             }
             else if (yellowBoxOpened == false)
             {
+                ColorButtons(0);
                 // Box was closed, open is possible only if box code is entered.
                 if (tbYellow.Text.Equals(string.Empty))
                 {
@@ -942,6 +973,7 @@ namespace QR_Code
 
                 }
             }
+            tbQr.Focus();
         }
 
         /// <summary>
@@ -953,6 +985,7 @@ namespace QR_Code
         {
             if (blueBoxOpened)
             {
+                ColorButtons(4);
                 // Box was opened, remove box code and close it.
                 // Check if codes for RW report are inserted into database.
                 // List for QR Codes that dont have Filenumber added.
@@ -963,7 +996,7 @@ namespace QR_Code
                 {
                     if (newCodes > 0)
                     {
-                        MessageBox.Show("Potrebno je uneti {0} filenumber za kodove koje ste skenirali!", newCodes.ToString());
+                        MessageBox.Show("Potrebno je uneti " + newCodes.ToString() + " filenumber za kodove koje ste skenirali!" );
                         return;
                     }
                     else
@@ -993,6 +1026,7 @@ namespace QR_Code
             }
             else if (blueBoxOpened == false)
             {
+                ColorButtons(0);
                 // Box was closed, open is possible only if box code is entered.
                 if (tbBlue.Text.Equals(string.Empty))
                 {
@@ -1015,7 +1049,7 @@ namespace QR_Code
                         errorProvider.SetError(tbBlue, string.Empty);
                         blueBoxOpened = true;
                         lStatusBlue.Text = "Status: Otvorena";
-                        ((Button)sender).Text = "Zatvori";
+                        ((Button)sender).Text = "Unesi filenumber";
                         lNumFilesBlue.Text = "Broj fajlova u kutiji: " + blueBoxNumOfFiles;
                         tbBlue.Enabled = false;
                         cbCloseBlue.Enabled = true;
@@ -1040,6 +1074,7 @@ namespace QR_Code
 
                 }
             }
+            tbQr.Focus();
         }
 
         /// <summary>
@@ -1071,13 +1106,28 @@ namespace QR_Code
         private void QrCodeValueChanged(object sender, EventArgs e)
         {
             TextBox textBox = (TextBox)sender;
-            int textLength = textBox.Text.Length;
-            textBox.Text.Trim();
-            if (textLength > 0 && textBox.Text.Last().Equals('}'))
+            
+            //textBox.Text = textBox.Text.Trim();
+            if (Regex.IsMatch(textBox.Text, @"{((.|\n)*)}"))
             {
-                GetQrCodeAndWrite(textBox.Text);
-                textBox.Clear();
-                textBox.SelectionStart = 0;
+                while (textBox.Text.EndsWith("\r\n"))
+                {
+                    textBox.Text = textBox.Text.Remove(textBox.Text.LastIndexOf("\r\n"), 1);
+                }
+                int textLength = textBox.Text.Length;
+                if (textLength > 0 && textBox.Text.Last().Equals('}'))
+                {
+                    // Set control number of files to check if error appears.
+                    SetCtrlNumberOfFiles();
+                    GetQrCodeAndWrite(textBox.Text);
+                    textBox.Clear();
+                    textBox.SelectionStart = 0;
+                    if (!CheckCtrlNumberOfFiles())
+                    {
+                        MessageBox.Show("Desila se greska, proverite da li se kodovi skeniraju!");
+                    }
+                }
+                ColorButtons(0);
             }
         }
 
@@ -1209,7 +1259,79 @@ namespace QR_Code
         #endregion
 
         
+        /// <summary>
+        /// Colors buttons depending on indicator.
+        /// </summary>
+        /// <param name="indicator">0 - don't color, 1 - first button and etc.</param>
+        private void ColorButtons(int indicator)
+        {
+            switch (indicator)
+            {
+                case 0:
+                    bCloseGreen.BackColor = Color.White;
+                    bCloseRed.BackColor = Color.White; ;
+                    bCloseYellow.BackColor = Color.White; 
+                    bCloseBlue.BackColor = Color.White;
+                    break;
+                case 1:
+                    bCloseGreen.BackColor = Color.Red;
+                    bCloseRed.BackColor = Color.White; ;
+                    bCloseYellow.BackColor = Color.White;
+                    bCloseBlue.BackColor = Color.White;
+                    break;
+                case 2:
+                    bCloseGreen.BackColor = Color.White;
+                    bCloseRed.BackColor = Color.Red; ;
+                    bCloseYellow.BackColor = Color.White;
+                    bCloseBlue.BackColor = Color.White;
+                    break;
+                case 3:
+                    bCloseGreen.BackColor = Color.White;
+                    bCloseRed.BackColor = Color.White; ;
+                    bCloseYellow.BackColor = Color.Red;
+                    bCloseBlue.BackColor = Color.White;
+                    break;
+                case 4:
+                    bCloseGreen.BackColor = Color.White;
+                    bCloseRed.BackColor = Color.White; ;
+                    bCloseYellow.BackColor = Color.White;
+                    bCloseBlue.BackColor = Color.Red;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Set number of files to control variables - the values before scaning.
+        /// If scaning is successful and the numbers haven't changed some error appears.
+        /// </summary>
+        private void SetCtrlNumberOfFiles()
+        {
+            greenBoxNumOfFilesCtrl = greenBoxNumOfFiles;
+            redBoxNumOfFilesCtrl = redBoxNumOfFiles;
+            yellowBoxNumOfFilesCtrl = yellowBoxNumOfFiles;
+            blueBoxNumOfFilesCtrl = blueBoxNumOfFiles;
+        }
+
+        /// <summary>
+        /// Checks if error appears to solve bug.
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckCtrlNumberOfFiles()
+        {
+            if ((greenBoxNumOfFiles == greenBoxNumOfFilesCtrl 
+                && redBoxNumOfFiles == redBoxNumOfFilesCtrl 
+                && yellowBoxNumOfFiles == yellowBoxNumOfFilesCtrl
+                && blueBoxNumOfFiles == blueBoxNumOfFilesCtrl) && lNotification.ForeColor.Equals(Color.Green))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
 
 
+        
     }
 }
