@@ -320,6 +320,10 @@ namespace QR_Code
             }
             
         }
+
+
+
+
         #endregion
     }
 }

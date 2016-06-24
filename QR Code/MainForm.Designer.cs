@@ -142,6 +142,7 @@
             this.tbQr.TabIndex = 10;
             this.tbQr.TextChanged += new System.EventHandler(this.QrCodeValueChanged);
             this.tbQr.Enter += new System.EventHandler(this.QrCodeEntered);
+            this.tbQr.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbQr_KeyDown);
             // 
             // lQr
             // 

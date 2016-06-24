@@ -1331,7 +1331,18 @@ namespace QR_Code
             }
         }
 
-
-        
+        /// <summary>
+        /// Used for CTRL+A on QRCode.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tbQr_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.A)
+            {
+                if (sender != null)
+                    ((TextBox)sender).SelectAll();
+            }
+        }
     }
 }
