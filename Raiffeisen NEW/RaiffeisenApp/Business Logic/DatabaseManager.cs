@@ -190,6 +190,125 @@ namespace BusinessLogic
                 return -1;
             }
         }
+
+        public List<string> GetCodeWithoutFileNumberByBox(string boxCode)
+        {
+            List<string> ret = new List<string>(500);
+
+            try
+            {
+                using (SqlCommand command = new SqlCommand("SELECT ID FROM PartCodes WHERE FileNumber IS NULL AND BoxCode = @boxCode ", SqlConnection))
+                {
+                    command.Parameters.AddWithValue("@boxCode", boxCode);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while(reader.Read())
+                            {
+                                ret.Add((string)reader["ID"]);
+                            }
+                        }
+                    }
+                }
+            }
+            catch(Exception)
+            {
+                ret = null;
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Checks if fileNumber code is previously added.
+        /// </summary>
+        /// <param name="fileNum">Code to be added.</param>
+        /// <returns>Indicator if code exists. TRUE - exists or error, FALSE - doesn't</returns>
+        public bool CheckPreviousFileNumberCodes(string fileNum)
+        {
+            try
+            {
+                using (SqlCommand command = new SqlCommand("SELECT ID FROM PartCodes WHERE FileNumber = @fileNum", SqlConnection))
+                {
+                    command.CommandTimeout = 3600;
+                    command.Parameters.AddWithValue("fileNum", fileNum);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        // Code already used
+                        if (reader.HasRows)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Adds fileNumber to corresponding ids. Number of fileNumbers and ids MUST MATCH.
+        /// </summary>
+        /// <param name="fileNums">List of fileNumbers.</param>
+        /// <param name="ids">List of ids.</param>
+        /// <returns></returns>
+        public bool AddFileNumbersToPartialCode(List<string> fileNums, List<string> ids)
+        {
+            bool ret = false;
+            SqlTransaction sqlTransaction = SqlConnection.BeginTransaction();
+            try
+            {
+                using (SqlCommand command = new SqlCommand("UPDATE PartCodes SET FileNumber = @fileNum WHERE ID = @id", SqlConnection,sqlTransaction))
+                {
+                    int k = 0;
+                    for (int i = 0; i < ids.Count; i++)
+                    {
+                        command.Parameters.AddWithValue("@id", ids[i]);
+                        if (i != 0 && i % 20 == 0)
+                        {
+                            k++;
+                        }
+
+                        command.Parameters.AddWithValue("@fileNum", fileNums[k]);
+                        command.ExecuteNonQuery();
+                        command.Parameters.Clear();
+                    }
+
+                    sqlTransaction.Commit();
+                    ret = true;
+                }
+            }
+            catch(Exception)
+            {
+                sqlTransaction.Rollback();
+                ret = false;
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Calculates number of needed fileNumbers.
+        /// </summary>
+        /// <param name="numberOfFiles">Number of files.</param>
+        /// <returns>Calculated number of fileNumbers.</returns>
+        public int CalculateNumberOfCodes(int numberOfFiles)
+        {
+            int ret = 0;
+            ret = numberOfFiles / 20;
+            if (numberOfFiles % 20 != 0)
+            {
+                ret++;
+            }
+            return ret;
+        }
         #endregion
     }
 }

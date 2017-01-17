@@ -50,7 +50,6 @@ namespace Gui
 
         #endregion
 
-
         #region Private methods
 
         private void SetError(string message)
@@ -134,6 +133,14 @@ namespace Gui
         {
             if (boxOpened)
             {
+                List<string> codeWithoutFileNums = _databaseManager.GetCodeWithoutFileNumberByBox(tbBoxCode.Text);
+
+                if (codeWithoutFileNums != null && codeWithoutFileNums.Count > 0)
+                {
+                    FileNumDialog dialog = new FileNumDialog(codeWithoutFileNums,_databaseManager);
+                    dialog.ShowDialog();
+                }
+
                 if (cbCloseBox.Checked)
                 {
                     boxOpened = false;

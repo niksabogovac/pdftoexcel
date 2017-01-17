@@ -155,7 +155,6 @@ namespace QR_Code
                 MessageBox.Show("Desila se greska!");
                 return false;
             }
-            
         }
       
     }
