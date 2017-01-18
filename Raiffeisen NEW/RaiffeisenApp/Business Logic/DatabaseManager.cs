@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ExcelLibrary.SpreadSheet;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -309,6 +310,79 @@ namespace BusinessLogic
             }
             return ret;
         }
+
+        /// <summary>
+        /// Generates report from current database snapshot. Uses only IDs that have fileNumbers assigned. 
+        /// Also it can generate reports by box code OR order numbers.
+        /// <param name="boxCode">Box code provided.</param>
+        /// <param name="orderNum">Order number provided.</param>
+        /// </summary>
+        public bool GenerateReport(string boxCode, string orderNum)
+        {
+            string outputPath = ConfigurationManager.AppSettings["reportOutputPath"];
+            Worksheet outputSheet = new Worksheet("Sheet1");
+            Workbook outputBook = new Workbook();
+
+
+            int curRow = 0;
+            int curCol = 0;
+
+            outputSheet.Cells[curRow, curCol++] = new Cell("ID");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Broj naloga");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Kutija");
+            outputSheet.Cells[curRow++, curCol] = new Cell("File number");
+
+            curCol = 0;
+
+            string commandText = string.Empty;
+
+            if (boxCode == null && orderNum != null)
+            {
+                commandText = "SELECT * FROM PartCodes WHERE FileNumber IS NOT NULL AND OrderNum = @orderNum";
+            }
+            else if (boxCode != null & orderNum == null)
+            {
+                commandText = "SELECT * FROM PartCodes WHERE FileNumber IS NOT NULL AND BoxCode = @boxCode";
+            }
+
+            using (SqlCommand command = new SqlCommand(commandText, SqlConnection))
+            {
+                if (boxCode == null && orderNum != null)
+                {
+                    command.Parameters.AddWithValue("@orderNum", orderNum);
+                }
+                else if (boxCode != null & orderNum == null)
+                {
+                    command.Parameters.AddWithValue("@boxCode", boxCode);
+                }
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["ID"]);
+                            outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["OrderNum"]);
+                            outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["BoxCode"]);
+                            outputSheet.Cells[curRow++, curCol] = new Cell((string)reader["FileNumber"]);
+                            curCol = 0;
+                        }
+                    }
+                    try
+                    {
+                        outputBook.Worksheets.Add(outputSheet);
+                        outputBook.Save(outputPath);
+                        return true;
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
         #endregion
     }
 }

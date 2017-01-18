@@ -30,6 +30,11 @@ namespace Gui
         private Regex boxCodeRegex = new Regex(@"(RSRFBA)[0-9]{2}C-[0-9]{5}");
 
         /// <summary>
+        /// Length of box code.
+        /// </summary>
+        private readonly int BOX_CODE_LENGTH = 15;
+
+        /// <summary>
         /// Regex for 1d codes.
         /// </summary>
         private Regex simpleCodeRegex = new Regex(@"RQ[0-9]{8}");
@@ -157,7 +162,7 @@ namespace Gui
             {
                 string boxCode = tbBoxCode.Text.Trim(' ');
                 // Check if box code is correct.
-                if (!boxCodeRegex.IsMatch(boxCode) || tbBoxCode.Text.Length != 15)
+                if (!boxCodeRegex.IsMatch(boxCode) || tbBoxCode.Text.Length != BOX_CODE_LENGTH)
                 {
                     SetError("Nije unet dobar broj kutije!");
                 }
@@ -225,8 +230,13 @@ namespace Gui
             }
         }
 
-        #endregion
+        private void izvestajiToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            ReportDialog dialog = new ReportDialog(_databaseManager);
+            dialog.ShowDialog();
+        }
 
+        #endregion
 
     }
 }
