@@ -14,7 +14,6 @@ namespace Gui
 {
     public partial class ReportDialog : Form
     {
-        private DatabaseManager _databaseManager;
         /// <summary>
         /// Regex for box codes.
         /// </summary>
@@ -27,12 +26,6 @@ namespace Gui
             InitializeComponent();
         }
 
-        public ReportDialog(DatabaseManager dbMan)
-        {
-            InitializeComponent();
-            _databaseManager = dbMan;
-        }
-
         private void button1Click(object sender, EventArgs e)
         {
             
@@ -40,7 +33,7 @@ namespace Gui
             {
                 if (boxCodeRegex.IsMatch(tbValue.Text) && tbValue.Text.Length == BOX_CODE_LENGTH)
                 {
-                    if (_databaseManager.GenerateReport(tbValue.Text, null))
+                    if (ReportManager.GenerateReport(tbValue.Text, null))
                     {
                         MessageBox.Show("Uspešno generisan izveštaj!");
                     }
@@ -59,7 +52,7 @@ namespace Gui
                 int tmp;
                 if (Int32.TryParse(tbValue.Text,out tmp))
                 {
-                    if (_databaseManager.GenerateReport(null,tbValue.Text))
+                    if (ReportManager.GenerateReport(null,tbValue.Text))
                     {
                         MessageBox.Show("Uspešno generisan izveštaj!");
                     }

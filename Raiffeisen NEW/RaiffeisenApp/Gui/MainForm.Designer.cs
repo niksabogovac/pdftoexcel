@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Kutija5));
             this.lOrderNum = new System.Windows.Forms.Label();
             this.tbOrderNum = new System.Windows.Forms.TextBox();
             this.tbCode = new System.Windows.Forms.TextBox();
@@ -37,9 +38,10 @@
             this.lBoxCode = new System.Windows.Forms.Label();
             this.tbBoxCode = new System.Windows.Forms.TextBox();
             this.lReport = new System.Windows.Forms.Label();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.izvestajiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuStrip1.SuspendLayout();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // lOrderNum
@@ -133,28 +135,42 @@
             this.lReport.Size = new System.Drawing.Size(0, 39);
             this.lReport.TabIndex = 8;
             // 
-            // menuStrip1
+            // toolStrip1
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.izvestajiToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(530, 24);
-            this.menuStrip1.TabIndex = 100;
-            this.menuStrip1.Text = "menuStrip1";
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton1,
+            this.toolStripButton2});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(530, 25);
+            this.toolStrip1.TabIndex = 101;
+            this.toolStrip1.Text = "toolStrip1";
             // 
-            // izvestajiToolStripMenuItem
+            // toolStripButton1
             // 
-            this.izvestajiToolStripMenuItem.Name = "izvestajiToolStripMenuItem";
-            this.izvestajiToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
-            this.izvestajiToolStripMenuItem.Text = "Izvestaji";
-            this.izvestajiToolStripMenuItem.Click += new System.EventHandler(this.izvestajiToolStripMenuItemClick);
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(65, 22);
+            this.toolStripButton1.Text = "Izveštaj";
+            this.toolStripButton1.ToolTipText = "Izveštaj";
+            this.toolStripButton1.Click += new System.EventHandler(this.reportToolStripClicked);
+            // 
+            // toolStripButton2
+            // 
+            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
+            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.Size = new System.Drawing.Size(63, 22);
+            this.toolStripButton2.Text = "Import";
+            this.toolStripButton2.Click += new System.EventHandler(this.importToolStripClicked);
             // 
             // Kutija5
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(530, 469);
+            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.lReport);
             this.Controls.Add(this.tbBoxCode);
             this.Controls.Add(this.lBoxCode);
@@ -164,13 +180,11 @@
             this.Controls.Add(this.tbCode);
             this.Controls.Add(this.tbOrderNum);
             this.Controls.Add(this.lOrderNum);
-            this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Kutija5";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Kutija5";
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -187,8 +201,9 @@
         private System.Windows.Forms.Label lBoxCode;
         private System.Windows.Forms.TextBox tbBoxCode;
         private System.Windows.Forms.Label lReport;
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem izvestajiToolStripMenuItem;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton toolStripButton2;
     }
 }
 

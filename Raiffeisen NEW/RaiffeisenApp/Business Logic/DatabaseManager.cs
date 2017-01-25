@@ -10,9 +10,8 @@ using static BusinessLogic.Enums;
 
 namespace BusinessLogic
 {
-    public class DatabaseManager
+    public static class DatabaseManager
     {
-
         #region Private members
 
         // Single instance of database connection.
@@ -40,22 +39,13 @@ namespace BusinessLogic
 
         #endregion
 
-        #region Constructors
-
-        public DatabaseManager()
-        {
-
-        }
-
-        #endregion
-
         #region Private methods
 
         /// <summary>
         /// Updates values of nubmer of files in box when new values are scaned.
         /// </summary>
         /// <param name="boxCode">Code of box to be updated.</param>
-        private void UpdateBoxTable(string boxCode)
+        private static void UpdateBoxTable(string boxCode)
         {
             using (SqlCommand command = new SqlCommand("UPDATE [QRCode].[dbo].[Box] SET [NumberOfFiles] = (SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode) + 1  WHERE [Code] = @boxCode", SqlConnection))
             {
@@ -77,17 +67,18 @@ namespace BusinessLogic
         /// <param name="boxCode">Code of box where code is stored.</param>
         /// <param name="exceptionCode">In case of excepetion its code is set here.</param>
         /// <returns>Indicator of success.</returns>
-        public bool InsertNewPartialCode(string id, string orderNum, string boxCode, out int exceptionCode)
+        public static bool InsertNewPartialCode(string id, string orderNum, string boxCode,DateTime date, out int exceptionCode)
         {
             exceptionCode = -1;
             try
             {
                 // Add new entry for partial code.
-                using (SqlCommand command = new SqlCommand("INSERT INTO [QrCode].[dbo].[PartCodes] ([ID],[OrderNum],[BoxCode]) VALUES (@id,@orderNum,@boxCode)", SqlConnection))
+                using (SqlCommand command = new SqlCommand("INSERT INTO [QrCode].[dbo].[PartCodes] ([ID],[OrderNum],[BoxCode],[Date]) VALUES (@id,@orderNum,@boxCode,@date)", SqlConnection))
                 {
                     command.Parameters.AddWithValue("@id", id);
                     command.Parameters.AddWithValue("@orderNum", orderNum);
                     command.Parameters.AddWithValue("@boxCode", boxCode);
+                    command.Parameters.AddWithValue("@date", date);
                     command.ExecuteNonQuery();
                 }
                 // Update box table.
@@ -111,7 +102,7 @@ namespace BusinessLogic
         /// </summary>
         /// <param name="boxCode">Code of new box.</param>
         /// <returns>Indicator of success.</returns>
-        public bool InsertNewBox(string boxCode)
+        public static bool InsertNewBox(string boxCode)
         {
             try
             {
@@ -136,7 +127,7 @@ namespace BusinessLogic
         /// <param name="boxCode">Code to check.</param>
         /// <param name="boxType">Type of box if box exists.</param>
         /// <returns>Indicator of success.</returns>
-        public bool CheckIfType5BoxExists(string boxCode, out int boxType)
+        public static bool CheckIfType5BoxExists(string boxCode, out int boxType)
         {
             boxType = 0;
             try
@@ -168,7 +159,7 @@ namespace BusinessLogic
         /// </summary>
         /// <param name="boxCode">Code of box.</param>
         /// <returns>Number of files.</returns>
-        public int GetNumberOfFileFromBox(string boxCode)
+        public static int GetNumberOfFileFromBox(string boxCode)
         {
             try
             {
@@ -192,7 +183,7 @@ namespace BusinessLogic
             }
         }
 
-        public List<string> GetCodeWithoutFileNumberByBox(string boxCode)
+        public static List<string> GetCodeWithoutFileNumberByBox(string boxCode)
         {
             List<string> ret = new List<string>(500);
 
@@ -226,7 +217,7 @@ namespace BusinessLogic
         /// </summary>
         /// <param name="fileNum">Code to be added.</param>
         /// <returns>Indicator if code exists. TRUE - exists or error, FALSE - doesn't</returns>
-        public bool CheckPreviousFileNumberCodes(string fileNum)
+        public static bool CheckPreviousFileNumberCodes(string fileNum)
         {
             try
             {
@@ -260,7 +251,7 @@ namespace BusinessLogic
         /// <param name="fileNums">List of fileNumbers.</param>
         /// <param name="ids">List of ids.</param>
         /// <returns></returns>
-        public bool AddFileNumbersToPartialCode(List<string> fileNums, List<string> ids)
+        public static bool AddFileNumbersToPartialCode(List<string> fileNums, List<string> ids)
         {
             bool ret = false;
             SqlTransaction sqlTransaction = SqlConnection.BeginTransaction();
@@ -294,95 +285,7 @@ namespace BusinessLogic
 
             return ret;
         }
-
-        /// <summary>
-        /// Calculates number of needed fileNumbers.
-        /// </summary>
-        /// <param name="numberOfFiles">Number of files.</param>
-        /// <returns>Calculated number of fileNumbers.</returns>
-        public int CalculateNumberOfCodes(int numberOfFiles)
-        {
-            int ret = 0;
-            ret = numberOfFiles / 20;
-            if (numberOfFiles % 20 != 0)
-            {
-                ret++;
-            }
-            return ret;
-        }
-
-        /// <summary>
-        /// Generates report from current database snapshot. Uses only IDs that have fileNumbers assigned. 
-        /// Also it can generate reports by box code OR order numbers.
-        /// <param name="boxCode">Box code provided.</param>
-        /// <param name="orderNum">Order number provided.</param>
-        /// </summary>
-        public bool GenerateReport(string boxCode, string orderNum)
-        {
-            string outputPath = ConfigurationManager.AppSettings["reportOutputPath"];
-            Worksheet outputSheet = new Worksheet("Sheet1");
-            Workbook outputBook = new Workbook();
-
-
-            int curRow = 0;
-            int curCol = 0;
-
-            outputSheet.Cells[curRow, curCol++] = new Cell("ID");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Broj naloga");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Kutija");
-            outputSheet.Cells[curRow++, curCol] = new Cell("File number");
-
-            curCol = 0;
-
-            string commandText = string.Empty;
-
-            if (boxCode == null && orderNum != null)
-            {
-                commandText = "SELECT * FROM PartCodes WHERE FileNumber IS NOT NULL AND OrderNum = @orderNum";
-            }
-            else if (boxCode != null & orderNum == null)
-            {
-                commandText = "SELECT * FROM PartCodes WHERE FileNumber IS NOT NULL AND BoxCode = @boxCode";
-            }
-
-            using (SqlCommand command = new SqlCommand(commandText, SqlConnection))
-            {
-                if (boxCode == null && orderNum != null)
-                {
-                    command.Parameters.AddWithValue("@orderNum", orderNum);
-                }
-                else if (boxCode != null & orderNum == null)
-                {
-                    command.Parameters.AddWithValue("@boxCode", boxCode);
-                }
-
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["ID"]);
-                            outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["OrderNum"]);
-                            outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["BoxCode"]);
-                            outputSheet.Cells[curRow++, curCol] = new Cell((string)reader["FileNumber"]);
-                            curCol = 0;
-                        }
-                    }
-                    try
-                    {
-                        outputBook.Worksheets.Add(outputSheet);
-                        outputBook.Save(outputPath);
-                        return true;
-                    }
-                    catch (Exception)
-                    {
-                        return false;
-                    }
-                }
-            }
-        }
-
+ 
         #endregion
     }
 }

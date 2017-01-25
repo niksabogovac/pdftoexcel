@@ -15,10 +15,6 @@ namespace Gui
     public partial class FileNumDialog : Form
     {
         /// <summary>
-        /// Reference to databaseManager.
-        /// </summary>
-        private DatabaseManager _databaseManager;
-        /// <summary>
         /// Number of codes to add fileNumber.
         /// </summary>
         private int _codeNums;
@@ -38,12 +34,11 @@ namespace Gui
             InitializeComponent();
         }
 
-        public FileNumDialog(List<string> idCodes, DatabaseManager databaseManager)
+        public FileNumDialog(List<string> idCodes)
         {
             InitializeComponent();
-            _databaseManager = databaseManager;
 
-            _codeNums = _databaseManager.CalculateNumberOfCodes(idCodes.Count);
+            _codeNums = DataParser.CalculateNumberOfCodes(idCodes.Count);
             _idCodes = idCodes;
             lText.Text = "Preostali broj kodova za unos: " + _codeNums;
         }
@@ -52,7 +47,7 @@ namespace Gui
         {
             if (reg.IsMatch(tbCode.Text) && tbCode.Text.Length == 15)
             {
-                if (!_databaseManager.CheckPreviousFileNumberCodes(tbCode.Text) && !_currentFileNums.Contains(tbCode.Text))
+                if (!DatabaseManager.CheckPreviousFileNumberCodes(tbCode.Text) && !_currentFileNums.Contains(tbCode.Text))
                 {
                     _currentFileNums.Add(tbCode.Text);
                     lText.Text = "Preostali broj kodova za unos: " + --_codeNums;
@@ -63,7 +58,7 @@ namespace Gui
                     }
                     else
                     {
-                        if (!_databaseManager.AddFileNumbersToPartialCode(_currentFileNums, _idCodes))
+                        if (!DatabaseManager.AddFileNumbersToPartialCode(_currentFileNums, _idCodes))
                         {
                             MessageBox.Show("Desila se greška, pokušajte ponovo!");
                         }

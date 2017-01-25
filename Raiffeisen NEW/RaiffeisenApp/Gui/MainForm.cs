@@ -17,7 +17,6 @@ namespace Gui
     {
         #region Private members
 
-        private DatabaseManager _databaseManager = new DatabaseManager();
 
         /// <summary>
         /// Indicator if box is opened.
@@ -42,7 +41,7 @@ namespace Gui
         /// <summary>
         /// Regex for qr codes.
         /// </summary>
-        private Regex qrCodeRegex = new Regex("{\"1\":\".*\",\"2\":\"RQ[0-9]{8}\",\"4\":\".*\",\"10\":\"RQ[0-9]{8}\"}");
+        private Regex qrCodeRegex = new Regex("{\"1\":\".*\",\"2\":\".*\",\"4\":\".*\",\"10\":\".*\"}");
 
         #endregion
 
@@ -71,7 +70,7 @@ namespace Gui
 
         private void UpdateNumberOfFiles(string boxCode)
         {
-            lNumberOfFiles.Text = "Broj fajlova u kutiji: " + _databaseManager.GetNumberOfFileFromBox(boxCode).ToString();
+            lNumberOfFiles.Text = "Broj fajlova u kutiji: " + DatabaseManager.GetNumberOfFileFromBox(boxCode).ToString();
         }
 
         /// <summary>
@@ -84,7 +83,7 @@ namespace Gui
         {
             int errorNum;
             // Try to insert to database.
-            if (_databaseManager.InsertNewPartialCode(code, orderNum, boxCode, out errorNum))
+            if (DatabaseManager.InsertNewPartialCode(code, orderNum, boxCode,DateTime.Now, out errorNum))
             {
                 UpdateNumberOfFiles(tbBoxCode.Text);
                 tbCode.Clear();
@@ -101,6 +100,7 @@ namespace Gui
                 {
                     SetError("Kod je neuspešno učitan!");
                 }
+                tbCode.Clear();
             }
         }
 
@@ -138,11 +138,11 @@ namespace Gui
         {
             if (boxOpened)
             {
-                List<string> codeWithoutFileNums = _databaseManager.GetCodeWithoutFileNumberByBox(tbBoxCode.Text);
+                List<string> codeWithoutFileNums = DatabaseManager.GetCodeWithoutFileNumberByBox(tbBoxCode.Text);
 
                 if (codeWithoutFileNums != null && codeWithoutFileNums.Count > 0)
                 {
-                    FileNumDialog dialog = new FileNumDialog(codeWithoutFileNums,_databaseManager);
+                    FileNumDialog dialog = new FileNumDialog(codeWithoutFileNums);
                     dialog.ShowDialog();
                 }
 
@@ -170,9 +170,9 @@ namespace Gui
                 {
                     int boxType;
                     // Check if box already exists.
-                    if (!_databaseManager.CheckIfType5BoxExists(boxCode, out boxType))
+                    if (!DatabaseManager.CheckIfType5BoxExists(boxCode, out boxType))
                     {
-                        if (!_databaseManager.InsertNewBox(boxCode))
+                        if (!DatabaseManager.InsertNewBox(boxCode))
                         {
                             SetError("Ne može se dodati nova kutija!");
                         }
@@ -207,36 +207,42 @@ namespace Gui
 
         private void tbCodeTextChanged(object sender, EventArgs e)
         {
-            if (simpleCodeRegex.IsMatch(tbCode.Text) && tbCode.Text.Length < 11)
+            if (simpleCodeRegex.IsMatch(tbCode.Text))
             {
-                TryInsertPartialCode(tbBoxCode.Text, tbOrderNum.Text, tbBoxCode.Text);
+                TryInsertPartialCode(tbCode.Text, tbOrderNum.Text, tbBoxCode.Text);
             }
             else if (qrCodeRegex.IsMatch(tbCode.Text))
             {
-                MatchCollection ids = simpleCodeRegex.Matches(tbCode.Text);
-                if (ids.Count != 2)
-                {
-                    SetError("Format QRCodea nije odgovarajući!");
-                }
-                else if (ids[0].ToString() == ids[1].ToString())
-                {
-                    TryInsertPartialCode(ids[0].ToString(), tbOrderNum.Text, tbBoxCode.Text);
-                }
-                else
-                {
-                    SetError("Format QRCodea nije odgovarajući!");
-                }
-
+                TryInsertPartialCode(DataParser.GetIdFromQrCode(tbCode.Text), tbOrderNum.Text, tbBoxCode.Text);
             }
         }
 
-        private void izvestajiToolStripMenuItemClick(object sender, EventArgs e)
+        private void reportToolStripClicked(object sender, EventArgs e)
         {
-            ReportDialog dialog = new ReportDialog(_databaseManager);
+            ReportDialog dialog = new ReportDialog();
             dialog.ShowDialog();
         }
 
+        private void importToolStripClicked(object sender, EventArgs e)
+        {
+            OpenFileDialog diag = new OpenFileDialog();
+            diag.Filter = "Excel Files (*.xls)|*.xls";
+            if (diag.ShowDialog() == DialogResult.OK)
+            {
+                if (ReportManager.ImportData(diag.FileName))
+                {
+                    MessageBox.Show("Importovanje podataka završeno!");
+                }
+                else
+                {
+                    MessageBox.Show("Neuspešno importovanje podataka! Proverite da li je fajl otvoren!");
+                }
+                
+            }
+        }
+
         #endregion
+
 
     }
 }
