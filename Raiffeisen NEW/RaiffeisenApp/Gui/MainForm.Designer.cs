@@ -124,7 +124,6 @@
             this.tbBoxCode.Name = "tbBoxCode";
             this.tbBoxCode.Size = new System.Drawing.Size(506, 38);
             this.tbBoxCode.TabIndex = 3;
-            this.tbBoxCode.Text = "RSRFBA01C-00001";
             // 
             // lReport
             // 
@@ -180,6 +179,7 @@
             this.Controls.Add(this.tbCode);
             this.Controls.Add(this.tbOrderNum);
             this.Controls.Add(this.lOrderNum);
+            this.MinimumSize = new System.Drawing.Size(546, 508);
             this.Name = "Kutija5";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Kutija5";

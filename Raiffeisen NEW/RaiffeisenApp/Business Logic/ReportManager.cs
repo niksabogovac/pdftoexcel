@@ -29,7 +29,7 @@ namespace BusinessLogic
         /// </summary>
         public static bool GenerateReport(string boxCode, string orderNum)
         {
-            string outputPath = ConfigurationManager.AppSettings["reportOutputPath"];
+            string outputPath = "izvestaj.xls";
             Worksheet outputSheet = new Worksheet("Sheet1");
             Workbook outputBook = new Workbook();
 
@@ -97,7 +97,8 @@ namespace BusinessLogic
         /// Imports data from excel document to database.
         /// </summary>
         /// <param name="filePath">Path of file to import</param>
-        public static bool ImportData(string filePath)
+        /// <param name="jmbg">Unique identifier of currenly logged user.</param>
+        public static bool ImportData(string filePath, string jmbg)
         {
             StringBuilder log = new StringBuilder();
 
@@ -149,6 +150,10 @@ namespace BusinessLogic
                             {
                                 jObject["partija"] = row.GetCell(ACCOUNT_ID_COL).StringValue;
                             }
+                            if (!string.IsNullOrWhiteSpace(row.GetCell(CLIENT_NAME_COL).StringValue))
+                            {
+                                jObject["mbrid"] = row.GetCell(CLIENT_NAME_COL).StringValue;
+                            }
                         }
                         else
                         {
@@ -167,7 +172,7 @@ namespace BusinessLogic
                         insertCommand.Parameters.AddWithValue("@orderNum", orderNum);
                         insertCommand.Parameters.AddWithValue("@boxCode", boxCode);
                         insertCommand.Parameters.AddWithValue("@date", date);
-                        insertCommand.Parameters.AddWithValue("@mbr", "1234567");
+                        insertCommand.Parameters.AddWithValue("@mbr", jmbg);
                         insertCommand.Parameters.AddWithValue("@qrCode", jObject.ToString());
 
                         insertCommand.ExecuteNonQuery();

@@ -16,7 +16,24 @@ namespace Gui
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Kutija5());
+
+            LoginForm loginForm = new LoginForm();
+            DialogResult result = loginForm.ShowDialog();
+
+
+            while (result == DialogResult.Retry)
+            {
+                loginForm.tbName.Clear();
+                loginForm.tbPass.Clear();
+                MessageBox.Show("Pogrešno ste uneli parametre za logovanje, pokušajte ponovo!");
+                result = loginForm.ShowDialog();
+            }
+
+            if (result == DialogResult.OK)
+            {
+                Kutija5 mainForm = new Kutija5(loginForm.tbPass.Text);
+                mainForm.ShowDialog();
+            }
         }
     }
 }

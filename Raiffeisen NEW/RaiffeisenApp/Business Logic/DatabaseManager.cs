@@ -17,6 +17,7 @@ namespace BusinessLogic
         // Single instance of database connection.
         private static SqlConnection _sqlConnection = null;
 
+        private static string _connectionString = @"Data Source=SERVER\SQLEXPRESS;Initial Catalog=QRCode;User ID=niksa;Password=Niksa2015;Integrated Security=false";
         #endregion
 
         #region Properties
@@ -30,7 +31,7 @@ namespace BusinessLogic
             {
                 if (_sqlConnection == null)
                 {
-                    _sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["QrCode"].ConnectionString);
+                    _sqlConnection = new SqlConnection(_connectionString);
                     _sqlConnection.Open();
                 }
                 return _sqlConnection;
@@ -67,9 +68,9 @@ namespace BusinessLogic
         /// <param name="boxCode">Code of box where code is stored.</param>
         /// <param name="exceptionCode">In case of excepetion its code is set here.</param>
         /// <returns>Indicator of success.</returns>
-        public static bool InsertNewPartialCode(string id, string orderNum, string boxCode,DateTime date, out int exceptionCode)
+        public static bool InsertNewPartialCode(string id, string orderNum, string boxCode,DateTime date, out string exceptionCode)
         {
-            exceptionCode = -1;
+            exceptionCode = string.Empty;
             try
             {
                 // Add new entry for partial code.
@@ -88,11 +89,12 @@ namespace BusinessLogic
             }
             catch (SqlException e)
             {
-                exceptionCode = e.Number;
+                exceptionCode = e.Number.ToString();
                 return false;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                exceptionCode = e.Message + "\n" + e.StackTrace;
                 return false;
             }
         }
@@ -286,6 +288,41 @@ namespace BusinessLogic
             return ret;
         }
  
+        /// <summary>
+        /// Checks if user exists in database.
+        /// </summary>
+        /// <param name="jmbg">Password of user.</param>
+        /// <returns>Indicator if user exists in database.</returns>
+        public static bool CheckIfUserExists(string name, string jmbg, out string errorMsg)
+        {
+            try
+            {
+                using (SqlCommand command = new SqlCommand("SELECT * FROM [QRCode].[dbo].[Users] WHERE [Name]= @name AND [UserName] = @username", SqlConnection))
+                {
+                    command.Parameters.AddWithValue("@name", jmbg);
+                    command.Parameters.AddWithValue("@username", name);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            errorMsg = "Uspesno logovanje";
+                            return true;
+                        }
+                        else
+                        {
+                            errorMsg = "Neuspesno logovanje";
+                            return false;
+                        }
+                    }
+
+                }
+            }
+            catch (Exception e )
+            {
+                errorMsg = e.Message +  "\n" + e.StackTrace;
+                return false;
+            }
+        }
         #endregion
     }
 }

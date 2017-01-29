@@ -17,6 +17,10 @@ namespace Gui
     {
         #region Private members
 
+        /// <summary>
+        /// Unique identifier of current user.
+        /// </summary>
+        private string _jmbg;
 
         /// <summary>
         /// Indicator if box is opened.
@@ -36,7 +40,7 @@ namespace Gui
         /// <summary>
         /// Regex for 1d codes.
         /// </summary>
-        private Regex simpleCodeRegex = new Regex(@"RQ[0-9]{8}");
+        private Regex simpleCodeRegex = new Regex(@"RQ[0-9]{8}[0-9]?");
 
         /// <summary>
         /// Regex for qr codes.
@@ -46,6 +50,13 @@ namespace Gui
         #endregion
 
         #region Constructors
+
+
+        public Kutija5(string jmbg)
+        {
+            InitializeComponent();
+            _jmbg = jmbg;
+        }
 
         public Kutija5()
         {
@@ -81,7 +92,7 @@ namespace Gui
         /// <param name="boxCode">Code of box that the file is put in.</param>
         private void TryInsertPartialCode(string code, string orderNum, string boxCode)
         {
-            int errorNum;
+            string errorNum;
             // Try to insert to database.
             if (DatabaseManager.InsertNewPartialCode(code, orderNum, boxCode,DateTime.Now, out errorNum))
             {
@@ -92,13 +103,13 @@ namespace Gui
             else
             {
                 // Primary key violation.
-                if (errorNum == 2627)
+                if (errorNum == "2627")
                 {
                     SetError("Već je učitan kod!");
                 }
                 else
                 {
-                    SetError("Kod je neuspešno učitan!");
+                    SetError("Kod je neuspešno učitan!Kod greške: " + errorNum);
                 }
                 tbCode.Clear();
             }
@@ -207,7 +218,7 @@ namespace Gui
 
         private void tbCodeTextChanged(object sender, EventArgs e)
         {
-            if (simpleCodeRegex.IsMatch(tbCode.Text))
+            if (simpleCodeRegex.IsMatch(tbCode.Text) && tbCode.Text.Length <= 11 )
             {
                 TryInsertPartialCode(tbCode.Text, tbOrderNum.Text, tbBoxCode.Text);
             }
@@ -229,7 +240,7 @@ namespace Gui
             diag.Filter = "Excel Files (*.xls)|*.xls";
             if (diag.ShowDialog() == DialogResult.OK)
             {
-                if (ReportManager.ImportData(diag.FileName))
+                if (ReportManager.ImportData(diag.FileName,_jmbg))
                 {
                     MessageBox.Show("Importovanje podataka završeno!");
                 }
@@ -242,7 +253,6 @@ namespace Gui
         }
 
         #endregion
-
 
     }
 }

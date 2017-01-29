@@ -16,190 +16,17 @@ namespace QR_Code
 {
     public partial class ReportDialog : Form
     {
+        #region Constructors
+
         public ReportDialog()
         {
             InitializeComponent();
             
         }
 
-        private void BReport_Click(object sender, EventArgs e)
-        {
-            // Is order number provided.
-            if (tbOrderNumber.Text.Equals(string.Empty) && (cbChoose.SelectedIndex == 0 || cbChoose.SelectedIndex == 2))
-            {
-                MessageBox.Show("Unesite broj naloga.");
-            }
-            else
-            {
-                // Check what is selected.
-                switch(cbChoose.SelectedIndex)
-                {
-                    case 0:
-                        GenerateReports(null, null);
-                        break;
-                    case 1:
-                        GenerateReports(dateTimeFrom.Value, dateTimeUntil.Value);
-                        break;
-                    case 2:
-                        GenerateReports(null, null);
-                        break;
-                    default:
-                        break;
-                }
-                
-            }
-            
-        }
+        #endregion
 
-        /// <summary>
-        /// Triggered when detailed report creation from combo box is selected.
-        /// </summary>
-        /// <param name="start">Start date if provided.</param>
-        /// <param name="end">End date if provided.</param>
-        private void DetailedReport(DateTime? start, DateTime? end)
-        {
-            string outPath = string.Empty;
-            if (start == null && end == null)
-            {
-                outPath += Application.StartupPath + @"\tabelaZaBankuDetaljna " + tbOrderNumber.Text + ".xls";
-            } 
-            else
-            {
-                outPath += Application.StartupPath + @"\tabelaZaBankuDetaljna " + start.Value.Date.ToString("dd.MM.yyyy.") + " - " + end.Value.Date.ToString("dd.MM.yyyy.") + ".xls";
-            }
-            
-            // Create default output sheet and workbook
-            Worksheet outputSheet = new Worksheet("Sheet1");
-            Workbook outputBook = new Workbook();
-
-
-            // Set it to beginning of the document
-            int curRow = 0;
-            int curCol = 0;
-
-            outputSheet.Cells[curRow, curCol++] = new Cell("Broj naloga/primopredaje");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Vrsta kutije");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Broj fajlova u kutiji");
-            outputSheet.Cells[curRow, curCol++] = new Cell("File number");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Šifra kutije");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Doctype");
-            outputSheet.Cells[curRow, curCol++] = new Cell("ID");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Mbr");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Partija");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Zahtev");
-            outputSheet.Cells[curRow, curCol++] = new Cell("ID kartice");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Mbrid");
-            outputSheet.Cells[curRow++, curCol++] = new Cell("Paket");
-            curCol = 0;
-
-            SqlConnection conn = Helper.GetConnection();
-            SqlCommand command;
-            string commandText = "SELECT * FROM [QRCode].[dbo].[BankTable] INNER JOIN [QRCode].[dbo].[RWTable] on [QRCode].[dbo].[BankTable].[ID] = [QRCode].[dbo].[RWTable].[QRID] WHERE ";
-            
-            // Used for counting number of files for progress bar.
-            string countCommandText = "SELECT count([QRCode].[dbo].[BankTable].[ID]) FROM [QRCode].[dbo].[BankTable] INNER JOIN [QRCode].[dbo].[RWTable] on [QRCode].[dbo].[BankTable].[ID] = [QRCode].[dbo].[RWTable].[QRID] WHERE ";
-
-            if (start == null && end == null)
-            {
-                // Do by order num.
-                if (cbChoose.SelectedIndex == 0)
-                {
-                    commandText += "[OrderNum] = @orderNum";
-                    countCommandText += "[OrderNum] = @orderNum";
-                    command = new SqlCommand(commandText, conn);
-                    command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
-                } 
-                // Do by box Code.
-                else if (cbChoose.SelectedIndex == 2)
-                {
-                    commandText += "[QRCode].[dbo].[BankTable].[BoxCode] = @boxCode";
-                    countCommandText += "[QRCode].[dbo].[BankTable].[BoxCode] = @boxCode";
-                    command = new SqlCommand(commandText, conn);
-                    command.Parameters.AddWithValue("@boxCode", tbOrderNumber.Text);
-                }
-                // Error.
-                else
-                {
-                    return;
-                }
-            }
-            else
-            {
-                if (start.Value.Date.Equals(end.Value.Date))
-                {
-                    commandText += "CAST([Date] as Date) LIKE CAST(@date as Date)";
-                    countCommandText += "CAST([Date] as Date) LIKE CAST(@date as Date)";
-                    command = new SqlCommand(commandText, conn);
-                    command.Parameters.AddWithValue("date", start.Value);
-                }
-                else
-                {
-                    commandText += "[Date] BETWEEN @startDate AND @stopDate";
-                    countCommandText += "[Date] BETWEEN @startDate AND @stopDate";
-                    command = new SqlCommand(commandText, conn);
-                    command.Parameters.AddWithValue("@startDate", start.Value);
-                    command.Parameters.AddWithValue("@stopDate", end.Value);
-                }
-                
-            }
-
-            command.CommandText = countCommandText;
-            command.CommandTimeout = 3600;
-            int totalRows = (int)command.ExecuteScalar();
-
-            progressBar1.Value = 0;
-            progressBar1.Maximum = totalRows;
-            command.CommandText = commandText;
-            using (SqlDataReader reader = command.ExecuteReader())
-            {
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        progressBar1.Value++;
-                        outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["OrderNum"]);
-                        string boxCode = (string)reader["BoxCode"];
-                        int boxType = GetTypeFromBoxCode(boxCode);
-                        switch (boxType)
-                        {
-                            case 86:
-                                outputSheet.Cells[curRow, curCol++] = new Cell("POZAJMICE");
-                                break;
-                            case 148:
-                                outputSheet.Cells[curRow, curCol++] = new Cell("KREDITI");
-                                break;
-                            case 82:
-                                outputSheet.Cells[curRow, curCol++] = new Cell("RAČUNI");
-                                break;
-                            case 83:
-                                outputSheet.Cells[curRow, curCol++] = new Cell("OROČENJA");
-                                break;
-                            default:
-                                break;
-
-                        }
-                        outputSheet.Cells[curRow, curCol++] = new Cell(GetNumberOfFilesFromBox(boxCode).ToString());
-                        outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["Code"]);
-                        outputSheet.Cells[curRow, curCol++] = new Cell(boxCode);
-                        string code = (string)reader["QRCode"];
-                        HandleCodeAndWrite(code, outputSheet, ref curRow, ref curCol);
-                    }
-                }
-            }
-            
-
-            
-            try
-            {
-                outputBook.Worksheets.Add(outputSheet);
-                outputBook.Save(outPath);
-                MessageBox.Show("Uspešno kreiran detaljan izveštaj.");
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Nije moguće kreirati detaljan izveštaj!");
-            }
-        }
+        #region Report methods
 
         /// <summary>
         /// Triggered when report creation from combo box is selected.
@@ -217,7 +44,7 @@ namespace QR_Code
             {
                 outPath += Application.StartupPath + @"\tabelaZaBanku " + start.Value.Date.ToString("dd.MM.yyyy.") + " - " + end.Value.Date.ToString("dd.MM.yyyy.") + ".xls";
             }
-            
+
             // Create default output sheet and workbook
             Worksheet outputSheet = new Worksheet("Sheet1");
             Workbook outputBook = new Workbook();
@@ -270,7 +97,7 @@ namespace QR_Code
                 if (start.Value.Date.Equals(end.Value.Date))
                 {
                     commandText += "CAST([Date] AS Date) LIKE CAST (@date as Date)";
-                    countCommandText +=  "CAST([Date] AS Date) LIKE CAST (@date as Date)";
+                    countCommandText += "CAST([Date] AS Date) LIKE CAST (@date as Date)";
                     command = new SqlCommand(commandText, conn);
                     command.Parameters.AddWithValue("@date", start.Value);
                 }
@@ -282,8 +109,8 @@ namespace QR_Code
                     command.Parameters.AddWithValue("@startDate", start.Value);
                     command.Parameters.AddWithValue("@stopDate", end.Value);
                 }
-                
-                
+
+
             }
             command.CommandText = countCommandText;
             int totalRows = (int)command.ExecuteScalar();
@@ -328,6 +155,161 @@ namespace QR_Code
         }
 
         /// <summary>
+        /// Triggered when detailed report creation from combo box is selected.
+        /// </summary>
+        /// <param name="start">Start date if provided.</param>
+        /// <param name="end">End date if provided.</param>
+        private void DetailedReport(DateTime? start, DateTime? end)
+        {
+            string outPath = string.Empty;
+            if (start == null && end == null)
+            {
+                outPath += Application.StartupPath + @"\tabelaZaBankuDetaljna " + tbOrderNumber.Text + ".xls";
+            }
+            else
+            {
+                outPath += Application.StartupPath + @"\tabelaZaBankuDetaljna " + start.Value.Date.ToString("dd.MM.yyyy.") + " - " + end.Value.Date.ToString("dd.MM.yyyy.") + ".xls";
+            }
+
+            // Create default output sheet and workbook
+            Worksheet outputSheet = new Worksheet("Sheet1");
+            Workbook outputBook = new Workbook();
+
+
+            // Set it to beginning of the document
+            int curRow = 0;
+            int curCol = 0;
+
+            outputSheet.Cells[curRow, curCol++] = new Cell("Broj naloga/primopredaje");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Vrsta kutije");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Broj fajlova u kutiji");
+            outputSheet.Cells[curRow, curCol++] = new Cell("File number");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Šifra kutije");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Doctype");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Lista kategorija");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Rok čuvanja");
+            outputSheet.Cells[curRow, curCol++] = new Cell("ID");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Mbr");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Partija");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Zahtev");
+            outputSheet.Cells[curRow, curCol++] = new Cell("ID kartice");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Mbrid");
+            outputSheet.Cells[curRow++, curCol++] = new Cell("Paket");
+            curCol = 0;
+
+            SqlConnection conn = Helper.GetConnection();
+            SqlCommand command;
+            string commandText = "SELECT * FROM [QRCode].[dbo].[BankTable] INNER JOIN [QRCode].[dbo].[RWTable] on [QRCode].[dbo].[BankTable].[ID] = [QRCode].[dbo].[RWTable].[QRID] WHERE ";
+
+            // Used for counting number of files for progress bar.
+            string countCommandText = "SELECT count([QRCode].[dbo].[BankTable].[ID]) FROM [QRCode].[dbo].[BankTable] INNER JOIN [QRCode].[dbo].[RWTable] on [QRCode].[dbo].[BankTable].[ID] = [QRCode].[dbo].[RWTable].[QRID] WHERE ";
+
+            if (start == null && end == null)
+            {
+                // Do by order num.
+                if (cbChoose.SelectedIndex == 0)
+                {
+                    commandText += "[OrderNum] = @orderNum";
+                    countCommandText += "[OrderNum] = @orderNum";
+                    command = new SqlCommand(commandText, conn);
+                    command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
+                }
+                // Do by box Code.
+                else if (cbChoose.SelectedIndex == 2)
+                {
+                    commandText += "[QRCode].[dbo].[BankTable].[BoxCode] = @boxCode";
+                    countCommandText += "[QRCode].[dbo].[BankTable].[BoxCode] = @boxCode";
+                    command = new SqlCommand(commandText, conn);
+                    command.Parameters.AddWithValue("@boxCode", tbOrderNumber.Text);
+                }
+                // Error.
+                else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                if (start.Value.Date.Equals(end.Value.Date))
+                {
+                    commandText += "CAST([Date] as Date) LIKE CAST(@date as Date)";
+                    countCommandText += "CAST([Date] as Date) LIKE CAST(@date as Date)";
+                    command = new SqlCommand(commandText, conn);
+                    command.Parameters.AddWithValue("date", start.Value);
+                }
+                else
+                {
+                    commandText += "[Date] BETWEEN @startDate AND @stopDate";
+                    countCommandText += "[Date] BETWEEN @startDate AND @stopDate";
+                    command = new SqlCommand(commandText, conn);
+                    command.Parameters.AddWithValue("@startDate", start.Value);
+                    command.Parameters.AddWithValue("@stopDate", end.Value);
+                }
+
+            }
+
+            command.CommandText = countCommandText;
+            command.CommandTimeout = 3600;
+            int totalRows = (int)command.ExecuteScalar();
+
+            progressBar1.Value = 0;
+            progressBar1.Maximum = totalRows;
+            command.CommandText = commandText;
+            using (SqlDataReader reader = command.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        progressBar1.Value++;
+                        outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["OrderNum"]);
+                        string boxCode = (string)reader["BoxCode"];
+                        int boxType = GetTypeFromBoxCode(boxCode);
+                        switch (boxType)
+                        {
+                            case 86:
+                                outputSheet.Cells[curRow, curCol++] = new Cell("POZAJMICE");
+                                break;
+                            case 148:
+                                outputSheet.Cells[curRow, curCol++] = new Cell("KREDITI");
+                                break;
+                            case 82:
+                                outputSheet.Cells[curRow, curCol++] = new Cell("RAČUNI");
+                                break;
+                            case 83:
+                                outputSheet.Cells[curRow, curCol++] = new Cell("OROČENJA");
+                                break;
+                            case 5:
+                                outputSheet.Cells[curRow, curCol++] = new Cell("TIP5");
+                                break;
+                            default:
+                                break;
+
+                        }
+                        outputSheet.Cells[curRow, curCol++] = new Cell(GetNumberOfFilesFromBox(boxCode).ToString());
+                        outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["Code"]);
+                        outputSheet.Cells[curRow, curCol++] = new Cell(boxCode);
+                        string code = (string)reader["QRCode"];
+                        HandleCodeAndWrite(code, outputSheet, ref curRow, ref curCol);
+                    }
+                }
+            }
+
+
+
+            try
+            {
+                outputBook.Worksheets.Add(outputSheet);
+                outputBook.Save(outPath);
+                MessageBox.Show("Uspešno kreiran detaljan izveštaj.");
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Nije moguće kreirati detaljan izveštaj!");
+            }
+        }
+
+        /// <summary>
         /// Triggered when RW report creation from combo box is selected.
         /// </summary>
         /// <param name="start">Start date if provided.</param>
@@ -359,6 +341,8 @@ namespace QR_Code
             outputSheet.Cells[curRow, curCol++] = new Cell("Broj fajlova u kutiji");
             outputSheet.Cells[curRow, curCol++] = new Cell("Šifra kutije");
             outputSheet.Cells[curRow, curCol++] = new Cell("Doctype");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Lista kategorija");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Rok čuvanja");
             outputSheet.Cells[curRow, curCol++] = new Cell("ID");
             outputSheet.Cells[curRow, curCol++] = new Cell("Mbr");
             outputSheet.Cells[curRow, curCol++] = new Cell("Partija");
@@ -380,7 +364,7 @@ namespace QR_Code
                     commandText += " WHERE [OrderNum] = @orderNum";
                     command = new SqlCommand(commandText, conn);
                     command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
-                } 
+                }
                 // Do by box Code.
                 else if (cbChoose.SelectedIndex == 2)
                 {
@@ -416,7 +400,7 @@ namespace QR_Code
                 }
             }
 
-           
+
             progressBar1.Value = 0;
             progressBar1.Maximum = boxCodes.Count;
 
@@ -431,14 +415,14 @@ namespace QR_Code
                         command = new SqlCommand(commandText, conn);
                         command.Parameters.AddWithValue("@orderNum", tbOrderNumber.Text);
                         command.Parameters.AddWithValue("@boxCode", boxCode);
-                    } 
+                    }
                     else if (cbChoose.SelectedIndex == 2)
                     {
                         commandText = "SELECT * FROM [QRCode].[dbo].[BankTable] INNER JOIN [QRCode].[dbo].[RWTable] ON [QRCode].[dbo].[BankTable].[ID] = [QRCode].[dbo].[RWTable].[QRID] AND [QRCode].[dbo].[BankTable].[BoxCode] = @boxCode INNER JOIN [QRCode].[dbo].[Box] ON [QRCode].[dbo].[BankTable].[BoxCode] = [QRCode].[dbo].[Box].Code ORDER BY [QRCode].[dbo].[RWTable].[Code]";
                         command = new SqlCommand(commandText, conn);
                         command.Parameters.AddWithValue("@boxCode", boxCode);
                     }
-                    
+
                 }
                 else
                 {
@@ -457,7 +441,7 @@ namespace QR_Code
                         command.Parameters.AddWithValue("@startDate", start.Value);
                         command.Parameters.AddWithValue("@stopDate", end.Value);
                     }
-                    
+
                 }
                 command.CommandTimeout = 3600;
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -467,7 +451,8 @@ namespace QR_Code
                         int i = 0;
                         // hbCode - current boxcode
                         string orderNum = null, hbCode = null;
-                        string doctype = null, id = "", mbr = null, partija = null, zahtev = null, idKartice = null,paket = null;
+                        string doctype = null, id = "", mbr = null, partija = null, zahtev = null, idKartice = null, paket = null;
+                        string categoryList = null, retentionPeriod = null;
                         // current filenumber
                         string tmpCode = null;
                         // old filenumber
@@ -510,6 +495,9 @@ namespace QR_Code
                                     case 83:
                                         outputSheet.Cells[curRow, curCol++] = new Cell("OROČENJA");
                                         break;
+                                    case 5:
+                                        outputSheet.Cells[curRow, curCol++] = new Cell("TIP5");
+                                        break;
                                     default:
                                         break;
 
@@ -527,6 +515,25 @@ namespace QR_Code
                                 {
                                     outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
                                 }
+
+                                if (categoryList != null)
+                                {
+                                    outputSheet.Cells[curRow, curCol++] = new Cell(categoryList);
+                                }
+                                else
+                                {
+                                    outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+                                }
+
+                                if (retentionPeriod != null)
+                                {
+                                    outputSheet.Cells[curRow, curCol++] = new Cell(retentionPeriod);
+                                }
+                                else
+                                {
+                                    outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+                                }
+
 
                                 if (id != null)
                                 {
@@ -581,6 +588,8 @@ namespace QR_Code
                                 }
                                 #endregion
                                 doctype = null;
+                                categoryList = null;
+                                retentionPeriod = null;
                                 id = null;
                                 mbr = null;
                                 partija = null;
@@ -603,6 +612,8 @@ namespace QR_Code
                             string[] stringSeparators = new string[] { "," };
                             string[] tokens = code.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
                             string tmpdoctype = i.ToString() + ". " + @"\\" + ((char)13).ToString();
+                            string tmpCategoryList  = i.ToString() + ". " + @"\\" + ((char)13).ToString();
+                            string tmpRetentionPeriod = i.ToString() + ". " + @"\\" + ((char)13).ToString();
                             string tmpid = i.ToString() + ". " + @"\\" + ((char)13).ToString();
                             string tmpmbr = i.ToString() + ". " + @"\\" + ((char)13).ToString();
                             string tmppartija = i.ToString() + ". " + @"\\" + ((char)13).ToString();
@@ -625,6 +636,19 @@ namespace QR_Code
                                     {
                                         // Get type of document.
                                         tmpdoctype = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
+                                        string catList, retPer;
+                                        if (GetDoctypeData(tmpTokens[0],out catList,out retPer))
+                                        {
+                                            if (!string.IsNullOrEmpty(catList))
+                                            {
+                                                tmpCategoryList = i.ToString() + ". " + catList + @"\\" + ((char)13).ToString();
+                                            }
+
+                                            if (!string.IsNullOrEmpty(retPer))
+                                            {
+                                                tmpRetentionPeriod = i.ToString() + ". " + retPer + @"\\" + ((char)13).ToString();
+                                            }
+                                        }
                                     }
                                     else if (Helper.CheckMbr(tmpTokens[0]))
                                     {
@@ -651,6 +675,8 @@ namespace QR_Code
                             }
                             id += tmpid;
                             doctype += tmpdoctype;
+                            categoryList += tmpCategoryList;
+                            retentionPeriod += tmpRetentionPeriod;
                             mbr += tmpmbr;
                             partija += tmppartija;
                             zahtev += tmpzahtev;
@@ -684,6 +710,9 @@ namespace QR_Code
                                 case 83:
                                     outputSheet.Cells[curRow, curCol++] = new Cell("OROČENJA");
                                     break;
+                                case 5:
+                                    outputSheet.Cells[curRow, curCol++] = new Cell("TIP5");
+                                    break;
                                 default:
                                     break;
 
@@ -701,6 +730,25 @@ namespace QR_Code
                             {
                                 outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
                             }
+
+                            if (categoryList != null)
+                            {
+                                outputSheet.Cells[curRow, curCol++] = new Cell(categoryList);
+                            }
+                            else
+                            {
+                                outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+                            }
+
+                            if (retentionPeriod != null)
+                            {
+                                outputSheet.Cells[curRow, curCol++] = new Cell(retentionPeriod);
+                            }
+                            else
+                            {
+                                outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+                            }
+
 
                             if (id != null)
                             {
@@ -757,11 +805,11 @@ namespace QR_Code
                             curCol = 0;
                         }
                     }
-                    
+
                 }
-                
+
             }
-            
+
             try
             {
                 outputBook.Worksheets.Add(outputSheet);
@@ -774,6 +822,84 @@ namespace QR_Code
             }
 
         }
+
+        #endregion
+
+        #region Event handlers
+        private void BReport_Click(object sender, EventArgs e)
+        {
+            // Is order number provided.
+            if (tbOrderNumber.Text.Equals(string.Empty) && (cbChoose.SelectedIndex == 0 || cbChoose.SelectedIndex == 2))
+            {
+                MessageBox.Show("Unesite broj naloga.");
+            }
+            else
+            {
+                // Check what is selected.
+                switch(cbChoose.SelectedIndex)
+                {
+                    case 0:
+                        GenerateReports(null, null);
+                        break;
+                    case 1:
+                        GenerateReports(dateTimeFrom.Value, dateTimeUntil.Value);
+                        break;
+                    case 2:
+                        GenerateReports(null, null);
+                        break;
+                    default:
+                        break;
+                }
+                
+            }
+            
+        }
+
+        /// <summary>
+        /// Triggered when selected index is changed, changes GUI according to selection.
+        /// </summary>
+        /// <param name="sender">Sending object.</param>
+        /// <param name="e">Following args.</param>
+        private void cbChoose_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (cbChoose.SelectedIndex)
+            {
+                // Order number is selected.
+                case 0:
+                    lValue.Visible = true;
+                    lValue.Text = "Unesite broj naloga:";
+                    tbOrderNumber.Visible = true;
+                    tbOrderNumber.Text = string.Empty;
+                    dateTimeFrom.Visible = false;
+                    dateTimeUntil.Visible = false;
+                    break;
+                // Date is selected.
+                case 1:
+                    lValue.Visible = true;
+                    lValue.Text = "Izaberite pocetni i kranji datum:";
+                    tbOrderNumber.Visible = false;
+                    dateTimeFrom.Visible = true;
+                    dateTimeUntil.Visible = true;
+                    break;
+                case 2:
+                    lValue.Visible = true;
+                    lValue.Text = "Unesite kod kutije:";
+                    tbOrderNumber.Visible = true;
+                    tbOrderNumber.Text = string.Empty;
+                    dateTimeFrom.Visible = false;
+                    dateTimeUntil.Visible = false;
+                    break;
+                default:
+                    lValue.Visible = false;
+                    dateTimeFrom.Visible = false;
+                    dateTimeUntil.Visible = false;
+                    tbOrderNumber.Visible = false;
+                    break;
+            }
+        }
+        #endregion
+
+        #region Private methods
 
         /// <summary>
         /// Reades input box code type from database.
@@ -828,49 +954,6 @@ namespace QR_Code
                     }
                     return fileNum;
                 }
-            }
-        }
-
-        /// <summary>
-        /// Triggered when selected index is changed, changes GUI according to selection.
-        /// </summary>
-        /// <param name="sender">Sending object.</param>
-        /// <param name="e">Following args.</param>
-        private void cbChoose_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (cbChoose.SelectedIndex)
-            {
-                // Order number is selected.
-                case 0:
-                    lValue.Visible = true;
-                    lValue.Text = "Unesite broj naloga:";
-                    tbOrderNumber.Visible = true;
-                    tbOrderNumber.Text = string.Empty;
-                    dateTimeFrom.Visible = false;
-                    dateTimeUntil.Visible = false;
-                    break;
-                // Date is selected.
-                case 1:
-                    lValue.Visible = true;
-                    lValue.Text = "Izaberite pocetni i kranji datum:";
-                    tbOrderNumber.Visible = false;
-                    dateTimeFrom.Visible = true;
-                    dateTimeUntil.Visible = true;
-                    break;
-                case 2:
-                    lValue.Visible = true;
-                    lValue.Text = "Unesite kod kutije:";
-                    tbOrderNumber.Visible = true;
-                    tbOrderNumber.Text = string.Empty;
-                    dateTimeFrom.Visible = false;
-                    dateTimeUntil.Visible = false;
-                    break;
-                default:
-                    lValue.Visible = false;
-                    dateTimeFrom.Visible = false;
-                    dateTimeUntil.Visible = false;
-                    tbOrderNumber.Visible = false;
-                    break;
             }
         }
 
@@ -963,9 +1046,37 @@ namespace QR_Code
             if (doctype != null)
             {
                 outputSheet.Cells[curRow, curCol++] = new Cell(doctype);
+                string categoryList, retentionPeriod;
+                if(GetDoctypeData(doctype,out categoryList,out retentionPeriod))
+                {
+                    if (!string.IsNullOrEmpty(categoryList))
+                    {
+                        outputSheet.Cells[curRow, curCol++] = new Cell(categoryList);
+                    }
+                    else
+                    {
+                        outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+                    }
+
+                    if (!string.IsNullOrEmpty(retentionPeriod))
+                    {
+                        outputSheet.Cells[curRow, curCol++] = new Cell(retentionPeriod);
+                    }
+                    else
+                    {
+                        outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+                    }
+                }
+                else
+                {
+                    outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+                    outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+                }
             }
             else
             {
+                outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
+                outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
                 outputSheet.Cells[curRow, curCol++] = new Cell(string.Empty);
             }
 
@@ -1032,5 +1143,40 @@ namespace QR_Code
 
             curCol = 0;
         }
+
+        /// <summary>
+        /// Gets DocTypeData such as caregoty list and retention period for given doctype.
+        /// </summary>
+        /// <param name="docType">Input doctype.</param>
+        /// <param name="categoryList">Output category list.</param>
+        /// <param name="retentionPeriod">Output retention period.</param>
+        /// <returns>Indicator of success.</returns>
+        private bool GetDoctypeData(string docType, out string categoryList, out string retentionPeriod)
+        {
+            categoryList = string.Empty;
+            retentionPeriod = string.Empty;
+            using (SqlConnection conn = new SqlConnection(Helper.ConnectionString))
+            {
+                conn.Open();
+                SqlCommand command = new SqlCommand("SELECT * FROM DocTypes WHERE DocType = @docType", conn);
+                command.Parameters.AddWithValue("@docType", docType);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        reader.Read();
+                        categoryList = (string)reader["CategoryList"];
+                        retentionPeriod = (string)reader["RetentionPeriod"];
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        #endregion
     }
 }
