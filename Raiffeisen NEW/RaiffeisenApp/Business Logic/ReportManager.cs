@@ -204,8 +204,9 @@ namespace BusinessLogic
                 }
             }
 
-            return true;
+            
             File.WriteAllText("log.txt", log.ToString());
+			return true;
         }
 
     }

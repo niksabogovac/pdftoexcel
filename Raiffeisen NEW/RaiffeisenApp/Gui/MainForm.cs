@@ -222,7 +222,8 @@ namespace Gui
             {
                 TryInsertPartialCode(tbCode.Text, tbOrderNum.Text, tbBoxCode.Text);
             }
-            else if (qrCodeRegex.IsMatch(tbCode.Text))
+			// Try parse QRCode.
+            else if (DataParser.TryParseJson(tbCode.Text))
             {
                 TryInsertPartialCode(DataParser.GetIdFromQrCode(tbCode.Text), tbOrderNum.Text, tbBoxCode.Text);
             }

@@ -24,6 +24,24 @@ namespace BusinessLogic
             return qrCode.First.Next.First.ToString();
         }
 
+		/// <summary>
+		/// Checks if json is valid.
+		/// </summary>
+		/// <param name="inputCode">Input json code.</param>
+		/// <returns>Indicator of success.</returns>
+		public static bool TryParseJson(string inputCode)
+		{
+			try
+			{
+				JObject qrCode = JObject.Parse(inputCode);
+				return true;
+			}
+			catch(Exception)
+			{
+				return false;
+			}
+		}
+
         /// <summary>
         /// Calculates number of needed fileNumbers.
         /// </summary>
