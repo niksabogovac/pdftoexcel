@@ -35,3 +35,9 @@ D:\GitRepos\pdftoexcel\Drugi\obj\Debug\Drugi.pdb
 D:\GitRepos\pdftoexcel\Drugi\bin\Debug\Drugi.exe
 D:\GitRepos\pdftoexcel\Drugi\bin\Debug\Drugi.pdb
 D:\GitRepos\pdftoexcel\Drugi\obj\Debug\Alpha.csprojResolveAssemblyReference.cache
+C:\Git\pdftoexcel\Drugi\bin\Debug\Drugi.exe.config
+C:\Git\pdftoexcel\Drugi\bin\Debug\Drugi.exe
+C:\Git\pdftoexcel\Drugi\bin\Debug\Drugi.pdb
+C:\Git\pdftoexcel\Drugi\obj\Debug\Alpha.csprojResolveAssemblyReference.cache
+C:\Git\pdftoexcel\Drugi\obj\Debug\Drugi.exe
+C:\Git\pdftoexcel\Drugi\obj\Debug\Drugi.pdb

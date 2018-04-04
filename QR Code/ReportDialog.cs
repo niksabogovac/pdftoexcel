@@ -637,7 +637,7 @@ namespace QR_Code
                                         // Get type of document.
                                         tmpdoctype = i.ToString() + ". " + tmpTokens[1] + @"\\" + ((char)13).ToString();
                                         string catList, retPer;
-                                        if (GetDoctypeData(tmpTokens[0],out catList,out retPer))
+                                        if (GetDoctypeData(tmpTokens[1],out catList,out retPer))
                                         {
                                             if (!string.IsNullOrEmpty(catList))
                                             {
@@ -826,7 +826,7 @@ namespace QR_Code
         #endregion
 
         #region Event handlers
-        private void BReport_Click(object sender, EventArgs e)
+        private async void BReport_Click(object sender, EventArgs e)
         {
             // Is order number provided.
             if (tbOrderNumber.Text.Equals(string.Empty) && (cbChoose.SelectedIndex == 0 || cbChoose.SelectedIndex == 2))
@@ -836,23 +836,23 @@ namespace QR_Code
             else
             {
                 // Check what is selected.
-                switch(cbChoose.SelectedIndex)
+                switch (cbChoose.SelectedIndex)
                 {
                     case 0:
-                        GenerateReports(null, null);
+                        await GenerateReports(null, null);
                         break;
                     case 1:
-                        GenerateReports(dateTimeFrom.Value, dateTimeUntil.Value);
+                        await GenerateReports(dateTimeFrom.Value, dateTimeUntil.Value);
                         break;
                     case 2:
-                        GenerateReports(null, null);
+                        await GenerateReports(null, null);
                         break;
                     default:
                         break;
                 }
-                
+
             }
-            
+
         }
 
         /// <summary>
@@ -962,19 +962,19 @@ namespace QR_Code
         /// </summary>
         /// <param name="start">Start date if provided.</param>
         /// <param name="end">Stop date if provided.</param>
-        private void GenerateReports(DateTime? start = null, DateTime? end = null)
+        private async Task GenerateReports(DateTime? start = null, DateTime? end = null)
         {
             if (checkBox1.Checked)
             {
-                GeneralReport(start, end);
+                await Task.Run(() => { GeneralReport(start, end); });
             }
             if (checkBox2.Checked)
             {
-                DetailedReport(start, end);
+                await Task.Run(() => { DetailedReport(start, end); });
             }
             if (checkBox3.Checked)
             {
-                RWReport(start, end);
+                await Task.Run(() => { RWReport(start, end); });
             }
         }
 

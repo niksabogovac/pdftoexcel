@@ -19,3 +19,14 @@ D:\GitRepos\pdftoexcel\GUI\obj\Debug\GUI.Properties.Resources.resources
 D:\GitRepos\pdftoexcel\GUI\obj\Debug\GUI.csproj.GenerateResource.Cache
 D:\GitRepos\pdftoexcel\GUI\obj\Debug\GUI.exe
 D:\GitRepos\pdftoexcel\GUI\obj\Debug\GUI.pdb
+C:\Git\pdftoexcel\GUI\bin\Debug\GUI.exe.config
+C:\Git\pdftoexcel\GUI\bin\Debug\GUI.exe
+C:\Git\pdftoexcel\GUI\bin\Debug\GUI.pdb
+C:\Git\pdftoexcel\GUI\bin\Debug\ExcelLibrary.dll
+C:\Git\pdftoexcel\GUI\obj\Debug\GUI.csprojResolveAssemblyReference.cache
+C:\Git\pdftoexcel\GUI\obj\Debug\GUI.ChooseDiag.resources
+C:\Git\pdftoexcel\GUI\obj\Debug\GUI.Form1.resources
+C:\Git\pdftoexcel\GUI\obj\Debug\GUI.Properties.Resources.resources
+C:\Git\pdftoexcel\GUI\obj\Debug\GUI.csproj.GenerateResource.Cache
+C:\Git\pdftoexcel\GUI\obj\Debug\GUI.exe
+C:\Git\pdftoexcel\GUI\obj\Debug\GUI.pdb

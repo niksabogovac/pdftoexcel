@@ -36,36 +36,7 @@ namespace QR_Code
         /// <summary>
         /// Represents a dictionary of doctypes and appropriate box types.
         /// </summary>
-        private static Dictionary<string, BoxTypeEnum> doctypeBoxCode = new Dictionary<string, BoxTypeEnum>()
-        {
-            { "PozTR", BoxTypeEnum.POZAJMICE },
-            { "UruKK", BoxTypeEnum.KREDITI },
-            { "OstDevAR", BoxTypeEnum.RACUNI },
-            { "PotTR", BoxTypeEnum.RACUNI },
-            { "ODDevAR", BoxTypeEnum.RACUNI },
-            { "ODDinAR", BoxTypeEnum.RACUNI },
-            { "ODKR", BoxTypeEnum.KREDITI },
-            { "ODDevOR", BoxTypeEnum.OROCENJA },
-            { "ODDinOR", BoxTypeEnum.OROCENJA },
-            { "OPDDevOR", BoxTypeEnum.OROCENJA },
-            { "OPDDinOR", BoxTypeEnum.OROCENJA },
-            { "DKDevAR", BoxTypeEnum.RACUNI },
-            { "ODTR", BoxTypeEnum.RACUNI },
-            { "OstDevOR" ,BoxTypeEnum.OROCENJA },
-            { "PotDevOR",BoxTypeEnum.OROCENJA },
-            { "OvlDevAR", BoxTypeEnum.RACUNI },
-            { "DKTR", BoxTypeEnum.RACUNI },
-            { "LDSDK", BoxTypeEnum.RACUNI },
-            { "OstKK", BoxTypeEnum.RACUNI },
-            { "OstDTR", BoxTypeEnum.RACUNI },
-            { "OvlTR", BoxTypeEnum.RACUNI },
-            { "DKDinAR", BoxTypeEnum.RACUNI },
-            { "PriSDK" , BoxTypeEnum.RACUNI },
-            { "OstDKR", BoxTypeEnum.KREDITI },
-            { "PotKR", BoxTypeEnum.KREDITI },
-            { "OstDinOR", BoxTypeEnum.OROCENJA},
-            { "PotDinOR", BoxTypeEnum.OROCENJA},
-        };
+        private static Dictionary<string, BoxTypeEnum> doctypeBoxCode = new Dictionary<string, BoxTypeEnum>();
 
 
         #endregion
@@ -94,10 +65,10 @@ namespace QR_Code
             }
         }
 
-        public static string ConnectionString = @"Data Source=MILAN;Initial Catalog=QRCode;Integrated Security=True";
+        //public static string ConnectionString = @"Data Source=MILAN;Initial Catalog=QRCode;Integrated Security=True";
         //public static string ConnectionString = @"Data Source=KNJG\SQLEXPRESS;Initial Catalog=QRCode;Integrated Security=True";
 
-        //public static string ConnectionString = @"Data Source=SERVER\SQLEXPRESS;Initial Catalog=QRCode;User ID=niksa;Password=Niksa2015;Integrated Security=false";
+        public static string ConnectionString = @"Data Source=SERVER\SQLEXPRESS;Initial Catalog=QRCode;User ID=niksa;Password=Niksa2015;Integrated Security=false";
 
         //private static string ConnectionString = @"Data Source=89.216.58.242\SQLEXPRESS;Initial Catalog=QRCode;Integrated Security=true";
         #endregion
