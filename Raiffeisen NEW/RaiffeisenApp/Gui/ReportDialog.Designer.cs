@@ -35,6 +35,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.rbBoxCode = new System.Windows.Forms.RadioButton();
             this.rbOrderNum = new System.Windows.Forms.RadioButton();
+            this.rbDateTime = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -63,13 +64,13 @@
             this.tbValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbValue.Location = new System.Drawing.Point(184, 86);
             this.tbValue.Name = "tbValue";
-            this.tbValue.Size = new System.Drawing.Size(269, 26);
+            this.tbValue.Size = new System.Drawing.Size(362, 26);
             this.tbValue.TabIndex = 4;
             // 
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(152, 124);
+            this.button1.Location = new System.Drawing.Point(199, 124);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(150, 30);
             this.button1.TabIndex = 5;
@@ -79,11 +80,12 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.rbDateTime);
             this.groupBox1.Controls.Add(this.rbBoxCode);
             this.groupBox1.Controls.Add(this.rbOrderNum);
             this.groupBox1.Location = new System.Drawing.Point(184, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(269, 50);
+            this.groupBox1.Size = new System.Drawing.Size(365, 50);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             // 
@@ -111,11 +113,23 @@
             this.rbOrderNum.Text = "Radni nalog";
             this.rbOrderNum.UseVisualStyleBackColor = true;
             // 
+            // rbDateTime
+            // 
+            this.rbDateTime.AutoSize = true;
+            this.rbDateTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbDateTime.Location = new System.Drawing.Point(287, 12);
+            this.rbDateTime.Name = "rbDateTime";
+            this.rbDateTime.Size = new System.Drawing.Size(75, 24);
+            this.rbDateTime.TabIndex = 10;
+            this.rbDateTime.TabStop = true;
+            this.rbDateTime.Text = "Datum";
+            this.rbDateTime.UseVisualStyleBackColor = true;
+            // 
             // ReportDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(465, 166);
+            this.ClientSize = new System.Drawing.Size(561, 166);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.tbValue);
@@ -139,5 +153,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton rbBoxCode;
         private System.Windows.Forms.RadioButton rbOrderNum;
+        private System.Windows.Forms.RadioButton rbDateTime;
     }
 }

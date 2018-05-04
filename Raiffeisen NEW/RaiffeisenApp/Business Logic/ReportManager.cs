@@ -28,8 +28,44 @@ namespace BusinessLogic
         /// <param name="orderNum">Order number provided.</param>
         /// </summary>
         public static bool GenerateReport(string boxCode, string orderNum)
+        { 
+            string commandText = "SELECT * FROM PartCodes WHERE FileNumber IS NOT NULL AND ";
+            string outputPath = string.Empty;
+            IList<Tuple<string, object>> parameters = new List<Tuple<string, object>>();
+
+            if (boxCode == null && orderNum != null)
+            {
+                commandText += "OrderNum = @orderNum";
+                outputPath = orderNum + ".xls";
+                Tuple<string, object> parameter = Tuple.Create<string, object>("@orderNum", orderNum);
+                parameters.Add(parameter);
+            }
+            else if (boxCode != null & orderNum == null)
+            {
+                commandText += "BoxCode = @boxCode";
+                outputPath = boxCode + ".xls";
+                Tuple<string, object> parameter = Tuple.Create<string, object>("@boxCode", boxCode);
+                parameters.Add(parameter);
+            }
+
+            return ExecuteQuery(outputPath, commandText, parameters);
+        }
+
+        public static bool GenerateReport(DateTime start, DateTime stop)
         {
-            string outputPath = "izvestaj.xls";
+            string commandText = "SELECT * FROM PartCodes WHERE Date BETWEEN @start AND @stop";
+            IList<Tuple<string, object>> parameters = new List<Tuple<string, object>>()
+            {
+                Tuple.Create<string, object>("@start", start),
+                Tuple.Create<string, object>("@stop", stop)
+            };
+            string outputPath = start.ToShortDateString() + "-" + stop.ToShortDateString() + ".xls";
+
+            return ExecuteQuery(outputPath, commandText, parameters);
+        }
+
+        private static bool ExecuteQuery(string outputPath, string commandText, IEnumerable<Tuple<string, object>> parameters)
+        {
             Worksheet outputSheet = new Worksheet("Sheet1");
             Workbook outputBook = new Workbook();
 
@@ -44,55 +80,43 @@ namespace BusinessLogic
 
             curCol = 0;
 
-            string commandText = string.Empty;
-
-            if (boxCode == null && orderNum != null)
+            try
             {
-                commandText = "SELECT * FROM PartCodes WHERE FileNumber IS NOT NULL AND OrderNum = @orderNum";
-            }
-            else if (boxCode != null & orderNum == null)
-            {
-                commandText = "SELECT * FROM PartCodes WHERE FileNumber IS NOT NULL AND BoxCode = @boxCode";
-            }
-
-            using (SqlCommand command = new SqlCommand(commandText, DatabaseManager.SqlConnection))
-            {
-                if (boxCode == null && orderNum != null)
+                using (SqlCommand command = new SqlCommand(commandText, DatabaseManager.SqlConnection))
                 {
-                    command.Parameters.AddWithValue("@orderNum", orderNum);
-                }
-                else if (boxCode != null & orderNum == null)
-                {
-                    command.Parameters.AddWithValue("@boxCode", boxCode);
-                }
-
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.HasRows)
+                    foreach(var parameter in parameters)
                     {
-                        while (reader.Read())
+                        command.Parameters.AddWithValue(parameter.Item1, parameter.Item2);
+                    }
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
                         {
-                            outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["ID"]);
-                            outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["OrderNum"]);
-                            outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["BoxCode"]);
-                            outputSheet.Cells[curRow++, curCol] = new Cell((string)reader["FileNumber"]);
-                            curCol = 0;
+                            while (reader.Read())
+                            {
+                                outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["ID"]);
+                                outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["OrderNum"]);
+                                outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["BoxCode"]);
+                                outputSheet.Cells[curRow++, curCol] = new Cell((string)reader["FileNumber"]);
+                                curCol = 0;
+                            }
                         }
                     }
-                    try
-                    {
-                        outputBook.Worksheets.Add(outputSheet);
-                        outputBook.Save(outputPath);
-                        return true;
-                    }
-                    catch (Exception)
-                    {
-                        return false;
-                    }
+
+                    outputBook.Worksheets.Add(outputSheet);
+                    outputBook.Save(outputPath);
+                    return true;
                 }
             }
+            catch(Exception)
+            {
+                return false;
+            }
+            
         }
 
+        
         /// <summary>
         /// Imports data from excel document to database.
         /// </summary>
