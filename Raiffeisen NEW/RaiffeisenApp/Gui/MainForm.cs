@@ -105,7 +105,19 @@ namespace Gui
                 // Primary key violation.
                 if (errorNum == "2627")
                 {
-                    SetError("Već je učitan kod!");
+                    string errorMsg = "Već je učitan kod!\n";
+                    // If a code has already been scaned, try to get its box code.
+                    string existingBoxCode;
+                    if (DatabaseManager.TryGetBoxCodeForID(code, out existingBoxCode))
+                    {
+                        errorMsg += $"Nalazi se u kutiji:\n {existingBoxCode}.";
+                    }
+                    else
+                    {
+                        errorMsg += "Nije moguće odrediti u kojoj kutiji.";
+                    }
+
+                    SetError(errorMsg);
                 }
                 else
                 {

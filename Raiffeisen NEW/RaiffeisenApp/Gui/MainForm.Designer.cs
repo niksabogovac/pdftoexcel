@@ -59,7 +59,7 @@
             this.tbOrderNum.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbOrderNum.Location = new System.Drawing.Point(201, 27);
             this.tbOrderNum.Name = "tbOrderNum";
-            this.tbOrderNum.Size = new System.Drawing.Size(317, 38);
+            this.tbOrderNum.Size = new System.Drawing.Size(329, 38);
             this.tbOrderNum.TabIndex = 1;
             // 
             // tbCode
@@ -67,7 +67,7 @@
             this.tbCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbCode.Location = new System.Drawing.Point(15, 86);
             this.tbCode.Name = "tbCode";
-            this.tbCode.Size = new System.Drawing.Size(503, 38);
+            this.tbCode.Size = new System.Drawing.Size(515, 38);
             this.tbCode.TabIndex = 2;
             this.tbCode.TextChanged += new System.EventHandler(this.tbCodeTextChanged);
             this.tbCode.Enter += new System.EventHandler(this.tbCodeEnter);
@@ -76,7 +76,7 @@
             // 
             this.lNumberOfFiles.AutoSize = true;
             this.lNumberOfFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lNumberOfFiles.Location = new System.Drawing.Point(5, 320);
+            this.lNumberOfFiles.Location = new System.Drawing.Point(8, 377);
             this.lNumberOfFiles.Name = "lNumberOfFiles";
             this.lNumberOfFiles.Size = new System.Drawing.Size(293, 37);
             this.lNumberOfFiles.TabIndex = 3;
@@ -85,7 +85,7 @@
             // bOpenCloseBox
             // 
             this.bOpenCloseBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bOpenCloseBox.Location = new System.Drawing.Point(148, 418);
+            this.bOpenCloseBox.Location = new System.Drawing.Point(151, 475);
             this.bOpenCloseBox.Name = "bOpenCloseBox";
             this.bOpenCloseBox.Size = new System.Drawing.Size(206, 38);
             this.bOpenCloseBox.TabIndex = 4;
@@ -98,7 +98,7 @@
             this.cbCloseBox.AutoSize = true;
             this.cbCloseBox.Enabled = false;
             this.cbCloseBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbCloseBox.Location = new System.Drawing.Point(178, 383);
+            this.cbCloseBox.Location = new System.Drawing.Point(181, 440);
             this.cbCloseBox.Name = "cbCloseBox";
             this.cbCloseBox.Size = new System.Drawing.Size(154, 29);
             this.cbCloseBox.TabIndex = 99;
@@ -110,7 +110,7 @@
             // 
             this.lBoxCode.AutoSize = true;
             this.lBoxCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lBoxCode.Location = new System.Drawing.Point(5, 200);
+            this.lBoxCode.Location = new System.Drawing.Point(8, 257);
             this.lBoxCode.Name = "lBoxCode";
             this.lBoxCode.Size = new System.Drawing.Size(277, 37);
             this.lBoxCode.TabIndex = 6;
@@ -119,10 +119,10 @@
             // tbBoxCode
             // 
             this.tbBoxCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbBoxCode.Location = new System.Drawing.Point(12, 258);
+            this.tbBoxCode.Location = new System.Drawing.Point(15, 315);
             this.tbBoxCode.MaxLength = 15;
             this.tbBoxCode.Name = "tbBoxCode";
-            this.tbBoxCode.Size = new System.Drawing.Size(506, 38);
+            this.tbBoxCode.Size = new System.Drawing.Size(515, 38);
             this.tbBoxCode.TabIndex = 3;
             // 
             // lReport
@@ -141,7 +141,7 @@
             this.toolStripButton2});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(530, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(542, 25);
             this.toolStrip1.TabIndex = 101;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -168,7 +168,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(530, 469);
+            this.ClientSize = new System.Drawing.Size(542, 523);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.lReport);
             this.Controls.Add(this.tbBoxCode);

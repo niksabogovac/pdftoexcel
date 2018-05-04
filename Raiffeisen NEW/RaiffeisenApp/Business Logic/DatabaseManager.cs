@@ -289,6 +289,31 @@ namespace BusinessLogic
         }
  
         /// <summary>
+        /// Tries to read box code of a PartCode entity.
+        /// </summary>
+        /// <param name="id">ID of part code.</param>
+        /// <param name="boxCode">Box code of that part code.</param>
+        /// <returns>Indicator of success.</returns>
+        public static bool TryGetBoxCodeForID(string id, out string boxCode)
+        {
+            boxCode = string.Empty;
+            using(SqlCommand command = new SqlCommand("SELECT BoxCode FROM [QRCode].[dbo].[PartCodes] WHERE ID = @id",SqlConnection ))
+            {
+                command.Parameters.AddWithValue("@id", id);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (!reader.HasRows)
+                    {
+                        return false;
+                    }
+
+                    reader.Read();
+                    boxCode = (string)reader["BoxCode"];
+                    return true;
+                }
+            }
+        }
+        /// <summary>
         /// Checks if user exists in database.
         /// </summary>
         /// <param name="jmbg">Password of user.</param>
