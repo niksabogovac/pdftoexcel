@@ -17,7 +17,7 @@ namespace BusinessLogic
         // Single instance of database connection.
         private static SqlConnection _sqlConnection = null;
 
-        private static string _connectionString = @"Data Source=SERVER\SQLEXPRESS;Initial Catalog=QRCode;User ID=niksa;Password=Niksa2015;Integrated Security=false";
+        private static string _connectionString = @"Data Source=MILAN;Initial Catalog=QRCode;Integrated Security=True";
         #endregion
 
         #region Properties
@@ -252,14 +252,15 @@ namespace BusinessLogic
         /// </summary>
         /// <param name="fileNums">List of fileNumbers.</param>
         /// <param name="ids">List of ids.</param>
+        /// <param name="orgUnit">Organizational unit to which the codes belong to.</param>
         /// <returns></returns>
-        public static bool AddFileNumbersToPartialCode(List<string> fileNums, List<string> ids)
+        public static bool AddFileNumbersToPartialCode(List<string> fileNums, List<string> ids, string orgUnit)
         {
             bool ret = false;
             SqlTransaction sqlTransaction = SqlConnection.BeginTransaction();
             try
             {
-                using (SqlCommand command = new SqlCommand("UPDATE PartCodes SET FileNumber = @fileNum WHERE ID = @id", SqlConnection,sqlTransaction))
+                using (SqlCommand command = new SqlCommand("UPDATE PartCodes SET FileNumber = @fileNum, OrganizationalUnit = @orgUnit WHERE ID = @id", SqlConnection,sqlTransaction))
                 {
                     int k = 0;
                     for (int i = 0; i < ids.Count; i++)
@@ -271,6 +272,7 @@ namespace BusinessLogic
                         }
 
                         command.Parameters.AddWithValue("@fileNum", fileNums[k]);
+                        command.Parameters.AddWithValue("@orgUnit", orgUnit);
                         command.ExecuteNonQuery();
                         command.Parameters.Clear();
                     }

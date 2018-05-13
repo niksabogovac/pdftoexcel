@@ -14,57 +14,134 @@ namespace Gui
 {
     public partial class FileNumDialog : Form
     {
+        #region Private members
+
         /// <summary>
         /// Number of codes to add fileNumber.
         /// </summary>
         private int _codeNums;
+
         /// <summary>
         /// List of codes to be add fileNumber.
         /// </summary>
         private List<string> _idCodes;
+
         /// <summary>
         /// List of fileNumers that are currently being added.
         /// </summary>
         private List<string> _currentFileNums = new List<string>();
 
-        private Regex reg = new Regex(@"(RSRFBA)[0-9]{2}\-[0-9]{6}");
+        /// <summary>
+        /// Regex for file numbers.
+        /// </summary>
+        private Regex regFileNum = new Regex(@"(RSRFBA)[0-9]{2}\-[0-9]{6}");
 
+        /// <summary>
+        /// Regex for organization units.
+        /// </summary>
+        private Regex regOrgUnit = new Regex(@"[A-Z]\-[0-9]{3}");
+
+        /// <summary>
+        /// Organizational unit for associated with current codes (and file numbers).
+        /// </summary>
+        private string organizationalUnit;
+
+        /// <summary>
+        /// Length of file number.
+        /// </summary>
+        private const short fileNumberLength = 15;
+
+        /// <summary>
+        /// Lenegth of organizational unit.
+        /// </summary>
+        private const short orgUnitLength = 5;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileNumDialog"/> class.
+        /// </summary>
         public FileNumDialog()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileNumDialog"/> class.
+        /// </summary>
+        /// <param name="idCodes">List of scaned codes that don't have a file number associated.</param>
         public FileNumDialog(List<string> idCodes)
         {
             InitializeComponent();
 
             _codeNums = DataParser.CalculateNumberOfCodes(idCodes.Count);
             _idCodes = idCodes;
-            lText.Text = "Preostali broj kodova za unos: " + _codeNums;
+            lTextFileNumber.Text = "Preostali broj kodova za unos: " + _codeNums;
         }
 
-        private void tbCodeTextChanged(object sender, EventArgs e)
+        #endregion
+
+
+        /// <summary>
+        /// Method that is invoked when new file number code is scanned.
+        /// </summary>
+        /// <param name="sender">Invoking object.</param>
+        /// <param name="e">Following args.</param>
+        private void tbFileNumCodeTextChanged(object sender, EventArgs e)
         {
-            if (reg.IsMatch(tbCode.Text) && tbCode.Text.Length == 15)
+            if (regFileNum.IsMatch(tbFileNumCode.Text) && tbFileNumCode.Text.Length == fileNumberLength)
             {
-                if (!DatabaseManager.CheckPreviousFileNumberCodes(tbCode.Text) && !_currentFileNums.Contains(tbCode.Text))
+                if (!DatabaseManager.CheckPreviousFileNumberCodes(tbFileNumCode.Text) && !_currentFileNums.Contains(tbFileNumCode.Text))
                 {
-                    _currentFileNums.Add(tbCode.Text);
-                    lText.Text = "Preostali broj kodova za unos: " + --_codeNums;
-                    tbCode.Clear();
+                    _currentFileNums.Add(tbFileNumCode.Text);
+                    lTextFileNumber.Text = "Preostali broj kodova za unos: " + --_codeNums;
+                    tbFileNumCode.Clear();
                     if (_codeNums > 0)
                     {
-                        tbCode.Focus();
+                        tbFileNumCode.Focus();
                     }
                     else
                     {
-                        if (!DatabaseManager.AddFileNumbersToPartialCode(_currentFileNums, _idCodes))
+                        if (!DatabaseManager.AddFileNumbersToPartialCode(_currentFileNums, _idCodes, organizationalUnit))
                         {
                             MessageBox.Show("Desila se greška, pokušajte ponovo!");
                         }
                         Dispose();
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Method that is invoked when text box for entering file numbers gains focus.
+        /// Checks if organizational unit is added.
+        /// </summary>
+        /// <param name="sender">Invoking object.</param>
+        /// <param name="e">Following args.</param>
+        private void tbFileNumCodeEnter(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(organizationalUnit))
+            {
+                tbOrgUnit.Focus();
+            }
+        }
+        /// <summary>
+        /// Method that is invoked when text box for entering organizational units is changed.
+        /// </summary>
+        /// <param name="sender">Invoking object.</param>
+        /// <param name="e">Following args.</param>
+        private void tbOrgUnitTextChanged(object sender, EventArgs e)
+        {
+            if (regOrgUnit.IsMatch(tbOrgUnit.Text) && tbOrgUnit.Text.Length == orgUnitLength)
+            {
+                organizationalUnit = tbOrgUnit.Text;
+                tbFileNumCode.Focus();
+            }
+            else
+            {
+                organizationalUnit = string.Empty;
             }
         }
     }

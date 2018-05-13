@@ -28,47 +28,56 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.lText = new System.Windows.Forms.Label();
-            this.bConfirm = new System.Windows.Forms.Button();
-            this.tbCode = new System.Windows.Forms.TextBox();
+            this.lTextFileNumber = new System.Windows.Forms.Label();
+            this.tbFileNumCode = new System.Windows.Forms.TextBox();
+            this.lOrgUnit = new System.Windows.Forms.Label();
+            this.tbOrgUnit = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
-            // lText
+            // lTextFileNumber
             // 
-            this.lText.AutoSize = true;
-            this.lText.Location = new System.Drawing.Point(12, 15);
-            this.lText.Name = "lText";
-            this.lText.Size = new System.Drawing.Size(46, 13);
-            this.lText.TabIndex = 1;
-            this.lText.Text = "Unesite ";
+            this.lTextFileNumber.AutoSize = true;
+            this.lTextFileNumber.Location = new System.Drawing.Point(11, 51);
+            this.lTextFileNumber.Name = "lTextFileNumber";
+            this.lTextFileNumber.Size = new System.Drawing.Size(46, 13);
+            this.lTextFileNumber.TabIndex = 5;
+            this.lTextFileNumber.Text = "Unesite ";
             // 
-            // bConfirm
+            // tbFileNumCode
             // 
-            this.bConfirm.Enabled = false;
-            this.bConfirm.Location = new System.Drawing.Point(93, 38);
-            this.bConfirm.Name = "bConfirm";
-            this.bConfirm.Size = new System.Drawing.Size(100, 23);
-            this.bConfirm.TabIndex = 4;
-            this.bConfirm.Text = "Potvrdi";
-            this.bConfirm.UseVisualStyleBackColor = true;
-            this.bConfirm.Visible = false;
+            this.tbFileNumCode.Location = new System.Drawing.Point(190, 48);
+            this.tbFileNumCode.Name = "tbFileNumCode";
+            this.tbFileNumCode.Size = new System.Drawing.Size(132, 20);
+            this.tbFileNumCode.TabIndex = 2;
+            this.tbFileNumCode.TextChanged += new System.EventHandler(this.tbFileNumCodeTextChanged);
+            this.tbFileNumCode.Enter += new System.EventHandler(this.tbFileNumCodeEnter);
             // 
-            // tbCode
+            // lOrgUnit
             // 
-            this.tbCode.Location = new System.Drawing.Point(191, 12);
-            this.tbCode.Name = "tbCode";
-            this.tbCode.Size = new System.Drawing.Size(132, 20);
-            this.tbCode.TabIndex = 3;
-            this.tbCode.TextChanged += new System.EventHandler(this.tbCodeTextChanged);
+            this.lOrgUnit.AutoSize = true;
+            this.lOrgUnit.Location = new System.Drawing.Point(11, 26);
+            this.lOrgUnit.Name = "lOrgUnit";
+            this.lOrgUnit.Size = new System.Drawing.Size(108, 13);
+            this.lOrgUnit.TabIndex = 4;
+            this.lOrgUnit.Text = "Unesite Org. Jedinicu";
+            // 
+            // tbOrgUnit
+            // 
+            this.tbOrgUnit.Location = new System.Drawing.Point(190, 19);
+            this.tbOrgUnit.Name = "tbOrgUnit";
+            this.tbOrgUnit.Size = new System.Drawing.Size(132, 20);
+            this.tbOrgUnit.TabIndex = 1;
+            this.tbOrgUnit.TextChanged += new System.EventHandler(this.tbOrgUnitTextChanged);
             // 
             // FileNumDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(335, 74);
-            this.Controls.Add(this.bConfirm);
-            this.Controls.Add(this.tbCode);
-            this.Controls.Add(this.lText);
+            this.ClientSize = new System.Drawing.Size(335, 79);
+            this.Controls.Add(this.tbOrgUnit);
+            this.Controls.Add(this.lOrgUnit);
+            this.Controls.Add(this.tbFileNumCode);
+            this.Controls.Add(this.lTextFileNumber);
             this.Name = "FileNumDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "FileNumDialog";
@@ -79,8 +88,9 @@
 
         #endregion
 
-        private System.Windows.Forms.Label lText;
-        private System.Windows.Forms.Button bConfirm;
-        private System.Windows.Forms.TextBox tbCode;
+        private System.Windows.Forms.Label lTextFileNumber;
+        private System.Windows.Forms.TextBox tbFileNumCode;
+        private System.Windows.Forms.Label lOrgUnit;
+        private System.Windows.Forms.TextBox tbOrgUnit;
     }
 }
