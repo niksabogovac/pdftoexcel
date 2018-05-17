@@ -88,6 +88,7 @@
             this.lBlue = new System.Windows.Forms.Label();
             this.bCloseBlue = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.oJToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pUpper.SuspendLayout();
             this.mMain.SuspendLayout();
             this.tlpLower.SuspendLayout();
@@ -272,7 +273,8 @@
             // izmeniToolStripMenuItem
             // 
             this.izmeniToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.brojNalogaToolStripMenuItem});
+            this.brojNalogaToolStripMenuItem,
+            this.oJToolStripMenuItem});
             this.izmeniToolStripMenuItem.Name = "izmeniToolStripMenuItem";
             this.izmeniToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.izmeniToolStripMenuItem.Text = "Izmeni";
@@ -280,7 +282,7 @@
             // brojNalogaToolStripMenuItem
             // 
             this.brojNalogaToolStripMenuItem.Name = "brojNalogaToolStripMenuItem";
-            this.brojNalogaToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.brojNalogaToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.brojNalogaToolStripMenuItem.Text = "Broj naloga";
             this.brojNalogaToolStripMenuItem.Click += new System.EventHandler(this.brojNalogaToolStripMenuItem_Click);
             // 
@@ -688,6 +690,13 @@
             // 
             this.errorProvider.ContainerControl = this;
             // 
+            // oJToolStripMenuItem
+            // 
+            this.oJToolStripMenuItem.Name = "oJToolStripMenuItem";
+            this.oJToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.oJToolStripMenuItem.Text = "OJ";
+            this.oJToolStripMenuItem.Click += new System.EventHandler(this.oJToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -781,6 +790,7 @@
         private System.Windows.Forms.CheckBox cbCloseRed;
         private System.Windows.Forms.CheckBox cbCloseYellow;
         private System.Windows.Forms.CheckBox cbCloseBlue;
+        private System.Windows.Forms.ToolStripMenuItem oJToolStripMenuItem;
     }
 }
 

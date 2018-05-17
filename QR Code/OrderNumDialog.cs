@@ -110,7 +110,7 @@ namespace QR_Code
                         command.ExecuteNonQuery();
                     }
                 }
-                MessageBox.Show("Uspješno izvršene izmjene.");
+                MessageBox.Show("Uspešno izvršene izmene.");
 
             }
             catch

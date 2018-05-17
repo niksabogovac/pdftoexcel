@@ -54,6 +54,7 @@
     <Compile Include="CloseBoxDialog.Designer.cs">
       <DependentUpon>CloseBoxDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataReaderExtenstionMethods.cs" />
     <Compile Include="DeleteForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -67,6 +68,8 @@
       <DependentUpon>DoctypeDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Helper.cs" />
+    <Compile Include="Import\DbUpdater.cs" />
+    <Compile Include="Import\Importer.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,6 +87,12 @@
     </Compile>
     <Compile Include="OrderNumDialog.Designer.cs">
       <DependentUpon>OrderNumDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OrganizationalUnit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OrganizationalUnit.Designer.cs">
+      <DependentUpon>OrganizationalUnit.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -121,6 +130,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="OrderNumDialog.resx">
       <DependentUpon>OrderNumDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OrganizationalUnit.resx">
+      <DependentUpon>OrganizationalUnit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -182,6 +182,7 @@ namespace QR_Code
 
             outputSheet.Cells[curRow, curCol++] = new Cell("Broj naloga/primopredaje");
             outputSheet.Cells[curRow, curCol++] = new Cell("Vrsta kutije");
+            outputSheet.Cells[curRow, curCol++] = new Cell("OJ");
             outputSheet.Cells[curRow, curCol++] = new Cell("Broj fajlova u kutiji");
             outputSheet.Cells[curRow, curCol++] = new Cell("File number");
             outputSheet.Cells[curRow, curCol++] = new Cell("Šifra kutije");
@@ -286,6 +287,7 @@ namespace QR_Code
                                 break;
 
                         }
+                        outputSheet.Cells[curRow, curCol++] = new Cell(GenerateStringValue(reader, "OrganizationalUnit"));
                         outputSheet.Cells[curRow, curCol++] = new Cell(GetNumberOfFilesFromBox(boxCode).ToString());
                         outputSheet.Cells[curRow, curCol++] = new Cell((string)reader["Code"]);
                         outputSheet.Cells[curRow, curCol++] = new Cell(boxCode);
@@ -337,7 +339,10 @@ namespace QR_Code
 
             outputSheet.Cells[curRow, curCol++] = new Cell("Novi kod:");
             outputSheet.Cells[curRow, curCol++] = new Cell("Broj naloga/primopredaje");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Unit type");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Godina");
             outputSheet.Cells[curRow, curCol++] = new Cell("Vrsta kutije");
+            outputSheet.Cells[curRow, curCol++] = new Cell("OJ");
             outputSheet.Cells[curRow, curCol++] = new Cell("Broj fajlova u kutiji");
             outputSheet.Cells[curRow, curCol++] = new Cell("Šifra kutije");
             outputSheet.Cells[curRow, curCol++] = new Cell("Doctype");
@@ -349,6 +354,7 @@ namespace QR_Code
             outputSheet.Cells[curRow, curCol++] = new Cell("Zahtev");
             outputSheet.Cells[curRow, curCol++] = new Cell("ID kartice");
             outputSheet.Cells[curRow++, curCol++] = new Cell("Paket");
+            //outputSheet.Cells[curRow++, curCol++] = new Cell("RW kod");
             curCol = 0;
 
             SqlConnection conn = Helper.GetConnection();
@@ -450,7 +456,9 @@ namespace QR_Code
                     {
                         int i = 0;
                         // hbCode - current boxcode
+                        DateTime date = DateTime.Now;
                         string orderNum = null, hbCode = null;
+                        string organizationalUnit = string.Empty;
                         string doctype = null, id = "", mbr = null, partija = null, zahtev = null, idKartice = null, paket = null;
                         string categoryList = null, retentionPeriod = null;
                         // current filenumber
@@ -466,6 +474,7 @@ namespace QR_Code
                             if (orderNum == null)
                             {
                                 orderNum = (string)reader["OrderNum"];
+                                date = (DateTime)reader["Date"];
                             }
                             hbCode = (string)reader["BoxCode"];
                             oldcode = tmpCode;
@@ -477,7 +486,9 @@ namespace QR_Code
                                 #region Write header data
                                 // Always read from the beggining of list and remove codes added to cells.
                                 outputSheet.Cells[curRow, curCol++] = new Cell(oldcode);
-                                outputSheet.Cells[curRow, curCol++] = new Cell(orderNum);
+                                outputSheet.Cells[curRow, curCol++] = new Cell(orderNum + $"/{date.Day}.{date.Month}.{date.Year}.");
+                                outputSheet.Cells[curRow, curCol++] = new Cell("QR");
+                                outputSheet.Cells[curRow, curCol++] = new Cell(date.Year + ".");
                                 orderNum = null;
                                 string bCode = (string)reader["BoxCode"];
                                 int boxType = GetTypeFromBoxCode(bCode);
@@ -502,6 +513,8 @@ namespace QR_Code
                                         break;
 
                                 }
+
+                                outputSheet.Cells[curRow, curCol++] = new Cell(organizationalUnit);
                                 #endregion
                                 outputSheet.Cells[curRow, curCol++] = new Cell((int)reader["NumberOfFiles"]);
                                 outputSheet.Cells[curRow, curCol++] = new Cell(bCode);
@@ -601,6 +614,7 @@ namespace QR_Code
                                 oldcode = tmpCode;
                             }
                             numfiles = (int)reader["NumberOfFiles"];
+                            organizationalUnit = GenerateStringValue(reader, "OrganizationalUnit");
                             #region handle Code
                             string code = (string)reader["QRCode"];
                             code = Regex.Replace(code, @"\\000021", string.Empty);
@@ -693,7 +707,9 @@ namespace QR_Code
                             #region Write header data
                             // Always read from the beggining of list and remove codes added to cells.
                             outputSheet.Cells[curRow, curCol++] = new Cell(tmpCode);
-                            outputSheet.Cells[curRow, curCol++] = new Cell(orderNum);
+                            outputSheet.Cells[curRow, curCol++] = new Cell(orderNum + $"/{date.Day}.{date.Month}.{date.Year}.");
+                            outputSheet.Cells[curRow, curCol++] = new Cell("QR");
+                            outputSheet.Cells[curRow, curCol++] = new Cell(date.Year + ".");
                             orderNum = null;
                             int boxType = GetTypeFromBoxCode(hbCode);
                             switch (boxType)
@@ -717,6 +733,7 @@ namespace QR_Code
                                     break;
 
                             }
+                            outputSheet.Cells[curRow, curCol++] = new Cell(organizationalUnit);
                             #endregion
                             outputSheet.Cells[curRow, curCol++] = new Cell(numfiles);
                             outputSheet.Cells[curRow, curCol++] = new Cell(hbCode);
@@ -1175,6 +1192,22 @@ namespace QR_Code
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Generates a <see cref="Cell"/> object depending on input data reader and column name.
+        /// </summary>
+        /// <param name="reader">Object from which the value is read.</param>
+        /// <param name="columnName">Column to be read.</param>
+        /// <returns><see cref="Cell"/> with empty value if column does not exist. Column value otherwise.</returns>
+        private string GenerateStringValue(SqlDataReader reader, string columnName)
+        {
+            if (reader[columnName] == null || !reader.HasColumn(columnName) || reader[columnName].GetType().Equals(typeof(DBNull)))
+            {
+                return string.Empty;
+            }
+
+            return (string)reader[columnName];
         }
 
         #endregion

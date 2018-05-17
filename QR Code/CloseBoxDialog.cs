@@ -14,7 +14,8 @@ namespace QR_Code
 {
     public partial class CloseBoxDialog : Form
     {
-        
+        #region Private members
+
         /// <summary>
         /// Represents the number of codes needed to be inserted. 
         /// </summary>
@@ -35,9 +36,30 @@ namespace QR_Code
         /// </summary>
         private List<string> Filenums;
 
+        /// <summary>
+        /// Regex for file numbers.
+        /// </summary>
+        private Regex fileNumberRegex = new Regex(@"(RSRFBA)[0-9]{2}\-[0-9]{6}");
 
+        /// <summary>
+        /// Organizational unit for associated with current codes (and file numbers).
+        /// </summary>
+        private string organizationalUnit;
 
-        private Regex reg = new Regex(@"(RSRFBA)[0-9]{2}\-[0-9]{6}");
+        /// <summary>
+        /// Length of file number.
+        /// </summary>
+        private const short fileNumberLength = 15;
+
+        /// <summary>
+        /// Lenegth of organizational unit.
+        /// </summary>
+        private const short orgUnitLength = 5;
+
+        #endregion
+
+        #region Constructors
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CloseBoxDialog"/> class.
         /// </summary>
@@ -59,20 +81,21 @@ namespace QR_Code
             boxCode = originalBoxCode;
             this.codeNums = codeNums;
             InitializeComponent();
-            lText.Text = "Preostali broj kodova za unos: " + codeNums;
+            lFileNum.Text = "Preostali broj kodova za unos: " + codeNums;
         }
 
+        #endregion
 
+        #region Private methods
 
         /// <summary>
-        /// Writes appropriate box codes with inserted codes.
+        /// Adds entries to SQL table - RWTable.
+        /// Maps QR ID with box code,File numbers Organizational units.
         /// </summary>
+        /// 
         private void InsertIntoRWTable()
         {
-
-            SqlConnection conn = Helper.GetConnection();
-
-            using (SqlCommand command = new SqlCommand("INSERT INTO [QRCode].[dbo].[RWTable] VALUES (@boxCode, @code,@qrid)",conn))
+            using (SqlCommand command = new SqlCommand("INSERT INTO [QRCode].[dbo].[RWTable] VALUES (@boxCode, @code,@qrid, @orgUnit)", Helper.GetConnection()))
             {
                 // Counter for QRCodes.
                 int k = 0;
@@ -85,6 +108,7 @@ namespace QR_Code
                         k++;
                     }
                     command.Parameters.AddWithValue("@code", Filenums[k]);
+                    command.Parameters.AddWithValue("@orgUnit", organizationalUnit);
                     command.ExecuteNonQuery();
                     command.Parameters.Clear();
                 }
@@ -92,20 +116,23 @@ namespace QR_Code
 
         }
 
-       
-
-        private void tbCode_TextChanged(object sender, EventArgs e)
+        /// <summary>
+        /// Method that is invoked when text in tbFileNumCode is entered.
+        /// </summary>
+        /// <param name="sender">Invoking object.</param>
+        /// <param name="e">Following args.</param>
+        private void tbFileNumCodeTextChanged(object sender, EventArgs e)
         {
-            if (reg.IsMatch(tbCode.Text) && tbCode.Text.Length == 15)
+            if (fileNumberRegex.IsMatch(tbFileNumCode.Text) && tbFileNumCode.Text.Length == fileNumberLength)
             {
-                if (!CheckPreviousCodes(tbCode.Text) && !Filenums.Contains(tbCode.Text))
+                if (!CheckPreviousCodes(tbFileNumCode.Text) && !Filenums.Contains(tbFileNumCode.Text))
                 {
-                    Filenums.Add(tbCode.Text);
-                    lText.Text = "Preostali broj kodova za unos: " + --codeNums;
-                    tbCode.Clear();
+                    Filenums.Add(tbFileNumCode.Text);
+                    lFileNum.Text = "Preostali broj kodova za unos: " + --codeNums;
+                    tbFileNumCode.Clear();
                     if (codeNums > 0)
                     {
-                        tbCode.Focus();
+                        tbFileNumCode.Focus();
                     }
                     else
                     {
@@ -119,6 +146,8 @@ namespace QR_Code
                 }
             }
         }
+
+        
 
         /// <summary>
         /// Checks if RWTable code is previously added.
@@ -156,6 +185,33 @@ namespace QR_Code
                 return false;
             }
         }
-      
+
+        #endregion
+
+        /// <summary>
+        /// Method that is invoked when tbFileNumCode gains focus.
+        /// Checks if organizational unit is entered correctly.
+        /// </summary>
+        /// <param name="sender">Invoking object.</param>
+        /// <param name="e">Following args.</param>
+        private void tbFileNumCodeEnter(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(organizationalUnit))
+            {
+                tbOrgUnit.Focus();
+            }
+        }
+
+        /// <summary>
+        /// Method that is invoked when tbOrgUnit text is entered.
+        /// Checks if the entered text is in correct format and sets internal value.
+        /// </summary>
+        /// <param name="sender">Invoking object.</param>
+        /// <param name="e">Following args.</param>
+        private void tbOrgUnitTextChanged(object sender, EventArgs e)
+        {
+            organizationalUnit = tbOrgUnit.Text;
+        }
+
     }
 }

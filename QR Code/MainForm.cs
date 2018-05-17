@@ -28,7 +28,7 @@ namespace QR_Code
         /// <summary>
         /// Regex za kodove kutije.
         /// </summary>
-        private Regex boxCodeRegex = new Regex(@"(RSRFBA)[0-9]{2}C-[0-9]{5}");
+        private Regex boxCodeRegex = new Regex(@"(RSRFBA)[0-9]{2}C-[0-9]{5,6}");
 
         #region Box status
         /// <summary>
@@ -1343,6 +1343,12 @@ namespace QR_Code
                 if (sender != null)
                     ((TextBox)sender).SelectAll();
             }
+        }
+
+        private void oJToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OrganizationalUnit diag = new OrganizationalUnit();
+            diag.ShowDialog();
         }
     }
 }
