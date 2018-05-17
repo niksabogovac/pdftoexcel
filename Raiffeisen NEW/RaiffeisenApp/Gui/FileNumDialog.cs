@@ -37,11 +37,6 @@ namespace Gui
         private Regex regFileNum = new Regex(@"(RSRFBA)[0-9]{2}\-[0-9]{6}");
 
         /// <summary>
-        /// Regex for organization units.
-        /// </summary>
-        private Regex regOrgUnit = new Regex(@"[A-Z]\-[0-9]{3}");
-
-        /// <summary>
         /// Organizational unit for associated with current codes (and file numbers).
         /// </summary>
         private string organizationalUnit;
@@ -134,15 +129,7 @@ namespace Gui
         /// <param name="e">Following args.</param>
         private void tbOrgUnitTextChanged(object sender, EventArgs e)
         {
-            if (regOrgUnit.IsMatch(tbOrgUnit.Text) && tbOrgUnit.Text.Length == orgUnitLength)
-            {
-                organizationalUnit = tbOrgUnit.Text;
-                tbFileNumCode.Focus();
-            }
-            else
-            {
-                organizationalUnit = string.Empty;
-            }
+            organizationalUnit = tbOrgUnit.Text;
         }
     }
 }

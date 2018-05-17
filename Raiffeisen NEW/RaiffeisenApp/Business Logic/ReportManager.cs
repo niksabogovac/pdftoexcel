@@ -36,6 +36,18 @@ namespace BusinessLogic
             "OrganizationalUnit"
         };
 
+        /// <summary>
+        /// List of header names generated in report.
+        /// </summary>
+        private static IList<string> reportHeaderNames = new List<string>()
+        {
+            "ID",
+            "Broj naloga",
+            "Kutija",
+            "File number",
+            "Organizaciona jedinica"
+        };
+
         #endregion
 
         #region Public methods
@@ -231,12 +243,12 @@ namespace BusinessLogic
             int curRow = 0;
             int curCol = 0;
 
-            outputSheet.Cells[curRow, curCol++] = new Cell("ID");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Broj naloga");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Kutija");
-            outputSheet.Cells[curRow, curCol++] = new Cell("File number");
-            outputSheet.Cells[curRow++, curCol] = new Cell("Organizationa jedinica");
+            foreach (string columnHeader in reportHeaderNames)
+            {
+                outputSheet.Cells[curRow, curCol++] = new Cell(columnHeader);
+            }
 
+            curRow++;
             curCol = 0;
 
             try

@@ -30,7 +30,7 @@ namespace Gui
         /// <summary>
         /// Regex for box codes.
         /// </summary>
-        private Regex boxCodeRegex = new Regex(@"(RSRFBA)[0-9]{2}C-[0-9]{5}");
+        private Regex boxCodeRegex = new Regex(@"(RSRFBA)[0-9]{2}C-[0-9]{5,6}");
 
         /// <summary>
         /// Length of box code.
