@@ -103,8 +103,8 @@ namespace QR_Code
                 }
                 else
                 {
-                    commandText += "[Date] BETWEEN @startDate AND @stopDate";
-                    countCommandText += "[Date] BETWEEN @startDate AND @stopDate";
+                    commandText += "CAST([Date] AS Date) BETWEEN CAST(@startDate AS Date) AND CAST(@stopDate AS Date)";
+                    countCommandText += "CAST([Date] AS Date) BETWEEN CAST(@startDate AS Date) AND CAST(@stopDate AS Date)";
                     command = new SqlCommand(commandText, conn);
                     command.Parameters.AddWithValue("@startDate", start.Value);
                     command.Parameters.AddWithValue("@stopDate", end.Value);
@@ -240,8 +240,8 @@ namespace QR_Code
                 }
                 else
                 {
-                    commandText += "[Date] BETWEEN @startDate AND @stopDate";
-                    countCommandText += "[Date] BETWEEN @startDate AND @stopDate";
+                    commandText += "CAST([Date] AS Date) BETWEEN CAST(@startDate AS Date) AND CAST(@stopDate AS Date)";
+                    countCommandText += "CAST([Date] AS Date) BETWEEN CAST(@startDate AS Date) AND CAST(@stopDate AS Date)";
                     command = new SqlCommand(commandText, conn);
                     command.Parameters.AddWithValue("@startDate", start.Value);
                     command.Parameters.AddWithValue("@stopDate", end.Value);
@@ -441,7 +441,7 @@ namespace QR_Code
                     }
                     else
                     {
-                        commandText = "SELECT * FROM [QRCode].[dbo].[BankTable] INNER JOIN [QRCode].[dbo].[RWTable] ON [QRCode].[dbo].[BankTable].[ID] = [QRCode].[dbo].[RWTable].[QRID] AND [QRCode].[dbo].[BankTable].[BoxCode] = @boxCode AND [QRCode].[dbo].[BankTable].[Date] BETWEEN @startDate AND @stopDate INNER JOIN [QRCode].[dbo].[Box] ON [QRCode].[dbo].[BankTable].[BoxCode] = [QRCode].[dbo].[Box].Code ORDER BY [QRCode].[dbo].[RWTable].[Code]";
+                        commandText = "SELECT * FROM [QRCode].[dbo].[BankTable] INNER JOIN [QRCode].[dbo].[RWTable] ON [QRCode].[dbo].[BankTable].[ID] = [QRCode].[dbo].[RWTable].[QRID] AND [QRCode].[dbo].[BankTable].[BoxCode] = @boxCode AND CAST([QRCode].[dbo].[BankTable].[Date] AS DATE) BETWEEN CAST(@startDate AS DATE) AND CAST(@stopDate AS DATE) INNER JOIN [QRCode].[dbo].[Box] ON [QRCode].[dbo].[BankTable].[BoxCode] = [QRCode].[dbo].[Box].Code ORDER BY [QRCode].[dbo].[RWTable].[Code]";
                         command = new SqlCommand(commandText, conn);
                         command.Parameters.AddWithValue("@boxCode", boxCode);
                         command.Parameters.AddWithValue("@startDate", start.Value);
