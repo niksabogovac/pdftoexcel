@@ -96,7 +96,7 @@ namespace Gui
                             return;
                         }
 
-                        if (ReportManager.GenerateReport(null, tbValue.Text))
+                        if (ReportManager.GenerateReport(start, stop))
                         {
                             MessageBox.Show("Uspešno generisan izveštaj!");
                         }

@@ -200,13 +200,23 @@ namespace BusinessLogic
 
         public static bool GenerateReport(DateTime start, DateTime stop)
         {
-            string commandText = "SELECT * FROM PartCodes WHERE Date BETWEEN @start AND @stop";
+            string commandText = string.Empty;
+            string outputPath = string.Empty;
+            if (start.Date.Equals(stop.Date))
+            {
+                commandText = "SELECT * FROM PartCodes WHERE CAST([Date] as Date) LIKE CAST(@start as DATE)";
+                outputPath = $"{start.Day}.{start.Month}.{start.Year}.xls";
+            }
+            else
+            {
+                commandText = "SELECT * FROM PartCodes WHERE CAST([Date] as Date) BETWEEN CAST(@start as DATE) AND CAST(@stop as DATE)";
+                outputPath = $"{start.Day}.{start.Month}.{start.Year}.-{stop.Day}.{stop.Month}.{stop.Year}.xls";
+            }
             IList<Tuple<string, object>> parameters = new List<Tuple<string, object>>()
             {
                 Tuple.Create<string, object>("@start", start),
                 Tuple.Create<string, object>("@stop", stop)
             };
-            string outputPath = start.ToShortDateString() + "-" + stop.ToShortDateString() + ".xls";
 
             return ExecuteQuery(outputPath, commandText, parameters);
         }
