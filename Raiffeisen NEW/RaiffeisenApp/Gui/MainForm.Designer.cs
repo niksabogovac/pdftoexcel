@@ -121,7 +121,7 @@
             // 
             this.tbBoxCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbBoxCode.Location = new System.Drawing.Point(15, 315);
-            this.tbBoxCode.MaxLength = 15;
+            this.tbBoxCode.MaxLength = 16;
             this.tbBoxCode.Name = "tbBoxCode";
             this.tbBoxCode.Size = new System.Drawing.Size(515, 38);
             this.tbBoxCode.TabIndex = 3;

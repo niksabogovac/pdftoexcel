@@ -725,7 +725,7 @@ namespace QR_Code
                     tbGreen.Focus();
 
                 }
-                else if (!boxCodeRegex.IsMatch(tbGreen.Text) || tbGreen.Text.Length != 15)
+                else if (!boxCodeRegex.IsMatch(tbGreen.Text) || (tbGreen.Text.Length != 15 && tbGreen.Text.Length != 16))
                 {
                     MessageBox.Show("Neuspešno otvorena kutija, nije ispravan format koda.");
                 }
@@ -825,7 +825,7 @@ namespace QR_Code
                     errorProvider.SetError(tbRed, "Da biste otvorili kutiju, morate uneti šifru.");
                     tbRed.Focus();
                 }
-                else if (!boxCodeRegex.IsMatch(tbRed.Text) || tbRed.Text.Length != 15)
+                else if (!boxCodeRegex.IsMatch(tbRed.Text) || (tbRed.Text.Length != 15 && tbRed.Text.Length != 16))
                 {
                     MessageBox.Show("Neuspešno otvorena kutija, nije ispravan format koda.");
                 }
@@ -928,7 +928,7 @@ namespace QR_Code
                     errorProvider.SetError(tbYellow, "Da biste otvorili kutiju, morate uneti šifru.");
                     tbYellow.Focus();
                 }
-                else if (!boxCodeRegex.IsMatch(tbYellow.Text) || tbYellow.Text.Length != 15)
+                else if (!boxCodeRegex.IsMatch(tbYellow.Text) || (tbYellow.Text.Length != 15 && tbYellow.Text.Length != 16))
                 {
                     MessageBox.Show("Neuspešno otvorena kutija, nije ispravan format koda.");
                 }
@@ -1029,7 +1029,7 @@ namespace QR_Code
                     errorProvider.SetError(tbBlue, "Da biste otvorili kutiju, morate uneti šifru.");
                     tbBlue.Focus();
                 }
-                else if (!boxCodeRegex.IsMatch(tbBlue.Text) || tbBlue.Text.Length != 15)
+                else if (!boxCodeRegex.IsMatch(tbBlue.Text) || (tbBlue.Text.Length != 15 && tbBlue.Text.Length != 16))
                 {
                     MessageBox.Show("Neuspešno otvorena kutija, nije ispravan format koda.");
                 }

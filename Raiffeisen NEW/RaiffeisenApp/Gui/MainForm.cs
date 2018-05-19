@@ -31,7 +31,7 @@ namespace Gui
         /// <summary>
         /// Length of box code.
         /// </summary>
-        private readonly int BOX_CODE_LENGTH = 15;
+        private readonly int BOX_CODE_LENGTH = 16;
 
         /// <summary>
         /// Regex for 1d codes.
@@ -181,7 +181,8 @@ namespace Gui
             {
                 string boxCode = tbBoxCode.Text.Trim(' ');
                 // Check if box code is correct.
-                if (!boxCodeRegex.IsMatch(boxCode) || tbBoxCode.Text.Length != BOX_CODE_LENGTH)
+                // New rule is that the box code can be 15 or 16 characters long.
+                if (!boxCodeRegex.IsMatch(boxCode) || (tbBoxCode.Text.Length != BOX_CODE_LENGTH && tbBoxCode.Text.Length != BOX_CODE_LENGTH -1))
                 {
                     SetError("Nije unet dobar broj kutije!");
                 }

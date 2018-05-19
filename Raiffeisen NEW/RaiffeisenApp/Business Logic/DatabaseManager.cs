@@ -17,7 +17,7 @@ namespace BusinessLogic
         // Single instance of database connection.
         private static SqlConnection _sqlConnection = null;
 
-        private static string _connectionString = @"Data Source=MILAN;Initial Catalog=QRCode;Integrated Security=True";
+        private static string _connectionString = @"Data Source=SERVER\SQLEXPRESS;Initial Catalog=QRCode;User ID=niksa;Password=Niksa2015;Integrated Security=false";
         #endregion
 
         #region Properties
