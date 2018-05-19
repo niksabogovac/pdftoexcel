@@ -41,6 +41,7 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.tsbOrgUnit = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -138,7 +139,8 @@
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1,
-            this.toolStripButton2});
+            this.toolStripButton2,
+            this.tsbOrgUnit});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(542, 25);
@@ -164,6 +166,15 @@
             this.toolStripButton2.Text = "Import";
             this.toolStripButton2.Click += new System.EventHandler(this.importToolStripClicked);
             // 
+            // tsbOrgUnit
+            // 
+            this.tsbOrgUnit.Image = ((System.Drawing.Image)(resources.GetObject("tsbOrgUnit.Image")));
+            this.tsbOrgUnit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbOrgUnit.Name = "tsbOrgUnit";
+            this.tsbOrgUnit.Size = new System.Drawing.Size(78, 22);
+            this.tsbOrgUnit.Text = "Izmeni OJ";
+            this.tsbOrgUnit.Click += new System.EventHandler(this.tsbOrgUnitClick);
+            // 
             // Kutija5
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -179,6 +190,7 @@
             this.Controls.Add(this.tbCode);
             this.Controls.Add(this.tbOrderNum);
             this.Controls.Add(this.lOrderNum);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(546, 508);
             this.Name = "Kutija5";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -204,6 +216,7 @@
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.ToolStripButton tsbOrgUnit;
     }
 }
 

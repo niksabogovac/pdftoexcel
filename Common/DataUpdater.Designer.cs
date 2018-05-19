@@ -1,6 +1,6 @@
-﻿namespace QR_Code
+﻿namespace Common
 {
-    partial class OrderNumDialog
+    partial class DataUpdater
     {
         /// <summary>
         /// Required designer variable.
@@ -28,57 +28,56 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.lFile = new System.Windows.Forms.Label();
-            this.bChoose = new System.Windows.Forms.Button();
             this.bConfirm = new System.Windows.Forms.Button();
+            this.bChoose = new System.Windows.Forms.Button();
+            this.lFile = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
+            // 
+            // bConfirm
+            // 
+            this.bConfirm.Location = new System.Drawing.Point(90, 57);
+            this.bConfirm.Name = "bConfirm";
+            this.bConfirm.Size = new System.Drawing.Size(93, 23);
+            this.bConfirm.TabIndex = 5;
+            this.bConfirm.Text = "Potvrdi";
+            this.bConfirm.UseVisualStyleBackColor = true;
+            this.bConfirm.Click += new System.EventHandler(this.bConfirmClick);
+            // 
+            // bChoose
+            // 
+            this.bChoose.Location = new System.Drawing.Point(179, 19);
+            this.bChoose.Name = "bChoose";
+            this.bChoose.Size = new System.Drawing.Size(93, 23);
+            this.bChoose.TabIndex = 4;
+            this.bChoose.Text = "Odaberi";
+            this.bChoose.UseVisualStyleBackColor = true;
+            this.bChoose.Click += new System.EventHandler(this.bChooseClick);
             // 
             // lFile
             // 
             this.lFile.AutoSize = true;
             this.lFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lFile.Location = new System.Drawing.Point(12, 20);
+            this.lFile.Location = new System.Drawing.Point(12, 19);
             this.lFile.Name = "lFile";
             this.lFile.Size = new System.Drawing.Size(97, 17);
-            this.lFile.TabIndex = 0;
+            this.lFile.TabIndex = 3;
             this.lFile.Text = "Odaberite fajl:";
-            // 
-            // bChoose
-            // 
-            this.bChoose.Location = new System.Drawing.Point(179, 20);
-            this.bChoose.Name = "bChoose";
-            this.bChoose.Size = new System.Drawing.Size(93, 23);
-            this.bChoose.TabIndex = 1;
-            this.bChoose.Text = "Odaberi";
-            this.bChoose.UseVisualStyleBackColor = true;
-            this.bChoose.Click += new System.EventHandler(this.bChooseClick);
-            // 
-            // bConfirm
-            // 
-            this.bConfirm.Location = new System.Drawing.Point(90, 80);
-            this.bConfirm.Name = "bConfirm";
-            this.bConfirm.Size = new System.Drawing.Size(93, 23);
-            this.bConfirm.TabIndex = 2;
-            this.bConfirm.Text = "Potvrdi";
-            this.bConfirm.UseVisualStyleBackColor = true;
-            this.bConfirm.Click += new System.EventHandler(this.bConfirmClick);
             // 
             // openFileDialog1
             // 
-            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog1.Filter = "Excel files (*.xls)|*.xls";
             // 
-            // OrderNumDialog
+            // DataUpdater
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 120);
+            this.ClientSize = new System.Drawing.Size(284, 92);
             this.Controls.Add(this.bConfirm);
             this.Controls.Add(this.bChoose);
             this.Controls.Add(this.lFile);
-            this.Name = "OrderNumDialog";
+            this.Name = "DataUpdater";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "OrderNumDialog";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -86,9 +85,9 @@
 
         #endregion
 
-        private System.Windows.Forms.Label lFile;
-        private System.Windows.Forms.Button bChoose;
         private System.Windows.Forms.Button bConfirm;
+        private System.Windows.Forms.Button bChoose;
+        private System.Windows.Forms.Label lFile;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.pUpper = new System.Windows.Forms.Panel();
             this.lNotification = new System.Windows.Forms.Label();
             this.bAddData = new System.Windows.Forms.Button();
@@ -50,6 +51,7 @@
             this.izveštajiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.izmeniToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.brojNalogaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.oJToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tlpLower = new System.Windows.Forms.TableLayoutPanel();
             this.pGreen = new System.Windows.Forms.Panel();
             this.cbCloseGreen = new System.Windows.Forms.CheckBox();
@@ -88,7 +90,6 @@
             this.lBlue = new System.Windows.Forms.Label();
             this.bCloseBlue = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.oJToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pUpper.SuspendLayout();
             this.mMain.SuspendLayout();
             this.tlpLower.SuspendLayout();
@@ -282,9 +283,16 @@
             // brojNalogaToolStripMenuItem
             // 
             this.brojNalogaToolStripMenuItem.Name = "brojNalogaToolStripMenuItem";
-            this.brojNalogaToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.brojNalogaToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.brojNalogaToolStripMenuItem.Text = "Broj naloga";
             this.brojNalogaToolStripMenuItem.Click += new System.EventHandler(this.brojNalogaToolStripMenuItem_Click);
+            // 
+            // oJToolStripMenuItem
+            // 
+            this.oJToolStripMenuItem.Name = "oJToolStripMenuItem";
+            this.oJToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.oJToolStripMenuItem.Text = "OJ";
+            this.oJToolStripMenuItem.Click += new System.EventHandler(this.oJToolStripMenuItem_Click);
             // 
             // tlpLower
             // 
@@ -690,13 +698,6 @@
             // 
             this.errorProvider.ContainerControl = this;
             // 
-            // oJToolStripMenuItem
-            // 
-            this.oJToolStripMenuItem.Name = "oJToolStripMenuItem";
-            this.oJToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.oJToolStripMenuItem.Text = "OJ";
-            this.oJToolStripMenuItem.Click += new System.EventHandler(this.oJToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -705,6 +706,7 @@
             this.Controls.Add(this.tlpLower);
             this.Controls.Add(this.pUpper);
             this.Controls.Add(this.mMain);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mMain;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

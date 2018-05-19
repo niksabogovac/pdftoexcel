@@ -33,9 +33,11 @@
             this.tbValue = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.rbDateTime = new System.Windows.Forms.RadioButton();
             this.rbBoxCode = new System.Windows.Forms.RadioButton();
             this.rbOrderNum = new System.Windows.Forms.RadioButton();
-            this.rbDateTime = new System.Windows.Forms.RadioButton();
+            this.dtpStart = new System.Windows.Forms.DateTimePicker();
+            this.dtpStop = new System.Windows.Forms.DateTimePicker();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,13 +66,14 @@
             this.tbValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbValue.Location = new System.Drawing.Point(184, 86);
             this.tbValue.Name = "tbValue";
-            this.tbValue.Size = new System.Drawing.Size(362, 26);
+            this.tbValue.Size = new System.Drawing.Size(412, 26);
             this.tbValue.TabIndex = 4;
+            this.tbValue.Visible = false;
             // 
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(199, 124);
+            this.button1.Location = new System.Drawing.Point(240, 124);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(150, 30);
             this.button1.TabIndex = 5;
@@ -85,21 +88,35 @@
             this.groupBox1.Controls.Add(this.rbOrderNum);
             this.groupBox1.Location = new System.Drawing.Point(184, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(365, 50);
+            this.groupBox1.Size = new System.Drawing.Size(412, 50);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
+            // 
+            // rbDateTime
+            // 
+            this.rbDateTime.AutoSize = true;
+            this.rbDateTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbDateTime.Location = new System.Drawing.Point(331, 12);
+            this.rbDateTime.Name = "rbDateTime";
+            this.rbDateTime.Size = new System.Drawing.Size(75, 24);
+            this.rbDateTime.TabIndex = 10;
+            this.rbDateTime.TabStop = true;
+            this.rbDateTime.Text = "Datum";
+            this.rbDateTime.UseVisualStyleBackColor = true;
+            this.rbDateTime.Click += new System.EventHandler(this.rbDateTimeClick);
             // 
             // rbBoxCode
             // 
             this.rbBoxCode.AutoSize = true;
             this.rbBoxCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbBoxCode.Location = new System.Drawing.Point(172, 12);
+            this.rbBoxCode.Location = new System.Drawing.Point(192, 12);
             this.rbBoxCode.Name = "rbBoxCode";
             this.rbBoxCode.Size = new System.Drawing.Size(66, 24);
             this.rbBoxCode.TabIndex = 8;
             this.rbBoxCode.TabStop = true;
             this.rbBoxCode.Text = "Kutija";
             this.rbBoxCode.UseVisualStyleBackColor = true;
+            this.rbBoxCode.Click += new System.EventHandler(this.rbBoxCodeClick);
             // 
             // rbOrderNum
             // 
@@ -112,24 +129,33 @@
             this.rbOrderNum.TabStop = true;
             this.rbOrderNum.Text = "Radni nalog";
             this.rbOrderNum.UseVisualStyleBackColor = true;
+            this.rbOrderNum.Click += new System.EventHandler(this.rbOrderNumClick);
             // 
-            // rbDateTime
+            // dtpStart
             // 
-            this.rbDateTime.AutoSize = true;
-            this.rbDateTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbDateTime.Location = new System.Drawing.Point(287, 12);
-            this.rbDateTime.Name = "rbDateTime";
-            this.rbDateTime.Size = new System.Drawing.Size(75, 24);
-            this.rbDateTime.TabIndex = 10;
-            this.rbDateTime.TabStop = true;
-            this.rbDateTime.Text = "Datum";
-            this.rbDateTime.UseVisualStyleBackColor = true;
+            this.dtpStart.Location = new System.Drawing.Point(184, 92);
+            this.dtpStart.Name = "dtpStart";
+            this.dtpStart.Size = new System.Drawing.Size(206, 20);
+            this.dtpStart.TabIndex = 7;
+            this.dtpStart.Value = new System.DateTime(2018, 5, 19, 12, 11, 32, 0);
+            this.dtpStart.Visible = false;
+            // 
+            // dtpStop
+            // 
+            this.dtpStop.Location = new System.Drawing.Point(396, 92);
+            this.dtpStop.Name = "dtpStop";
+            this.dtpStop.Size = new System.Drawing.Size(200, 20);
+            this.dtpStop.TabIndex = 8;
+            this.dtpStop.Value = new System.DateTime(2018, 5, 19, 12, 11, 25, 0);
+            this.dtpStop.Visible = false;
             // 
             // ReportDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(561, 166);
+            this.ClientSize = new System.Drawing.Size(604, 166);
+            this.Controls.Add(this.dtpStop);
+            this.Controls.Add(this.dtpStart);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.tbValue);
@@ -154,5 +180,7 @@
         private System.Windows.Forms.RadioButton rbBoxCode;
         private System.Windows.Forms.RadioButton rbOrderNum;
         private System.Windows.Forms.RadioButton rbDateTime;
+        private System.Windows.Forms.DateTimePicker dtpStart;
+        private System.Windows.Forms.DateTimePicker dtpStop;
     }
 }

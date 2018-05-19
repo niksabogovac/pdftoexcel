@@ -73,52 +73,50 @@ namespace Gui
             }
             else if (!rbBoxCode.Checked && !rbOrderNum.Checked && rbDateTime.Checked)
             {
-                DateTime start = DateTime.MinValue;
-                DateTime stop = DateTime.MinValue;
-
-                if (dateRegex.IsMatch(tbValue.Text))
+                if (ReportManager.GenerateReport(dtpStart.Value, dtpStop.Value))
                 {
-                  
-                    try
-                    {
-                        // date time is in format 
-                        // dd.mm.yyyy.-dd.mm.yyyy.
-                        string[] items = tbValue.Text.Split(new char[] { '-' });
-                        if (!DateTime.TryParse(items[0], out start))
-                        {
-                            MessageBox.Show("Nije unet dobar datum!");
-                            return;
-                        }
-
-                        if (!DateTime.TryParse(items[1], out stop))
-                        {
-                            MessageBox.Show("Nije unet dobar datum!");
-                            return;
-                        }
-
-                        if (ReportManager.GenerateReport(start, stop))
-                        {
-                            MessageBox.Show("Uspešno generisan izveštaj!");
-                        }
-                        else
-                        {
-                            MessageBox.Show("Neuspešno generisan izveštaj!");
-                        }
-                    }
-                    catch(Exception)
-                    {
-                        MessageBox.Show("Nije unet dobar datum!");
-                    }
+                    MessageBox.Show("Uspešno generisan izveštaj!");
                 }
                 else
                 {
-                    MessageBox.Show("Nije unet dobar datum!");
+                    MessageBox.Show("Neuspešno generisan izveštaj!");
                 }
             }
             else
             {
                 MessageBox.Show("Izaberite tip izveštaja!");
             }
+        }
+
+        /// <summary>
+        /// Invoked when radio button for date time is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void rbDateTimeClick(object sender, EventArgs e)
+        {
+            dtpStart.Visible = true;
+            dtpStop.Visible = true;
+            tbValue.Visible = false;
+        }
+
+        /// <summary>
+        /// Invoked when radio button for order num is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void rbOrderNumClick(object sender, EventArgs e)
+        {
+            dtpStart.Visible = false;
+            dtpStop.Visible = false;
+            tbValue.Visible = true;
+        }
+
+        private void rbBoxCodeClick(object sender, EventArgs e)
+        {
+            dtpStart.Visible = false;
+            dtpStop.Visible = false;
+            tbValue.Visible = true;
         }
     }
 }

@@ -1,15 +1,11 @@
-﻿using ExcelLibrary.SpreadSheet;
+﻿using Common;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace QR_Code
@@ -1204,8 +1200,7 @@ namespace QR_Code
         /// <param name="e"></param>
         private void brojNalogaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OrderNumDialog diag = new OrderNumDialog();
-            diag.ShowDialog();
+            new DataUpdater("Broj Naloga", "[QRCode].[dbo].[BankTable]", "[OrderNum]", "[ID]", Helper.GetConnection()).ShowDialog();
         }
 
         /// <summary>
@@ -1347,8 +1342,7 @@ namespace QR_Code
 
         private void oJToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OrganizationalUnit diag = new OrganizationalUnit();
-            diag.ShowDialog();
+            new DataUpdater("Organizaciona jedinica", "[QRCode].[dbo].[RWTABLE]", "[OrganizationalUnit]", "[QRID]", Helper.GetConnection()).ShowDialog();
         }
     }
 }
