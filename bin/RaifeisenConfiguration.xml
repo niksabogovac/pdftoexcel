@@ -1,0 +1,3 @@
+<Configuration>
+	<Item Name="Connection String">Data Source=SERVER\SQLEXPRESS;Initial Catalog=QRCode;User ID=niksa;Password=Niksa2015;Integrated Security=false</Item>
+</Configuration>

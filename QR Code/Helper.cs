@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace QR_Code
 {
@@ -12,6 +13,11 @@ namespace QR_Code
     /// </summary>
     public class Helper
     {
+        #region Constants
+
+        private const string CONFIGURATION_NAME = "RaifeisenConfiguration.xml";
+        #endregion
+
         #region Private members
         /// <summary>
         /// Represents a collection of names of client infos and their historical names.
@@ -38,7 +44,7 @@ namespace QR_Code
         /// </summary>
         private static Dictionary<string, BoxTypeEnum> doctypeBoxCode = new Dictionary<string, BoxTypeEnum>();
 
-
+        private static Lazy<string> connectionString = new Lazy<string>(() => InitializeXmlConfig());
         #endregion
 
         #region Properties
@@ -68,7 +74,13 @@ namespace QR_Code
         //public static string ConnectionString = @"Data Source=MILAN;Initial Catalog=QRCode;Integrated Security=True";
         //public static string ConnectionString = @"Data Source=KNJG\SQLEXPRESS;Initial Catalog=QRCode;Integrated Security=True";
 
-        public static string ConnectionString = @"Data Source=SERVER\SQLEXPRESS;Initial Catalog=QRCode;User ID=niksa;Password=Niksa2015;Integrated Security=false";
+        public static string ConnectionString
+        {
+            get
+            {
+                return connectionString.Value;
+            }
+        }
 
         //private static string ConnectionString = @"Data Source=89.216.58.242\SQLEXPRESS;Initial Catalog=QRCode;Integrated Security=true";
         #endregion
@@ -233,7 +245,6 @@ namespace QR_Code
 
         #endregion
 
-
         #region Constructors
         /// <summary>
         /// Initializes a new instance of the <see cref="Helper"/> class.
@@ -294,6 +305,25 @@ namespace QR_Code
 
 
 
+
+        #endregion
+
+        #region Private methods
+
+        private static string InitializeXmlConfig()
+        {
+            XElement configXml = XElement.Load(CONFIGURATION_NAME);
+            string connString = string.Empty;
+            foreach(var item in configXml.Elements())
+            {
+                if (item.FirstAttribute.Value.Equals(@"Connection String"))
+                {
+                    connString = item.Value;
+                }
+            }
+
+            return string.Empty;
+        }
 
         #endregion
     }
