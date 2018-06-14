@@ -71,9 +71,9 @@ namespace QR_Code
             }
         }
 
-        //public static string ConnectionString = @"Data Source=MILAN;Initial Catalog=QRCode;Integrated Security=True";
-        //public static string ConnectionString = @"Data Source=KNJG\SQLEXPRESS;Initial Catalog=QRCode;Integrated Security=True";
-
+        /// <summary>
+        /// Gets sql db connection string.
+        /// </summary>
         public static string ConnectionString
         {
             get
@@ -82,7 +82,6 @@ namespace QR_Code
             }
         }
 
-        //private static string ConnectionString = @"Data Source=89.216.58.242\SQLEXPRESS;Initial Catalog=QRCode;Integrated Security=true";
         #endregion
 
         /// <summary>
@@ -310,6 +309,10 @@ namespace QR_Code
 
         #region Private methods
 
+        /// <summary>
+        /// Initializes configuration from xml.
+        /// </summary>
+        /// <returns>Connecetion string.</returns>
         private static string InitializeXmlConfig()
         {
             XElement configXml = XElement.Load(CONFIGURATION_NAME);
@@ -322,7 +325,7 @@ namespace QR_Code
                 }
             }
 
-            return string.Empty;
+            return connString;
         }
 
         #endregion

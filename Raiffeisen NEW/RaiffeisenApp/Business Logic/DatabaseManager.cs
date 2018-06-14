@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using static BusinessLogic.Enums;
 
 namespace BusinessLogic
@@ -13,11 +14,32 @@ namespace BusinessLogic
     public static class DatabaseManager
     {
         #region Private members
+        private const string CONFIGURATION_NAME = "RaifeisenConfiguration.xml";
 
         // Single instance of database connection.
-        private static SqlConnection _sqlConnection = null;
+        private static Lazy<SqlConnection> _sqlConnection = new Lazy<SqlConnection>(() => InitializeConfiguration(), true);
 
-        private static string _connectionString = @"Data Source=SERVER\SQLEXPRESS;Initial Catalog=QRCode;User ID=niksa;Password=Niksa2015;Integrated Security=false";
+        private static string InitializeConnectionString()
+        {
+            XElement configXml = XElement.Load(CONFIGURATION_NAME);
+            string connString = string.Empty;
+            foreach (var item in configXml.Elements())
+            {
+                if (item.FirstAttribute.Value.Equals(@"Connection String"))
+                {
+                    connString = item.Value;
+                }
+            }
+            return connString;
+        }
+
+        private static SqlConnection InitializeConfiguration()
+        {
+            SqlConnection connection = new SqlConnection(InitializeConnectionString());
+            connection.Open();
+            return connection;
+        }
+
         #endregion
 
         #region Properties
@@ -25,36 +47,7 @@ namespace BusinessLogic
         /// <summary>
         /// Gets instance of sql connection to database.
         /// </summary>
-        public static SqlConnection SqlConnection
-        {
-            get
-            {
-                if (_sqlConnection == null)
-                {
-                    _sqlConnection = new SqlConnection(_connectionString);
-                    _sqlConnection.Open();
-                }
-                return _sqlConnection;
-            }
-        }
-
-        #endregion
-
-        #region Private methods
-
-        /// <summary>
-        /// Updates values of nubmer of files in box when new values are scaned.
-        /// </summary>
-        /// <param name="boxCode">Code of box to be updated.</param>
-        private static void UpdateBoxTable(string boxCode)
-        {
-            using (SqlCommand command = new SqlCommand("UPDATE [QRCode].[dbo].[Box] SET [NumberOfFiles] = (SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode) + 1  WHERE [Code] = @boxCode", SqlConnection))
-            {
-                command.Parameters.AddWithValue("@boxCode", boxCode);
-                command.ExecuteNonQuery();
-            }
-
-        }
+        public static SqlConnection SqlConnection => _sqlConnection.Value;
 
         #endregion
 
@@ -68,7 +61,7 @@ namespace BusinessLogic
         /// <param name="boxCode">Code of box where code is stored.</param>
         /// <param name="exceptionCode">In case of excepetion its code is set here.</param>
         /// <returns>Indicator of success.</returns>
-        public static bool InsertNewPartialCode(string id, string orderNum, string boxCode,DateTime date, out string exceptionCode)
+        public static bool InsertNewPartialCode(string id, string orderNum, string boxCode, DateTime date, out string exceptionCode)
         {
             exceptionCode = string.Empty;
             try
@@ -179,7 +172,7 @@ namespace BusinessLogic
                     }
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return -1;
             }
@@ -198,7 +191,7 @@ namespace BusinessLogic
                     {
                         if (reader.HasRows)
                         {
-                            while(reader.Read())
+                            while (reader.Read())
                             {
                                 ret.Add((string)reader["ID"]);
                             }
@@ -206,7 +199,7 @@ namespace BusinessLogic
                     }
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 ret = null;
             }
@@ -260,7 +253,7 @@ namespace BusinessLogic
             SqlTransaction sqlTransaction = SqlConnection.BeginTransaction();
             try
             {
-                using (SqlCommand command = new SqlCommand("UPDATE PartCodes SET FileNumber = @fileNum, OrganizationalUnit = @orgUnit WHERE ID = @id", SqlConnection,sqlTransaction))
+                using (SqlCommand command = new SqlCommand("UPDATE PartCodes SET FileNumber = @fileNum, OrganizationalUnit = @orgUnit WHERE ID = @id", SqlConnection, sqlTransaction))
                 {
                     int k = 0;
                     for (int i = 0; i < ids.Count; i++)
@@ -281,7 +274,7 @@ namespace BusinessLogic
                     ret = true;
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 sqlTransaction.Rollback();
                 ret = false;
@@ -289,7 +282,7 @@ namespace BusinessLogic
 
             return ret;
         }
- 
+
         /// <summary>
         /// Tries to read box code of a PartCode entity.
         /// </summary>
@@ -299,7 +292,7 @@ namespace BusinessLogic
         public static bool TryGetBoxCodeForID(string id, out string boxCode)
         {
             boxCode = string.Empty;
-            using(SqlCommand command = new SqlCommand("SELECT BoxCode FROM [QRCode].[dbo].[PartCodes] WHERE ID = @id",SqlConnection ))
+            using (SqlCommand command = new SqlCommand("SELECT BoxCode FROM [QRCode].[dbo].[PartCodes] WHERE ID = @id", SqlConnection))
             {
                 command.Parameters.AddWithValue("@id", id);
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -344,12 +337,30 @@ namespace BusinessLogic
 
                 }
             }
-            catch (Exception e )
+            catch (Exception e)
             {
-                errorMsg = e.Message +  "\n" + e.StackTrace;
+                errorMsg = e.Message + "\n" + e.StackTrace;
                 return false;
             }
         }
+        #endregion
+
+        #region Private methods
+
+        /// <summary>
+        /// Updates values of nubmer of files in box when new values are scaned.
+        /// </summary>
+        /// <param name="boxCode">Code of box to be updated.</param>
+        private static void UpdateBoxTable(string boxCode)
+        {
+            using (SqlCommand command = new SqlCommand("UPDATE [QRCode].[dbo].[Box] SET [NumberOfFiles] = (SELECT [NumberOfFiles] FROM [QRCode].[dbo].[Box] WHERE [Code] = @boxCode) + 1  WHERE [Code] = @boxCode", SqlConnection))
+            {
+                command.Parameters.AddWithValue("@boxCode", boxCode);
+                command.ExecuteNonQuery();
+            }
+
+        }
+
         #endregion
     }
 }
