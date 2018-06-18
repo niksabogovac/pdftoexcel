@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 
-namespace QR_Code.Import
+namespace Gui.Import
 {
     public class DbUpdater
     {

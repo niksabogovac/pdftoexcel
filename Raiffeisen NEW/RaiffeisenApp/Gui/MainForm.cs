@@ -262,13 +262,58 @@ namespace Gui
             }
         }
 
-        private void tsbOrgUnitClick(object sender, EventArgs e)
+        #region Change
+
+        private void oJToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new DataUpdater("Organizaciona jedinica", "[QRCode].[dbo].[PartCodes]", "[OrganizationalUnit]", "[ID]", DatabaseManager.SqlConnection).ShowDialog();
+        }
+
+
+        private void brojNalogaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new DataUpdater("Broj Naloga", "[QRCode].[dbo].[PartCodes]", "[OrderNum]", "[ID]", DatabaseManager.SqlConnection).ShowDialog();
         }
 
         #endregion
 
 
+        #region Delete 
+
+        /// <summary>
+        /// Invoked when delete box is selected.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void kutijuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new DeleteForm(Common.Enums.DeleteActionType.Box, DatabaseManager.SqlConnection).ShowDialog();
+        }
+
+        /// <summary>
+        /// Invoked when delete single QR code is selected.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void pojedinačnoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new DeleteForm(Common.Enums.DeleteActionType.QRCodeSingle, DatabaseManager.SqlConnection).ShowDialog();
+        }
+
+        /// <summary>
+        /// Invoked when multiple QRCodes deletion is selected.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void izTabeleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new DeleteForm(Common.Enums.DeleteActionType.QRCode, DatabaseManager.SqlConnection).ShowDialog();
+        }
+
+
+
+        #endregion
+
+        #endregion
     }
 }

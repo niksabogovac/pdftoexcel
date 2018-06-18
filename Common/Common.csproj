@@ -65,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\DeleteActionType.cs" />
     <Compile Include="Import\DbUpdater.cs" />
     <Compile Include="Import\Importer.cs" />
     <Compile Include="DataUpdater.cs">
@@ -79,6 +80,9 @@
     <EmbeddedResource Include="DataUpdater.resx">
       <DependentUpon>DataUpdater.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Delete\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

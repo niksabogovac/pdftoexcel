@@ -1,4 +1,4 @@
-﻿using QR_Code.Import;
+﻿using Gui.Import;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;

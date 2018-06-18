@@ -41,7 +41,14 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
-            this.tsbOrgUnit = new System.Windows.Forms.ToolStripButton();
+            this.tsbChange = new System.Windows.Forms.ToolStripDropDownButton();
+            this.oJToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.brojNalogaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsbDelete = new System.Windows.Forms.ToolStripDropDownButton();
+            this.kutijuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.qRCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pojedinačnoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.izTabeleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -140,7 +147,8 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1,
             this.toolStripButton2,
-            this.tsbOrgUnit});
+            this.tsbChange,
+            this.tsbDelete});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(542, 25);
@@ -166,14 +174,71 @@
             this.toolStripButton2.Text = "Import";
             this.toolStripButton2.Click += new System.EventHandler(this.importToolStripClicked);
             // 
-            // tsbOrgUnit
+            // tsbChange
             // 
-            this.tsbOrgUnit.Image = ((System.Drawing.Image)(resources.GetObject("tsbOrgUnit.Image")));
-            this.tsbOrgUnit.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbOrgUnit.Name = "tsbOrgUnit";
-            this.tsbOrgUnit.Size = new System.Drawing.Size(78, 22);
-            this.tsbOrgUnit.Text = "Izmeni OJ";
-            this.tsbOrgUnit.Click += new System.EventHandler(this.tsbOrgUnitClick);
+            this.tsbChange.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.oJToolStripMenuItem,
+            this.brojNalogaToolStripMenuItem});
+            this.tsbChange.Image = ((System.Drawing.Image)(resources.GetObject("tsbChange.Image")));
+            this.tsbChange.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbChange.Name = "tsbChange";
+            this.tsbChange.Size = new System.Drawing.Size(71, 22);
+            this.tsbChange.Text = "Izmeni";
+            // 
+            // oJToolStripMenuItem
+            // 
+            this.oJToolStripMenuItem.Name = "oJToolStripMenuItem";
+            this.oJToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.oJToolStripMenuItem.Text = "OJ";
+            this.oJToolStripMenuItem.Click += new System.EventHandler(this.oJToolStripMenuItem_Click);
+            // 
+            // brojNalogaToolStripMenuItem
+            // 
+            this.brojNalogaToolStripMenuItem.Name = "brojNalogaToolStripMenuItem";
+            this.brojNalogaToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.brojNalogaToolStripMenuItem.Text = "Broj naloga";
+            this.brojNalogaToolStripMenuItem.Click += new System.EventHandler(this.brojNalogaToolStripMenuItem_Click);
+            // 
+            // tsbDelete
+            // 
+            this.tsbDelete.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.kutijuToolStripMenuItem,
+            this.qRCodeToolStripMenuItem});
+            this.tsbDelete.Image = ((System.Drawing.Image)(resources.GetObject("tsbDelete.Image")));
+            this.tsbDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbDelete.Name = "tsbDelete";
+            this.tsbDelete.Size = new System.Drawing.Size(66, 22);
+            this.tsbDelete.Text = "Izbriši";
+            // 
+            // kutijuToolStripMenuItem
+            // 
+            this.kutijuToolStripMenuItem.Name = "kutijuToolStripMenuItem";
+            this.kutijuToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.kutijuToolStripMenuItem.Text = "Kutiju";
+            this.kutijuToolStripMenuItem.Click += new System.EventHandler(this.kutijuToolStripMenuItem_Click);
+            // 
+            // qRCodeToolStripMenuItem
+            // 
+            this.qRCodeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.pojedinačnoToolStripMenuItem,
+            this.izTabeleToolStripMenuItem});
+            this.qRCodeToolStripMenuItem.Name = "qRCodeToolStripMenuItem";
+            this.qRCodeToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.qRCodeToolStripMenuItem.Text = "QRCode";
+            // 
+            // pojedinačnoToolStripMenuItem
+            // 
+            this.pojedinačnoToolStripMenuItem.Name = "pojedinačnoToolStripMenuItem";
+            this.pojedinačnoToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.pojedinačnoToolStripMenuItem.Text = "Pojedinačno";
+            this.pojedinačnoToolStripMenuItem.Click += new System.EventHandler(this.pojedinačnoToolStripMenuItem_Click);
+            // 
+            // izTabeleToolStripMenuItem
+            // 
+            this.izTabeleToolStripMenuItem.Name = "izTabeleToolStripMenuItem";
+            this.izTabeleToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.izTabeleToolStripMenuItem.Text = "Iz tabele";
+            this.izTabeleToolStripMenuItem.Click += new System.EventHandler(this.izTabeleToolStripMenuItem_Click);
             // 
             // Kutija5
             // 
@@ -216,7 +281,14 @@
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
-        private System.Windows.Forms.ToolStripButton tsbOrgUnit;
+        private System.Windows.Forms.ToolStripDropDownButton tsbDelete;
+        private System.Windows.Forms.ToolStripMenuItem kutijuToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem qRCodeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pojedinačnoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem izTabeleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripDropDownButton tsbChange;
+        private System.Windows.Forms.ToolStripMenuItem oJToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem brojNalogaToolStripMenuItem;
     }
 }
 

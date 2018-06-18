@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace QR_Code.Import
+namespace Gui.Import
 {
     /// <summary>
     /// Class responsible for importing data from excel.
