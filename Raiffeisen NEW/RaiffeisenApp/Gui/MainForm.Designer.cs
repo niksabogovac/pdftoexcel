@@ -49,6 +49,8 @@
             this.qRCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pojedinačnoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.izTabeleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lDateTakeover = new System.Windows.Forms.Label();
+            this.dtpTakeover = new System.Windows.Forms.DateTimePicker();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -56,7 +58,7 @@
             // 
             this.lOrderNum.AutoSize = true;
             this.lOrderNum.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lOrderNum.Location = new System.Drawing.Point(12, 27);
+            this.lOrderNum.Location = new System.Drawing.Point(8, 25);
             this.lOrderNum.Name = "lOrderNum";
             this.lOrderNum.Size = new System.Drawing.Size(180, 37);
             this.lOrderNum.TabIndex = 0;
@@ -65,7 +67,7 @@
             // tbOrderNum
             // 
             this.tbOrderNum.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbOrderNum.Location = new System.Drawing.Point(201, 27);
+            this.tbOrderNum.Location = new System.Drawing.Point(201, 24);
             this.tbOrderNum.Name = "tbOrderNum";
             this.tbOrderNum.Size = new System.Drawing.Size(329, 38);
             this.tbOrderNum.TabIndex = 1;
@@ -73,7 +75,7 @@
             // tbCode
             // 
             this.tbCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbCode.Location = new System.Drawing.Point(15, 86);
+            this.tbCode.Location = new System.Drawing.Point(15, 140);
             this.tbCode.Name = "tbCode";
             this.tbCode.Size = new System.Drawing.Size(515, 38);
             this.tbCode.TabIndex = 2;
@@ -84,7 +86,7 @@
             // 
             this.lNumberOfFiles.AutoSize = true;
             this.lNumberOfFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lNumberOfFiles.Location = new System.Drawing.Point(8, 377);
+            this.lNumberOfFiles.Location = new System.Drawing.Point(8, 428);
             this.lNumberOfFiles.Name = "lNumberOfFiles";
             this.lNumberOfFiles.Size = new System.Drawing.Size(293, 37);
             this.lNumberOfFiles.TabIndex = 3;
@@ -93,7 +95,7 @@
             // bOpenCloseBox
             // 
             this.bOpenCloseBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bOpenCloseBox.Location = new System.Drawing.Point(151, 475);
+            this.bOpenCloseBox.Location = new System.Drawing.Point(151, 526);
             this.bOpenCloseBox.Name = "bOpenCloseBox";
             this.bOpenCloseBox.Size = new System.Drawing.Size(206, 38);
             this.bOpenCloseBox.TabIndex = 4;
@@ -106,7 +108,7 @@
             this.cbCloseBox.AutoSize = true;
             this.cbCloseBox.Enabled = false;
             this.cbCloseBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbCloseBox.Location = new System.Drawing.Point(181, 440);
+            this.cbCloseBox.Location = new System.Drawing.Point(181, 491);
             this.cbCloseBox.Name = "cbCloseBox";
             this.cbCloseBox.Size = new System.Drawing.Size(154, 29);
             this.cbCloseBox.TabIndex = 99;
@@ -118,7 +120,7 @@
             // 
             this.lBoxCode.AutoSize = true;
             this.lBoxCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lBoxCode.Location = new System.Drawing.Point(8, 257);
+            this.lBoxCode.Location = new System.Drawing.Point(8, 308);
             this.lBoxCode.Name = "lBoxCode";
             this.lBoxCode.Size = new System.Drawing.Size(277, 37);
             this.lBoxCode.TabIndex = 6;
@@ -127,7 +129,7 @@
             // tbBoxCode
             // 
             this.tbBoxCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbBoxCode.Location = new System.Drawing.Point(15, 315);
+            this.tbBoxCode.Location = new System.Drawing.Point(15, 366);
             this.tbBoxCode.MaxLength = 16;
             this.tbBoxCode.Name = "tbBoxCode";
             this.tbBoxCode.Size = new System.Drawing.Size(515, 38);
@@ -137,7 +139,7 @@
             // 
             this.lReport.AutoSize = true;
             this.lReport.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lReport.Location = new System.Drawing.Point(5, 143);
+            this.lReport.Location = new System.Drawing.Point(5, 194);
             this.lReport.Name = "lReport";
             this.lReport.Size = new System.Drawing.Size(0, 39);
             this.lReport.TabIndex = 8;
@@ -188,14 +190,14 @@
             // oJToolStripMenuItem
             // 
             this.oJToolStripMenuItem.Name = "oJToolStripMenuItem";
-            this.oJToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.oJToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.oJToolStripMenuItem.Text = "OJ";
             this.oJToolStripMenuItem.Click += new System.EventHandler(this.oJToolStripMenuItem_Click);
             // 
             // brojNalogaToolStripMenuItem
             // 
             this.brojNalogaToolStripMenuItem.Name = "brojNalogaToolStripMenuItem";
-            this.brojNalogaToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.brojNalogaToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.brojNalogaToolStripMenuItem.Text = "Broj naloga";
             this.brojNalogaToolStripMenuItem.Click += new System.EventHandler(this.brojNalogaToolStripMenuItem_Click);
             // 
@@ -240,11 +242,30 @@
             this.izTabeleToolStripMenuItem.Text = "Iz tabele";
             this.izTabeleToolStripMenuItem.Click += new System.EventHandler(this.izTabeleToolStripMenuItem_Click);
             // 
+            // lDateTakeover
+            // 
+            this.lDateTakeover.AutoSize = true;
+            this.lDateTakeover.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lDateTakeover.Location = new System.Drawing.Point(8, 76);
+            this.lDateTakeover.Name = "lDateTakeover";
+            this.lDateTakeover.Size = new System.Drawing.Size(308, 37);
+            this.lDateTakeover.TabIndex = 102;
+            this.lDateTakeover.Text = "Datum primopredaje";
+            // 
+            // dtpTakeover
+            // 
+            this.dtpTakeover.Location = new System.Drawing.Point(322, 88);
+            this.dtpTakeover.Name = "dtpTakeover";
+            this.dtpTakeover.Size = new System.Drawing.Size(200, 20);
+            this.dtpTakeover.TabIndex = 103;
+            // 
             // Kutija5
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(542, 523);
+            this.ClientSize = new System.Drawing.Size(542, 576);
+            this.Controls.Add(this.dtpTakeover);
+            this.Controls.Add(this.lDateTakeover);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.lReport);
             this.Controls.Add(this.tbBoxCode);
@@ -289,6 +310,8 @@
         private System.Windows.Forms.ToolStripDropDownButton tsbChange;
         private System.Windows.Forms.ToolStripMenuItem oJToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem brojNalogaToolStripMenuItem;
+        private System.Windows.Forms.Label lDateTakeover;
+        private System.Windows.Forms.DateTimePicker dtpTakeover;
     }
 }
 

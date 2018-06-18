@@ -31,6 +31,7 @@ namespace BusinessLogic
         {
             "ID",
             "OrderNum",
+            "TakeoverDate",
             "BoxCode",
             "FileNumber",
             "OrganizationalUnit"
@@ -43,6 +44,7 @@ namespace BusinessLogic
         {
             "ID",
             "Broj naloga",
+            "Datum primopredaje",
             "Kutija",
             "File number",
             "Organizaciona jedinica"
@@ -314,9 +316,30 @@ namespace BusinessLogic
                 return new Cell(string.Empty);
             }
 
-            return new Cell((string)reader[columnName]);
-        }
+            // Match special case of order num.
+            // With OrderNumber, date of scanning needs to be added.
+            if (columnName.Equals("OrderNum"))
+            {
+                DateTime scanDateTime = (DateTime)reader["Date"];
+                return new Cell((string)reader[columnName]  + $"/{scanDateTime.Day}.{scanDateTime.Month}.{scanDateTime.Year}.");
+            }
+            
 
+            if (reader.GetFieldType(reader.GetOrdinal(columnName)) == typeof(string))
+            {
+                return new Cell((string)reader[columnName]);
+            }
+            // Takeover time is used here.
+            else if (reader.GetFieldType(reader.GetOrdinal(columnName)) == typeof(DateTime))
+            {
+                DateTime takeoverDate = (DateTime)reader[columnName];
+                return new Cell($"{takeoverDate.Day}.{takeoverDate.Month}.{takeoverDate.Year}.");
+            }
+            else
+            {
+                return new Cell(string.Empty);
+            }
+        }
 
         #endregion
     }

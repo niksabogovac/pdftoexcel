@@ -85,12 +85,13 @@ namespace Gui
         /// </summary>
         /// <param name="code">ID of file.</param>
         /// <param name="orderNum">Current order number.</param>
+        /// <param name="takeoverDate">Takeover date from UI.</param>
         /// <param name="boxCode">Code of box that the file is put in.</param>
-        private void TryInsertPartialCode(string code, string orderNum, string boxCode)
+        private void TryInsertPartialCode(string code, string orderNum, DateTime takeoverDate, string boxCode)
         {
             string errorNum;
             // Try to insert to database.
-            if (DatabaseManager.InsertNewPartialCode(code, orderNum, boxCode,DateTime.Now, out errorNum))
+            if (DatabaseManager.InsertNewPartialCode(code, orderNum, takeoverDate, boxCode, DateTime.Now, out errorNum))
             {
                 UpdateNumberOfFiles(tbBoxCode.Text);
                 tbCode.Clear();
@@ -150,7 +151,7 @@ namespace Gui
                 tbCode.Text = string.Empty;
             }
 
-            
+
         }
 
         private void bOpenCloseBoxClick(object sender, EventArgs e)
@@ -182,7 +183,7 @@ namespace Gui
                 string boxCode = tbBoxCode.Text.Trim(' ');
                 // Check if box code is correct.
                 // New rule is that the box code can be 15 or 16 characters long.
-                if (!boxCodeRegex.IsMatch(boxCode) || (tbBoxCode.Text.Length != BOX_CODE_LENGTH && tbBoxCode.Text.Length != BOX_CODE_LENGTH -1))
+                if (!boxCodeRegex.IsMatch(boxCode) || (tbBoxCode.Text.Length != BOX_CODE_LENGTH && tbBoxCode.Text.Length != BOX_CODE_LENGTH - 1))
                 {
                     SetError("Nije unet dobar broj kutije!");
                 }
@@ -227,14 +228,14 @@ namespace Gui
 
         private void tbCodeTextChanged(object sender, EventArgs e)
         {
-            if (simpleCodeRegex.IsMatch(tbCode.Text) && tbCode.Text.Length <= 11 )
+            if (simpleCodeRegex.IsMatch(tbCode.Text) && tbCode.Text.Length <= 11)
             {
-                TryInsertPartialCode(tbCode.Text, tbOrderNum.Text, tbBoxCode.Text);
+                TryInsertPartialCode(tbCode.Text, tbOrderNum.Text, dtpTakeover.Value, tbBoxCode.Text);
             }
-			// Try parse QRCode.
+            // Try parse QRCode.
             else if (DataParser.TryParseJson(tbCode.Text))
             {
-                TryInsertPartialCode(DataParser.GetIdFromQrCode(tbCode.Text), tbOrderNum.Text, tbBoxCode.Text);
+                TryInsertPartialCode(DataParser.GetIdFromQrCode(tbCode.Text), tbOrderNum.Text, dtpTakeover.Value, tbBoxCode.Text);
             }
         }
 
@@ -250,7 +251,7 @@ namespace Gui
             diag.Filter = "Excel Files (*.xls)|*.xls";
             if (diag.ShowDialog() == DialogResult.OK)
             {
-                if (ReportManager.ImportData(diag.FileName,_jmbg))
+                if (ReportManager.ImportData(diag.FileName, _jmbg))
                 {
                     MessageBox.Show("Importovanje podataka završeno!");
                 }
@@ -258,7 +259,7 @@ namespace Gui
                 {
                     MessageBox.Show("Neuspešno importovanje podataka! Proverite da li je fajl otvoren!");
                 }
-                
+
             }
         }
 

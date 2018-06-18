@@ -17,7 +17,7 @@ namespace Gui
         /// <summary>
         /// Regex for box codes.
         /// </summary>
-        private Regex boxCodeRegex = new Regex(@"(RSRFBA)[0-9]{2}C-[0-9]{5}");
+        private Regex boxCodeRegex = new Regex(@"(RSRFBA)[0-9]{2}C-[0-9]{5,6}");
 
         /// <summary>
         /// Regex for date report.
@@ -36,7 +36,8 @@ namespace Gui
 
             if (rbBoxCode.Checked && !rbOrderNum.Checked && !rbDateTime.Checked)
             {
-                if (boxCodeRegex.IsMatch(tbValue.Text) && tbValue.Text.Length == BOX_CODE_LENGTH)
+                // New rule is that the box code length can be 15 or 16.
+                if (boxCodeRegex.IsMatch(tbValue.Text) && (tbValue.Text.Length == BOX_CODE_LENGTH || tbValue.Text.Length == BOX_CODE_LENGTH + 1))
                 {
                     if (ReportManager.GenerateReport(tbValue.Text, null))
                     {

@@ -58,19 +58,21 @@ namespace BusinessLogic
         /// </summary>
         /// <param name="id">Id of new code, only simple format needed, for example RQ00024.</param>
         /// <param name="orderNum">Order number of code.</param>
+        /// <param name="takeoverDate">Takeover date from UI.</param>
         /// <param name="boxCode">Code of box where code is stored.</param>
         /// <param name="exceptionCode">In case of excepetion its code is set here.</param>
         /// <returns>Indicator of success.</returns>
-        public static bool InsertNewPartialCode(string id, string orderNum, string boxCode, DateTime date, out string exceptionCode)
+        public static bool InsertNewPartialCode(string id, string orderNum, DateTime takeoverDate, string boxCode, DateTime date, out string exceptionCode)
         {
             exceptionCode = string.Empty;
             try
             {
                 // Add new entry for partial code.
-                using (SqlCommand command = new SqlCommand("INSERT INTO [QrCode].[dbo].[PartCodes] ([ID],[OrderNum],[BoxCode],[Date]) VALUES (@id,@orderNum,@boxCode,@date)", SqlConnection))
+                using (SqlCommand command = new SqlCommand("INSERT INTO [QrCode].[dbo].[PartCodes] ([ID],[OrderNum],[TakeoverDate],[BoxCode],[Date]) VALUES (@id,@orderNum,@takeoverDate,@boxCode,@date)", SqlConnection))
                 {
                     command.Parameters.AddWithValue("@id", id);
                     command.Parameters.AddWithValue("@orderNum", orderNum);
+                    command.Parameters.AddWithValue("@takeoverDate", takeoverDate.Date);
                     command.Parameters.AddWithValue("@boxCode", boxCode);
                     command.Parameters.AddWithValue("@date", date);
                     command.ExecuteNonQuery();
