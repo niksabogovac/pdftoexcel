@@ -235,7 +235,7 @@ namespace QR_Code
         private void InsertToBankTable(string id, string boxCode, string code)
         {
             SqlConnection conn = Helper.GetConnection();
-            using (SqlCommand command = new SqlCommand("INSERT INTO [QRCode].[dbo].[BankTable] VALUES (@id, @orderNum, @boxCode, @date, @jmbg, @code)", conn))
+            using (SqlCommand command = new SqlCommand("INSERT INTO [QRCode].[dbo].[BankTable] VALUES (@id, @orderNum, @boxCode, @date, @jmbg, @code,@takeoverDate)", conn))
             {
                 command.Parameters.AddWithValue("@id", id);
                 command.Parameters.AddWithValue("@orderNum", tbOrderNum.Text);
@@ -243,6 +243,7 @@ namespace QR_Code
                 command.Parameters.AddWithValue("@date", DateTime.Now);
                 command.Parameters.AddWithValue("@jmbg", jmbg);
                 command.Parameters.AddWithValue("@code", code);
+                command.Parameters.AddWithValue("@takeoverDate", dtpTakeover.Value);
                 command.ExecuteNonQuery();
             }
         }

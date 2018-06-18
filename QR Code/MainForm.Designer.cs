@@ -90,6 +90,8 @@
             this.lBlue = new System.Windows.Forms.Label();
             this.bCloseBlue = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.lTakeover = new System.Windows.Forms.Label();
+            this.dtpTakeover = new System.Windows.Forms.DateTimePicker();
             this.pUpper.SuspendLayout();
             this.mMain.SuspendLayout();
             this.tlpLower.SuspendLayout();
@@ -102,6 +104,8 @@
             // 
             // pUpper
             // 
+            this.pUpper.Controls.Add(this.dtpTakeover);
+            this.pUpper.Controls.Add(this.lTakeover);
             this.pUpper.Controls.Add(this.lNotification);
             this.pUpper.Controls.Add(this.bAddData);
             this.pUpper.Controls.Add(this.tbQr);
@@ -698,6 +702,22 @@
             // 
             this.errorProvider.ContainerControl = this;
             // 
+            // lTakeover
+            // 
+            this.lTakeover.AutoSize = true;
+            this.lTakeover.Location = new System.Drawing.Point(13, 89);
+            this.lTakeover.Name = "lTakeover";
+            this.lTakeover.Size = new System.Drawing.Size(138, 13);
+            this.lTakeover.TabIndex = 13;
+            this.lTakeover.Text = "Unesite datum primopredaje";
+            // 
+            // dtpTakeover
+            // 
+            this.dtpTakeover.Location = new System.Drawing.Point(182, 83);
+            this.dtpTakeover.Name = "dtpTakeover";
+            this.dtpTakeover.Size = new System.Drawing.Size(226, 20);
+            this.dtpTakeover.TabIndex = 14;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -793,6 +813,8 @@
         private System.Windows.Forms.CheckBox cbCloseYellow;
         private System.Windows.Forms.CheckBox cbCloseBlue;
         private System.Windows.Forms.ToolStripMenuItem oJToolStripMenuItem;
+        private System.Windows.Forms.DateTimePicker dtpTakeover;
+        private System.Windows.Forms.Label lTakeover;
     }
 }
 
