@@ -340,7 +340,7 @@ namespace QR_Code
             outputSheet.Cells[curRow, curCol++] = new Cell("Novi kod:");
             outputSheet.Cells[curRow, curCol++] = new Cell("Broj naloga/primopredaje");
             outputSheet.Cells[curRow, curCol++] = new Cell("Unit type");
-            outputSheet.Cells[curRow, curCol++] = new Cell("Datum primopredaje");
+            outputSheet.Cells[curRow, curCol++] = new Cell("Godina");
             outputSheet.Cells[curRow, curCol++] = new Cell("Vrsta kutije");
             outputSheet.Cells[curRow, curCol++] = new Cell("OJ");
             outputSheet.Cells[curRow, curCol++] = new Cell("Broj fajlova u kutiji");
@@ -456,7 +456,7 @@ namespace QR_Code
                     {
                         int i = 0;
                         // hbCode - current boxcode
-                        DateTime date = DateTime.Now;
+                        DateTime date = DateTime.MinValue;
                         string takeoverDateString = string.Empty;
                         string orderNum = null, hbCode = null;
                         string organizationalUnit = string.Empty;
@@ -488,9 +488,9 @@ namespace QR_Code
                                 #region Write header data
                                 // Always read from the beggining of list and remove codes added to cells.
                                 outputSheet.Cells[curRow, curCol++] = new Cell(oldcode);
-                                outputSheet.Cells[curRow, curCol++] = new Cell(orderNum + $"/{date.Day}.{date.Month}.{date.Year}.");
+                                outputSheet.Cells[curRow, curCol++] = new Cell(orderNum + $"/{takeoverDateString}");
                                 outputSheet.Cells[curRow, curCol++] = new Cell("QR");
-                                outputSheet.Cells[curRow, curCol++] = new Cell(takeoverDateString);
+                                outputSheet.Cells[curRow, curCol++] = new Cell(date.Year);
                                 orderNum = null;
                                 string bCode = (string)reader["BoxCode"];
                                 int boxType = GetTypeFromBoxCode(bCode);
@@ -709,9 +709,9 @@ namespace QR_Code
                             #region Write header data
                             // Always read from the beggining of list and remove codes added to cells.
                             outputSheet.Cells[curRow, curCol++] = new Cell(tmpCode);
-                            outputSheet.Cells[curRow, curCol++] = new Cell(orderNum + $"/{date.Day}.{date.Month}.{date.Year}.");
+                            outputSheet.Cells[curRow, curCol++] = new Cell(orderNum + $"/{takeoverDateString}");
                             outputSheet.Cells[curRow, curCol++] = new Cell("QR");
-                            outputSheet.Cells[curRow, curCol++] = new Cell(takeoverDateString);
+                            outputSheet.Cells[curRow, curCol++] = new Cell(date.Year);
                             orderNum = null;
                             int boxType = GetTypeFromBoxCode(hbCode);
                             switch (boxType)

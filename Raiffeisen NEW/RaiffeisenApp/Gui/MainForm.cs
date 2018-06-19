@@ -39,6 +39,11 @@ namespace Gui
         private Regex simpleCodeRegex = new Regex(@"RQ[0-9]{8}[0-9]?");
 
         /// <summary>
+        /// Length of 1d code.
+        /// </summary>
+        private const int SIMPLE_CODE_LENGTH = 11;
+
+        /// <summary>
         /// Regex for qr codes.
         /// </summary>
         private Regex qrCodeRegex = new Regex("{\"1\":\".*\",\"2\":\".*\",\"4\":\".*\",\"10\":\".*\"}");
@@ -228,7 +233,7 @@ namespace Gui
 
         private void tbCodeTextChanged(object sender, EventArgs e)
         {
-            if (simpleCodeRegex.IsMatch(tbCode.Text) && tbCode.Text.Length <= 11)
+            if (simpleCodeRegex.IsMatch(tbCode.Text) && tbCode.Text.Length <= SIMPLE_CODE_LENGTH)
             {
                 TryInsertPartialCode(tbCode.Text, tbOrderNum.Text, dtpTakeover.Value, tbBoxCode.Text);
             }
