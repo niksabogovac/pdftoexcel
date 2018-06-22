@@ -69,13 +69,13 @@
     <Compile Include="CloseBoxValidator.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CloseBoxValidator.Designer.cs">
+    <Compile Include="CloseBoxValidator.designer.cs">
       <DependentUpon>CloseBoxValidator.cs</DependentUpon>
     </Compile>
     <Compile Include="DataUpdater.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DataUpdater.Designer.cs">
+    <Compile Include="DataUpdater.designer.cs">
       <DependentUpon>DataUpdater.cs</DependentUpon>
     </Compile>
     <Compile Include="Enums\DeleteActionType.cs" />
