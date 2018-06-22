@@ -602,6 +602,28 @@ namespace QR_Code
                 command.ExecuteNonQuery();
             }
         }
+
+        private static ISet<string> GetFileNumbersForBox(string boxCode)
+        {
+            HashSet<string> fileNumbers = new HashSet<string>();
+            string selectPart   =  "SELECT DISTINCT Code ";
+            string fromPart     =  "FROM [QRCode].[dbo].[BankTable] b INNER JOIN [QRCode].[dbo].[RWTable] r on b.ID = r.QRID ";
+            string wherePart    = $"WHERE Code IS NOT NULL and b.BoxCode = '{boxCode}'";
+            using (SqlCommand command = new SqlCommand(selectPart + fromPart + wherePart, Helper.GetConnection()))
+            using (SqlDataReader reader = command.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        fileNumbers.Add((string)reader["Code"]);
+                    }
+                }
+            }
+
+            return fileNumbers;
+        }
+
         #region Event handlers
 
         /// <summary>
@@ -689,6 +711,12 @@ namespace QR_Code
                     } 
                     else
                     {
+                        CloseBoxValidator validator = new CloseBoxValidator(GetFileNumbersForBox(tbGreen.Text));
+                        if (validator.ShowDialog() != DialogResult.OK)
+                        {
+                            return;
+                        }
+
                         greenBoxOpened = false;
                         lNumFilesGreen.Text = string.Empty;
                         lStatusGreen.Text = "Status: Zatvorena";
@@ -794,6 +822,12 @@ namespace QR_Code
                     }
                     else
                     {
+                        CloseBoxValidator validator = new CloseBoxValidator(GetFileNumbersForBox(tbRed.Text));
+                        if (validator.ShowDialog() != DialogResult.OK)
+                        {
+                            return;
+                        }
+
                         redBoxOpened = false;
                         lStatusRed.Text = "Status: Zatvorena";
                         ((Button)sender).Text = "Otvori";
@@ -896,6 +930,12 @@ namespace QR_Code
                     }
                     else
                     {
+                        CloseBoxValidator validator = new CloseBoxValidator(GetFileNumbersForBox(tbYellow.Text));
+                        if (validator.ShowDialog() != DialogResult.OK)
+                        {
+                            return;
+                        }
+
                         yellowBoxOpened = false;
                         lStatusYellow.Text = "Status: Zatvorena";
                         ((Button)sender).Text = "Otvori";
@@ -998,6 +1038,12 @@ namespace QR_Code
                     }
                     else
                     {
+                        CloseBoxValidator validator = new CloseBoxValidator(GetFileNumbersForBox(tbRed.Text));
+                        if (validator.ShowDialog() != DialogResult.OK)
+                        {
+                            return;
+                        }
+
                         blueBoxOpened = false;
                         lStatusBlue.Text = "Status: Zatvorena";
                         ((Button)sender).Text = "Otvori";

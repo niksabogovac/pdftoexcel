@@ -87,7 +87,7 @@ namespace QR_Code
         /// <summary>
         /// Singleton instance of db connection.
         /// </summary>
-        public static SqlConnection connection;
+        private static SqlConnection connection;
 
         #region Public static methods
 

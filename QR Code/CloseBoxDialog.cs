@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -39,17 +40,12 @@ namespace QR_Code
         /// <summary>
         /// Regex for file numbers.
         /// </summary>
-        private Regex fileNumberRegex = new Regex(@"(RSRFBA)[0-9]{2}\-[0-9]{6}");
+        private Regex fileNumberRegex = new Regex(QRRegex.FileNumber);
 
         /// <summary>
         /// Organizational unit for associated with current codes (and file numbers).
         /// </summary>
         private string organizationalUnit;
-
-        /// <summary>
-        /// Length of file number.
-        /// </summary>
-        private const short fileNumberLength = 15;
 
         /// <summary>
         /// Lenegth of organizational unit.
@@ -123,7 +119,7 @@ namespace QR_Code
         /// <param name="e">Following args.</param>
         private void tbFileNumCodeTextChanged(object sender, EventArgs e)
         {
-            if (fileNumberRegex.IsMatch(tbFileNumCode.Text) && tbFileNumCode.Text.Length == fileNumberLength)
+            if (fileNumberRegex.IsMatch(tbFileNumCode.Text) && tbFileNumCode.Text.Length == QRRegex.FileNumberLength)
             {
                 if (!CheckPreviousCodes(tbFileNumCode.Text) && !Filenums.Contains(tbFileNumCode.Text))
                 {

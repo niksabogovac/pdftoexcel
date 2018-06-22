@@ -31,6 +31,8 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.pUpper = new System.Windows.Forms.Panel();
+            this.dtpTakeover = new System.Windows.Forms.DateTimePicker();
+            this.lTakeover = new System.Windows.Forms.Label();
             this.lNotification = new System.Windows.Forms.Label();
             this.bAddData = new System.Windows.Forms.Button();
             this.tbQr = new System.Windows.Forms.TextBox();
@@ -90,8 +92,6 @@
             this.lBlue = new System.Windows.Forms.Label();
             this.bCloseBlue = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.lTakeover = new System.Windows.Forms.Label();
-            this.dtpTakeover = new System.Windows.Forms.DateTimePicker();
             this.pUpper.SuspendLayout();
             this.mMain.SuspendLayout();
             this.tlpLower.SuspendLayout();
@@ -118,6 +118,22 @@
             this.pUpper.Name = "pUpper";
             this.pUpper.Size = new System.Drawing.Size(1017, 124);
             this.pUpper.TabIndex = 0;
+            // 
+            // dtpTakeover
+            // 
+            this.dtpTakeover.Location = new System.Drawing.Point(182, 83);
+            this.dtpTakeover.Name = "dtpTakeover";
+            this.dtpTakeover.Size = new System.Drawing.Size(226, 20);
+            this.dtpTakeover.TabIndex = 14;
+            // 
+            // lTakeover
+            // 
+            this.lTakeover.AutoSize = true;
+            this.lTakeover.Location = new System.Drawing.Point(13, 89);
+            this.lTakeover.Name = "lTakeover";
+            this.lTakeover.Size = new System.Drawing.Size(138, 13);
+            this.lTakeover.TabIndex = 13;
+            this.lTakeover.Text = "Unesite datum primopredaje";
             // 
             // lNotification
             // 
@@ -702,22 +718,6 @@
             // 
             this.errorProvider.ContainerControl = this;
             // 
-            // lTakeover
-            // 
-            this.lTakeover.AutoSize = true;
-            this.lTakeover.Location = new System.Drawing.Point(13, 89);
-            this.lTakeover.Name = "lTakeover";
-            this.lTakeover.Size = new System.Drawing.Size(138, 13);
-            this.lTakeover.TabIndex = 13;
-            this.lTakeover.Text = "Unesite datum primopredaje";
-            // 
-            // dtpTakeover
-            // 
-            this.dtpTakeover.Location = new System.Drawing.Point(182, 83);
-            this.dtpTakeover.Name = "dtpTakeover";
-            this.dtpTakeover.Size = new System.Drawing.Size(226, 20);
-            this.dtpTakeover.TabIndex = 14;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -730,7 +730,7 @@
             this.MainMenuStrip = this.mMain;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Program";
+            this.Text = "RaiffeisenApp4";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.pUpper.ResumeLayout(false);
             this.pUpper.PerformLayout();

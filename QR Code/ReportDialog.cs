@@ -480,7 +480,7 @@ namespace QR_Code
                             }
                             hbCode = (string)reader["BoxCode"];
                             oldcode = tmpCode;
-                            tmpCode = (string)reader[7];
+                            tmpCode = (string)reader["Code"];
 
                             if ((tmpCode == oldcode && i % 21 == 0) || (tmpCode != oldcode && oldcode != null && i > 1))
                             {
@@ -488,7 +488,7 @@ namespace QR_Code
                                 #region Write header data
                                 // Always read from the beggining of list and remove codes added to cells.
                                 outputSheet.Cells[curRow, curCol++] = new Cell(oldcode);
-                                outputSheet.Cells[curRow, curCol++] = new Cell(orderNum + $"/{takeoverDateString}");
+                                outputSheet.Cells[curRow, curCol++] = new Cell(orderNum + $" / {takeoverDateString}");
                                 outputSheet.Cells[curRow, curCol++] = new Cell("QR");
                                 outputSheet.Cells[curRow, curCol++] = new Cell(date.Year);
                                 orderNum = null;
@@ -709,7 +709,7 @@ namespace QR_Code
                             #region Write header data
                             // Always read from the beggining of list and remove codes added to cells.
                             outputSheet.Cells[curRow, curCol++] = new Cell(tmpCode);
-                            outputSheet.Cells[curRow, curCol++] = new Cell(orderNum + $"/{takeoverDateString}");
+                            outputSheet.Cells[curRow, curCol++] = new Cell(orderNum + $" / {takeoverDateString}");
                             outputSheet.Cells[curRow, curCol++] = new Cell("QR");
                             outputSheet.Cells[curRow, curCol++] = new Cell(date.Year);
                             orderNum = null;
