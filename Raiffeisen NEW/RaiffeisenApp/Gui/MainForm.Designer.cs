@@ -280,7 +280,7 @@
             this.MinimumSize = new System.Drawing.Size(546, 508);
             this.Name = "Kutija5";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Kutija5";
+            this.Text = "RaiffeisenApp5";
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);

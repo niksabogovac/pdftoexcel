@@ -163,16 +163,28 @@ namespace Gui
         {
             if (boxOpened)
             {
+                // First enter all reamaining codes.
                 List<string> codeWithoutFileNums = DatabaseManager.GetCodeWithoutFileNumberByBox(tbBoxCode.Text);
 
                 if (codeWithoutFileNums != null && codeWithoutFileNums.Count > 0)
                 {
                     FileNumDialog dialog = new FileNumDialog(codeWithoutFileNums);
-                    dialog.ShowDialog();
+                    if (dialog.ShowDialog() != DialogResult.OK)
+                    {
+                        return;
+                    }
                 }
 
+                // Now we need to check all inserted file numbers before closing the box.
                 if (cbCloseBox.Checked)
                 {
+                    CloseBoxValidator validator = new CloseBoxValidator(DatabaseManager.GetFileNumbersForBox(tbBoxCode.Text));
+
+                    if (validator.ShowDialog() != DialogResult.OK)
+                    {
+                        return;
+                    }
+
                     boxOpened = false;
                     cbCloseBox.Enabled = false;
                     cbCloseBox.Checked = false;

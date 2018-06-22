@@ -1,13 +1,8 @@
 ﻿using BusinessLogic;
+using Common;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Gui
@@ -34,17 +29,12 @@ namespace Gui
         /// <summary>
         /// Regex for file numbers.
         /// </summary>
-        private Regex regFileNum = new Regex(@"(RSRFBA)[0-9]{2}\-[0-9]{6}");
+        private Regex regFileNum = new Regex(QRRegex.FileNumber);
 
         /// <summary>
         /// Organizational unit for associated with current codes (and file numbers).
         /// </summary>
         private string organizationalUnit;
-
-        /// <summary>
-        /// Length of file number.
-        /// </summary>
-        private const short fileNumberLength = 15;
 
         /// <summary>
         /// Lenegth of organizational unit.
@@ -86,7 +76,7 @@ namespace Gui
         /// <param name="e">Following args.</param>
         private void tbFileNumCodeTextChanged(object sender, EventArgs e)
         {
-            if (regFileNum.IsMatch(tbFileNumCode.Text) && tbFileNumCode.Text.Length == fileNumberLength)
+            if (regFileNum.IsMatch(tbFileNumCode.Text) && tbFileNumCode.Text.Length == QRRegex.FileNumberLength)
             {
                 if (!DatabaseManager.CheckPreviousFileNumberCodes(tbFileNumCode.Text) && !_currentFileNums.Contains(tbFileNumCode.Text))
                 {

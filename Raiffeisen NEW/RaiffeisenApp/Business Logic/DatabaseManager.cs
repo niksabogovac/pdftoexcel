@@ -345,6 +345,25 @@ namespace BusinessLogic
                 return false;
             }
         }
+
+        public static ISet<string> GetFileNumbersForBox(string boxCode)
+        {
+            HashSet<string> fileNumbers = new HashSet<string>();
+            string commandText = $"SELECT DISTINCT FileNumber FROM [QRCode].[dbo].[PartCodes] WHERE BoxCode = '{boxCode}' AND FileNumber IS NOT NULL";
+            using (SqlCommand command = new SqlCommand(commandText, SqlConnection))
+            using (SqlDataReader reader = command.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        fileNumbers.Add((string)reader["FileNumber"]);
+                    }
+                }
+            }
+
+            return fileNumbers;
+        }
         #endregion
 
         #region Private methods

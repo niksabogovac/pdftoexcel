@@ -321,7 +321,7 @@ namespace BusinessLogic
             if (columnName.Equals("OrderNum"))
             {
                 DateTime takeoverDate = (DateTime)reader["TakeoverDate"];
-                return new Cell((string)reader[columnName]  + $"/{takeoverDate.Day}.{takeoverDate.Month}.{takeoverDate.Year}.");
+                return new Cell((string)reader[columnName]  + $" / {takeoverDate.Day}.{takeoverDate.Month}.{takeoverDate.Year}.");
             }
             
 
