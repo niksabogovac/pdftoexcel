@@ -74,6 +74,7 @@ namespace Common
         private void AppendRemainingCodesText(int numRemainingCodes)
         {
             lTextFileNumber.Text = $"Broj preostalih kodova:  {numRemainingCodes}.";
+            tbFileNumCode.Text = string.Empty;
         }
 
         private void CloseBoxValidatorShown(object sender, System.EventArgs e)

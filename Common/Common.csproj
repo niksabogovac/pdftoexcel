@@ -66,16 +66,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CloseBoxValidator.cs">
+    <Compile Include="CloseBoxValidator\CloseBoxValidator.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CloseBoxValidator.designer.cs">
+    <Compile Include="CloseBoxValidator\CloseBoxValidator.Designer.cs">
       <DependentUpon>CloseBoxValidator.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataUpdater.cs">
+    <Compile Include="DataUpdater\DataUpdater.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DataUpdater.designer.cs">
+    <Compile Include="DataUpdater\DataUpdater.Designer.cs">
       <DependentUpon>DataUpdater.cs</DependentUpon>
     </Compile>
     <Compile Include="Enums\DeleteActionType.cs" />
@@ -85,10 +85,10 @@
     <Compile Include="QRRegex.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="CloseBoxValidator.resx">
+    <EmbeddedResource Include="CloseBoxValidator\CloseBoxValidator.resx">
       <DependentUpon>CloseBoxValidator.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DataUpdater.resx">
+    <EmbeddedResource Include="DataUpdater\DataUpdater.resx">
       <DependentUpon>DataUpdater.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
