@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -39,7 +40,7 @@ namespace Common
                 // Already validated.
                 if (validatedCodes.Contains(validCode))
                 {
-                    MessageBox.Show($"File Number {validCode} je već kontrolisan za ovu kutiju.");
+                    ShowErrorMessage($"File Number {validCode} je već kontrolisan.", Color.Red);
                     tbFileNumCode.Text = string.Empty;
                     return;
                 }
@@ -50,17 +51,18 @@ namespace Common
                     remainingCodes.Remove(validCode);
                     validatedCodes.Add(validCode);
                     AppendRemainingCodesText(remainingCodes.Count);
-                    
+                    ShowErrorMessage(string.Empty, Color.Black);
                     if (remainingCodes.Count == 0)
                     {
                         DialogResult = DialogResult.OK;
                         Close();
                     }
+                    
                 }
                 // Code is not validated and should not be validated.
                 else
                 {
-                    MessageBox.Show($"File Number {validCode} ne pripada ovoj kutiji.");
+                    ShowErrorMessage($"File Number {validCode} ne pripada ovoj kutiji.", Color.Red);
                     tbFileNumCode.Text = string.Empty;
                 }
             
@@ -84,6 +86,12 @@ namespace Common
                 DialogResult = DialogResult.OK;
                 Close();
             }
+        }
+
+        private void ShowErrorMessage(string text, Color color)
+        {
+            lErrorMessage.Text = text;
+            lErrorMessage.ForeColor = color;
         }
     }
 }
