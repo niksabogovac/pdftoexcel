@@ -1038,7 +1038,7 @@ namespace QR_Code
                     }
                     else
                     {
-                        CloseBoxValidator validator = new CloseBoxValidator(GetFileNumbersForBox(tbRed.Text));
+                        CloseBoxValidator validator = new CloseBoxValidator(GetFileNumbersForBox(tbBlue.Text));
                         if (validator.ShowDialog() != DialogResult.OK)
                         {
                             return;
