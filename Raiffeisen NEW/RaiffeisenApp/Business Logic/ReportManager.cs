@@ -311,7 +311,7 @@ namespace BusinessLogic
         /// <returns><see cref="Cell"/> with empty value if column does not exist. Column value otherwise.</returns>
         private static Cell GenerateStringValue(SqlDataReader reader, string columnName)
         {
-            if (reader[columnName] == null  || !reader.HasColumn(columnName) || reader[columnName].GetType().Equals(typeof(DBNull)))
+            if (ColumnDoesntExistOrIsNull(reader,columnName))
             {
                 return new Cell(string.Empty);
             }
@@ -320,8 +320,14 @@ namespace BusinessLogic
             // With OrderNumber, takeover date needs to be added.
             if (columnName.Equals("OrderNum"))
             {
+                // If takeover date is not enlisted.
+                if (ColumnDoesntExistOrIsNull(reader, "TakeoverDate"))
+                {
+                    return new Cell((string)reader[columnName]);
+                }
                 DateTime takeoverDate = (DateTime)reader["TakeoverDate"];
-                return new Cell((string)reader[columnName]  + $" / {takeoverDate.Day}.{takeoverDate.Month}.{takeoverDate.Year}.");
+
+                return new Cell((string)reader[columnName]  + $" / {takeoverDate:dd.MM.yyyy.}");
             }
             
 
@@ -329,11 +335,11 @@ namespace BusinessLogic
             {
                 return new Cell((string)reader[columnName]);
             }
-            // Takeover time is used here.
+            // Year is used here.
             else if (reader.GetFieldType(reader.GetOrdinal(columnName)) == typeof(DateTime))
             {
-                DateTime takeoverDate = (DateTime)reader[columnName];
-                return new Cell($"{takeoverDate.Day}.{takeoverDate.Month}.{takeoverDate.Year}.");
+                DateTime yearDate = (DateTime)reader[columnName];
+                return new Cell($"{yearDate.Year}.");
             }
             else
             {
@@ -341,6 +347,7 @@ namespace BusinessLogic
             }
         }
 
+        private static bool ColumnDoesntExistOrIsNull(SqlDataReader reader, string columnName) => reader[columnName] == null || !reader.HasColumn(columnName) || reader[columnName].GetType().Equals(typeof(DBNull));
         #endregion
     }
 }

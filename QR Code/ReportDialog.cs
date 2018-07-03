@@ -490,7 +490,7 @@ namespace QR_Code
                                 outputSheet.Cells[curRow, curCol++] = new Cell(oldcode);
                                 outputSheet.Cells[curRow, curCol++] = new Cell(orderNum + $" / {takeoverDateString}");
                                 outputSheet.Cells[curRow, curCol++] = new Cell("QR");
-                                outputSheet.Cells[curRow, curCol++] = new Cell(date.Year);
+                                outputSheet.Cells[curRow, curCol++] = new Cell($"{date.Year}.");
                                 orderNum = null;
                                 string bCode = (string)reader["BoxCode"];
                                 int boxType = GetTypeFromBoxCode(bCode);
@@ -711,7 +711,7 @@ namespace QR_Code
                             outputSheet.Cells[curRow, curCol++] = new Cell(tmpCode);
                             outputSheet.Cells[curRow, curCol++] = new Cell(orderNum + $" / {takeoverDateString}");
                             outputSheet.Cells[curRow, curCol++] = new Cell("QR");
-                            outputSheet.Cells[curRow, curCol++] = new Cell(date.Year);
+                            outputSheet.Cells[curRow, curCol++] = new Cell($"{date.Year}.");
                             orderNum = null;
                             int boxType = GetTypeFromBoxCode(hbCode);
                             switch (boxType)
@@ -1217,7 +1217,7 @@ namespace QR_Code
             else if (reader.GetFieldType(reader.GetOrdinal(columnName)) == typeof(DateTime))
             {
                 DateTime takeoverDate = (DateTime)reader[columnName];
-                return $"{takeoverDate.Day}.{takeoverDate.Month}.{takeoverDate.Year}.";
+                return $"{takeoverDate:dd.MM.yyyy.}";
             }
             else
             {
